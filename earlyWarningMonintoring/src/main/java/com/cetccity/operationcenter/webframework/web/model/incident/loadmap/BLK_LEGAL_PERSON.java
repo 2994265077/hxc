@@ -1,0 +1,75 @@
+package com.cetccity.operationcenter.webframework.web.model.incident.loadmap;
+
+import lombok.Data;
+
+@Data
+public class BLK_LEGAL_PERSON {
+    
+    private String ID; 
+	private String TYSHXYDM; 
+	private String GSZZZCH; 
+	private String JGMC; 
+	private String JGXX; 
+	private String JGDZ;
+	private String FMJG; 
+	private String FZRID; 
+	private String FRZJDM; 
+	private String FRZJHM; 
+	private String FZRXM; 
+	private String CJR; 
+	private String BZ;
+	private String CJRQ;
+    private String XGR;
+	private String XGRQ;
+    private String YSBGXSJ;
+    private String YSBSJLY;
+	private String BZDZ; 
+	private String SHENG; 
+	private String SHENGDM; 
+	private String SHI; 
+	private String SHIDM; 
+	private String QU; 
+	private String QUDM; 
+	private String JD; 
+	private String JDDM; 
+	private String SQ; 
+	private String SQDM; 
+	private String WG; 
+	private String WGDM; 
+	private String DL; 
+	private String DLDM; 
+	private String XQ; 
+	private String XQDM; 
+	private String LD; 
+	private String LDDM; 
+	private String FW; 
+	private String FWDM; 
+	private String CJSJ;
+    private String GXSJ;
+    private String SJLYFS;
+	private String SJLY; 
+	private String DYWGCODE; 
+	private String CODE; 
+	private String ADDRCODE; 
+	private String ADDRDESC; 
+	private String YYZT; 
+	private String LON; 
+	private String LAT; 
+	private String TASK_ID; 
+	private String USER_ID; 
+	private String STATUS; 
+	private String LRR; 
+	private String LRRQ;
+    private String GXR;
+	private String FRDH; 
+	private String SFZCFR; 
+	private String HYFL; 
+	private String JYFW; 
+	private String SSZTFL; 
+	private String BFRQ;
+    private String CLASSFIY;
+	private String SYSTEM_NAME; 
+	private String FRGDDH;
+	private String STREET_CODE; 
+	private String COMMUNITY_CODE;
+}

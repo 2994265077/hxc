@@ -1,0 +1,106 @@
+[
+  {
+    "name": "福田组织架构",
+    "detail": "general manager",
+    "status": "0",
+    "id": "123",
+    "type": "0"
+  },
+  {
+    "name": "区属",
+    "detail": "department manager",
+    "level": "0",
+    "status": "0",
+    "id": "123",
+    "type": "0"
+  },
+  {
+    "name": "领导",
+    "detail": "department manager",
+    "level": "5",
+    "status": "0",
+    "id": "123",
+    "type": "1"
+  },
+  {
+    "name": "福保街道",
+    "detail": "department manager",
+    "level": "1",
+    "status": "0",
+    "id": "123",
+    "type": "0"
+  },
+  {
+    "name": "香蜜街道",
+    "detail": "department manager",
+    "level": "2",
+    "status": "0",
+    "id": "123",
+    "type": "0"
+  },
+  {
+    "name": "梅林街道",
+    "detail": "department manager",
+    "level": "3",
+    "status": "0",
+    "id": "123",
+    "type": "0"
+  },
+  {
+    "name": "福田街道",
+    "detail": "department manager",
+    "level": "4",
+    "status": "0",
+    "id": "123",
+    "type": "0"
+  },
+
+  {
+    "name": "指挥大厅",
+    "detail": "department manager",
+    "level": "0-0",
+    "status": "0",
+    "id": "123",
+    "type": "0"
+  },
+  {
+    "name": "办公厅",
+    "detail": "department manager",
+    "level": "0-1",
+    "status": "0",
+    "id": "123",
+    "type": "0"
+  },
+  {
+    "name": "管理员",
+    "detail": "department manager",
+    "level": "0-0-0",
+    "status": "0",
+    "id": "123",
+    "type": "1"
+  },
+  {
+    "name": "运维人员",
+    "detail": "department manager",
+    "level": "0-0-1",
+    "status": "0",
+    "id": "123",
+    "type": "1"
+  },
+  {
+    "name": "值班",
+    "detail": "department manager",
+    "level": "0-0-2",
+    "status": "0",
+    "id": "123",
+    "type": "1"
+  },
+  {
+    "name": "领导",
+    "detail": "department manager",
+    "level": "0-1-0",
+    "status": "0",
+    "id": "123",
+    "type": "1"
+  }
+]

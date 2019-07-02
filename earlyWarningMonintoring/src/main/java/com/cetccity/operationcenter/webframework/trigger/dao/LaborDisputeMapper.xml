@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.trigger.dao.LaborDisputeMapper">
+
+    <select id="querySourceData" parameterType="java.util.Map" resultType="com.cetccity.operationcenter.webframework.trigger.entity.LaborDispute">
+        SELECT ROW_ID,SOURCE,PUSH_TIME,QYMC,LDDM,WRITETIME,MONEY,CONTENT,TYPE,TITLE,REGION_CODE,STREET_CODE,
+            COMMUNITY_CODE,JD84,WD84,ADDRESS,OBJECT_ID,STREET_NAME,COMMUNITY_NAME,YJJC_CREATE_TIME,YJJC_UPDATE_TIME
+        from LABOR_DISPUTE
+        <where>
+            <if test="begin != null">
+                and PUSH_TIME &gt; #{begin}
+            </if>
+            <if test="end != null">
+                and PUSH_TIME &lt;= #{end}
+            </if>
+        </where>
+        order by PUSH_TIME asc
+    </select>
+</mapper>

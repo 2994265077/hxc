@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.hiddendanger.dao.SanXiaoPlaceMapMapper">
+
+    <select id="loadMapByDBAlarm" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT a.id ID, a.PLACE_TYPE, a.name, a.JD84,a.WD84,b.event_content eventContent, b.EVENT_TIME, b.state STATE,  b.SYSTEMID
+        FROM BLK_SANXIAO_PLACE a, BLK_CHENGGUAN_EVENT b
+        <where>
+            AND a.name = b.event_name
+            AND a.address = b.address
+            AND b.event_source = 6
+            AND (b.state = 0 OR b.state = 1)
+            AND b.isdelete = '0'
+            <if test="PLACE_TYPE != null">
+                and a.PLACE_TYPE = #{PLACE_TYPE}
+            </if>
+            <if test="StreetCode != null">
+                and a.STREET_CODE = #{StreetCode}
+            </if>
+            <if test="startTime != null">
+                and b.EVENT_TIME &gt;= to_date(#{startTime},'yyyy-MM-dd HH24:mi:ss')
+            </if>
+            <if test="endTime != null">
+                and b.EVENT_TIME &lt; to_date(#{endTime},'yyyy-MM-dd HH24:mi:ss')
+            </if>
+        </where>
+    </select>
+
+</mapper>

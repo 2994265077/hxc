@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.web.dao.T_BUILD_CHECKDAY_DANGERMapper">
+    
+    <select id="getT_BUILD_CHECKDAY_DANGER" parameterType="com.cetccity.operationcenter.webframework.web.model.incident.loadmap.T_BUILD_CHECKDAY_DANGER" resultType="com.cetccity.operationcenter.webframework.web.model.incident.loadmap.T_BUILD_CHECKDAY_DANGER">
+        select  UUID,CODE,BUILD_ID,CHECK_TIME,USERNAME,USER_ID,STATUS,REMARK,HCR,HCR_ID,ZGR,ZGR_ID,HC_TIME,LRDATE,ZG_STATUS
+        from T_BUILD_CHECKDAY_DANGER where 1=1
+        <if test="BUILD_ID != null">
+            and BUILD_ID = #{BUILD_ID}
+        </if>
+        <if test="start_time != null">
+            and to_date(CHECK_TIME,'yyyy-mm-dd hh24:mi:ss') &gt;= to_date(#{start_time},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="end_time != null">
+            and to_date(CHECK_TIME,'yyyy-mm-dd hh24:mi:ss') &lt;= to_date(#{end_time},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+
+    </select>
+
+</mapper>

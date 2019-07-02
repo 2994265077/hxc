@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.rundisplay.dao.RIVER_INFOMapper">
+
+    <select id="getRIVER_INFO" parameterType="com.cetccity.operationcenter.webframework.rundisplay.dao.entity.RIVER_INFO" resultType="com.cetccity.operationcenter.webframework.rundisplay.dao.entity.RIVER_INFO">
+        select RIVER_NAME,REGION_MANAGER_JOB,REGION_MANAGER_NAME,STREET_NAMAGER_JOB,STREET_MANAGER_NAME
+        from RIVER_INFO
+        where 1=1
+    </select>
+
+</mapper>

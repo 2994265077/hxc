@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.alarmcenter.dao.DUTY_TABLE_FILE_PATHMapper">
+
+    <select id="getSEQ" resultType="java.lang.Integer">
+        select SEQ_DUTY_TABLE_FILE_PATH.nextval from dual
+    </select>
+
+    <select id="getDUTY_TABLE_FILE_PATH" parameterType="java.lang.String" resultType="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.DUTY_TABLE_FILE_PATH">
+        select  OBJECT_ID,FILE_NAME,FILE_SUFFIX,PATH,FILE_CODE,YJJC_CREATE_TIME,YJJC_UPDATE_TIME
+        from DUTY_TABLE_FILE_PATH
+        where 1=1
+        <if test="fileCode != null">
+            and FILE_CODE = #{fileCode}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.DUTY_TABLE_FILE_PATH">
+        INSERT INTO DUTY_TABLE_FILE_PATH(OBJECT_ID,FILE_NAME,FILE_SUFFIX,PATH,FILE_CODE,YJJC_CREATE_TIME,YJJC_UPDATE_TIME)
+        VALUES (#{OBJECT_ID},#{FILE_NAME},#{FILE_SUFFIX},#{PATH},#{FILE_CODE},sysdate,sysdate)
+    </insert>
+
+    <delete id="deleteFile" parameterType="java.lang.String">
+        delete from DUTY_TABLE_FILE_PATH
+        where FILE_CODE = #{fileCode}
+    </delete>
+
+</mapper>

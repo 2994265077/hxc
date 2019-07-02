@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.urbansign.dao.XIAOSAN_PROJECTMapper">
+
+    <select id="getList" parameterType="com.cetccity.operationcenter.webframework.urbansign.dao.entity.XIAOSAN_PROJECT" resultType="com.cetccity.operationcenter.webframework.urbansign.dao.entity.XIAOSAN_PROJECT">
+        SELECT OBJECT_ID,YJJC_CREATE_TIME,YJJC_UPDATE_TIME,"KEY","VALUE","TYPE" from XIAOSAN_PROJECT
+        <where>
+          <if test="type != null">
+            and "TYPE" = #{type}
+          </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.hiddendanger.dao.TXfBuilderPfjgMapper">
+
+    <select id="getT_XF_BUILDER_PFJGCount" parameterType="com.cetccity.operationcenter.webframework.hiddendanger.dao.entity.T_XF_BUILDER_PFJG" resultType="java.lang.Integer">
+        select  count(*)
+        from T_XF_BUILDER_PFJG where 1=1
+        <if test="BUILDERID != null">
+            and BUILDERID = #{BUILDERID}
+        </if>
+
+    </select>
+
+    <select id="getT_XF_BUILDER_PFJG" parameterType="com.cetccity.operationcenter.webframework.hiddendanger.dao.entity.T_XF_BUILDER_PFJG" resultType="com.cetccity.operationcenter.webframework.hiddendanger.dao.entity.T_XF_BUILDER_PFJG">
+        select  BUILDERID,BUILDERUSESCORE,FINSHTIME,YEARSCORE,HIGHSCORE,FIRELEVELSCORE,HIDDENLEVELSCORE,HZBJQDJPF,
+        FIRECONTRLSCORE,WEATHERSCORE,TEMPERATURESCORE,WINDLEVELSCORE,ADDRESS,STREET,COMMUNITY,BUILDERUSE,YEARLIMIT,
+        HIGH,FIRELEVEL,HIDDENLEVEL,FIRETEALLPOLICE,FIRECONTROL,WEATHER,TEMPERATURE,WINDLEVELS,TOTALSCORE,WRITETIME
+        from T_XF_BUILDER_PFJG where 1=1
+        <if test="BUILDERID != null">
+            and BUILDERID = #{BUILDERID}
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.hiddendanger.dao.RiskHiddenDangerMapper">
+
+    <select id="getRiskHiddenDanger" parameterType="com.cetccity.operationcenter.webframework.hiddendanger.api.model.RiskHiddenDanger" resultType="com.cetccity.operationcenter.webframework.hiddendanger.api.model.RiskHiddenDanger">
+        SELECT a.INSPECTCONTENT,a.IMPROVESTEP,a.CHECKDATE,a.FINISHDATE, a.STATUS,a.PLANFINISHDATE,a.INSRECORDID,a.CHECKMAN,a.CHECKUNIT,
+        b.ENTPNAME,b.ENTPMAN,b.ENTPMANTEL,c.INNERID
+        FROM QAJJ_INSTROUBLEREGCHECK_V a , QAJJ_INSRECORD_V b ,QAJJ_PUCENTP_V c
+        WHERE a.INSRECORDID=b.ID AND b.INNERID = c.INNERID AND c.INNERID = #{INNERID}
+    </select>
+
+</mapper>

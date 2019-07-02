@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.environment.dao.QJHH_SEWERAGE_INFOMapper">
+
+
+    <select id="loadMap" parameterType="java.util.Map" resultType="com.cetccity.operationcenter.webframework.environment.dao.entity.QJHH_SEWERAGE_INFO">
+        select "UID","TYPE",ADDRESS,JD84,WD84
+        from QJHH_SEWERAGE_INFO
+        <where>
+            <if test="UID != null">
+                and "UID" = #{UID}
+            </if>
+            <if test="TYPE != null">
+                and "TYPE" = #{TYPE}
+            </if>
+            <if test="STREET_CODE != null">
+                and STREET_CODE = #{STREET_CODE}
+            </if>
+            <if test="currentMonth != null">
+                and to_char(CREATE_TIME,'yyyy-MM-dd HH24:mi:ss') LIKE CONCAT(#{currentMonth},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getList" parameterType="com.cetccity.operationcenter.webframework.environment.dao.entity.QJHH_SEWERAGE_INFO" resultType="com.cetccity.operationcenter.webframework.environment.dao.entity.QJHH_SEWERAGE_INFO">
+        select "UID",USER_ID,"TYPE",ADDRESS,"NAME",LNG,LAT,UNIT,REMARK,CREATOR,CREATE_TIME,LAST_EDITOR,LAST_EDIT_TIME,
+          OBJECT_ID,YJJC_CREATE_TIME,YJJC_UPDATE_TIME,REGION_CODE,STREET_CODE,COMMUNITY_CODE,STREET_NAME,
+          COMMUNITY_NAME,JD84,WD84
+        from QJHH_SEWERAGE_INFO
+        <where>
+          <if test="UID != null">
+            and "UID" = #{UID}
+          </if>
+        </where>
+    </select>
+
+    <select id="getTip" parameterType="java.lang.String" resultType="java.util.LinkedHashMap">
+        select "UID",USER_ID,"TYPE",ADDRESS,"NAME",LNG,LAT,UNIT,REMARK,CREATOR,CREATE_TIME,LAST_EDITOR,LAST_EDIT_TIME,
+        OBJECT_ID,YJJC_CREATE_TIME,YJJC_UPDATE_TIME,REGION_CODE,STREET_CODE,COMMUNITY_CODE,STREET_NAME,
+        COMMUNITY_NAME,JD84,WD84
+        from QJHH_SEWERAGE_INFO
+        <where>
+            <if test="UID != null">
+                and "UID" = #{UID}
+            </if>
+        </where>
+    </select>
+
+    <select id="count" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select NVl(count(*), 0)
+        from QJHH_SEWERAGE_INFO
+        <where>
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+            <if test="month != null">
+                and to_char(CREATE_TIME,'yyyy-MM-dd HH24:mi:ss') like concat(#{month},'%')
+            </if>
+            <if test="lastMonthCount != null">
+                and to_char(CREATE_TIME,'yyyy-MM') &lt;= #{lastMonthCount}
+            </if>
+        </where>
+    </select>
+
+    <select id="rightTwo" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT * FROM(
+        select to_char(CREATE_TIME,'yyyy-MM') X_TIME ,NVl(count(*), 0) 排水户数量变化 from QJHH_SEWERAGE_INFO
+        <where>
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+            <if test="month != null">
+                and to_char(CREATE_TIME,'yyyy-MM-dd HH24:mi:ss') like concat(#{month},'%')
+            </if>
+        </where>
+        GROUP BY to_char(CREATE_TIME,'yyyy-MM') ORDER BY X_TIME DESC
+        )WHERE ROWNUM &lt;= 12 ORDER BY X_TIME
+    </select>
+
+    <select id="rightTwoRemoval" parameterType="java.util.Map" resultType="java.util.HashMap">
+        select NVl(count(*), 0) 排水户数量 from QJHH_SEWERAGE_INFO
+        <where>
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+            <if test="month != null">
+                and CREATE_TIME &lt;= to_date(#{month},'yyyy-MM')
+            </if>
+        </where>
+    </select>
+
+    <select id="rightThree" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT "TYPE" X_NAME, COUNT("TYPE") 排水户类型分布 FROM QJHH_SEWERAGE_INFO
+            <where>
+              <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+              </if>
+              <if test="month != null">
+                and to_char(CREATE_TIME,'yyyy-MM-dd HH24:mi:ss') like concat(#{month},'%')
+              </if>
+            </where>
+         GROUP BY "TYPE"
+    </select>
+
+    <select id="rightFourNoStreet" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT b.STREET_NAME X_NAME,a.区域排水户分布 FROM
+        (SELECT STREET_CODE,COUNT(STREET_CODE) 区域排水户分布 FROM QJHH_SEWERAGE_INFO
+          <where>
+            <if test="month != null">
+                and to_char(CREATE_TIME,'yyyy-MM-dd HH24:mi:ss') like concat(#{month},'%')
+            </if>
+          </where>
+        GROUP BY STREET_CODE)a,
+        (SELECT distinct STREET_NAME,STREET_CODE FROM QJHH_SEWERAGE_INFO)b
+        where b.STREET_CODE = a.STREET_CODE
+    </select>
+
+    <select id="rightFourHasStreet" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT b.COMMUNITY_NAME X_NAME,a.区域排水户分布 FROM
+        (SELECT COMMUNITY_CODE,COUNT(COMMUNITY_CODE) 区域排水户分布 FROM QJHH_SEWERAGE_INFO
+        <where>
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+            <if test="month != null">
+                and to_char(CREATE_TIME,'yyyy-MM-dd HH24:mi:ss') like concat(#{month},'%')
+            </if>
+        </where>
+        GROUP BY COMMUNITY_CODE)a,
+        (SELECT distinct COMMUNITY_NAME,COMMUNITY_CODE FROM QJHH_SEWERAGE_INFO)b
+        where b.COMMUNITY_CODE = a.COMMUNITY_CODE
+    </select>
+</mapper>

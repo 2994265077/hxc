@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.alarmcenter.dao.MessageHistoryMapper">
+
+    <resultMap id="messageHistory" type="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.MessageHistory" >
+        <id property="objectId" column="OBJECT_ID" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="content" column="CONTENT" javaType="java.lang.String" jdbcType="CLOB" />
+        <result property="createUser" column="CREATE_USER" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="createTime" column="CREATE_TIME" javaType="java.time.LocalDateTime" jdbcType="DATE" />
+        <result property="alarmId" column="ALARM_ID" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="messageHistoryUnion" type="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.MessageHistoryUnion">
+        <result property="alarmTypeLv1Name" column="ALARM_TYPE_LV1_NAME" javaType="java.lang.String"></result>
+        <result property="alarmTypeLv2Name" column="ALARM_TYPE_LV2_NAME" javaType="java.lang.String"></result>
+        <result property="yjjcUpdateTime" column="YJJC_UPDATE_TIME" javaType="java.time.LocalDateTime"></result>
+        <result property="yjjcCreateTime" column="YJJC_CREATE_TIME" javaType="java.time.LocalDateTime"></result>
+        <result property="channel" column="CHANNEL" javaType="java.lang.String"></result>
+        <result property="sendState" column="SEND_STATE" javaType="java.lang.String"></result>
+        <result property="disposalState" column="DISPOSAL_STATE" javaType="java.lang.String"></result>
+        <result property="alarmTypeLv2" column="ALARM_TYPE_LV2" javaType="java.lang.String"></result>
+        <result property="alarmTypeLv1" column="ALARM_TYPE_LV1" javaType="java.lang.String"></result>
+        <result property="alarmLevel" column="ALARM_LEVEL" javaType="java.lang.String"></result>
+        <result property="contents" column="CONTENTS" javaType="java.lang.String"></result>
+        <result property="alarmState" column="ALARM_STATE" javaType="java.lang.String"></result>
+        <result property="releasePerson" column="RELEASE_PERSON" javaType="java.lang.String"></result>
+        <result property="cancelTime" column="CANCEL_TIME" javaType="java.time.LocalDateTime"></result>
+        <result property="releaseTime" column="RELEASE_TIME" javaType="java.time.LocalDateTime"></result>
+        <result property="systemId" column="SYSTEM_ID" javaType="java.lang.String"></result>
+        <result property="originTableName" column="ORIGIN_TABLE_NAME" javaType="java.lang.String"></result>
+        <result property="fRowId" column="F_ROW_ID" javaType="java.lang.String"></result>
+        <result property="objectId" column="OBJECT_ID" javaType="java.lang.String"></result>
+        <result property="lddm" column="LDDM" javaType="java.lang.String"></result>
+        <result property="communityName" column="COMMUNITY_NAME" javaType="java.lang.String"></result>
+        <result property="streetName" column="STREET_NAME" javaType="java.lang.String"></result>
+        <result property="address" column="ADDRESS" javaType="java.lang.String"></result>
+        <result property="communityCode" column="COMMUNITY_CODE" javaType="java.lang.String"></result>
+        <result property="streetCode" column="STREET_CODE" javaType="java.lang.String"></result>
+        <result property="regionCode" column="REGION_CODE" javaType="java.lang.String"></result>
+        <result property="wd84" column="WD84" javaType="java.lang.String"></result>
+        <result property="jd84" column="JD84" javaType="java.lang.String"></result>
+        <result property="fObjectRowId" column="F_OBJECT_ROW_ID" javaType="java.lang.String"></result>
+        <result property="alarmObject" column="ALARM_OBJECT" javaType="java.lang.String"></result>
+        <result property="sendNum" column="SEND_NUM" javaType="java.lang.Long"></result>
+        <result property="alarmTypeLv1Name" column="LV_1_NAME" javaType="java.lang.String" />
+        <result property="alarmTypeLv2Name" column="LV_2_NAME" javaType="java.lang.String" />
+    </resultMap>
+
+    <parameterMap id="messageHistory" type="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.MessageHistory">
+        <parameter property="objectId" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <parameter property="content" javaType="java.lang.String" jdbcType="CLOB" />
+        <parameter property="createUser" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <parameter property="alarmId" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </parameterMap>
+
+    <parameterMap id="messageHistoryQuery" type="com.cetccity.operationcenter.webframework.backstage.message.qo.MessageHistoryQuery">
+        <parameter property="alarmTypeCode" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <parameter property="staffId" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <parameter property="sendTimeBegin" javaType="java.time.LocalDateTime" jdbcType="DATE" />
+        <parameter property="sendTimeEnd" javaType="java.time.LocalDateTime" jdbcType="DATE" />
+        <parameter property="createUser" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </parameterMap>
+
+    <insert id="save" parameterMap="messageHistory">
+        INSERT
+        INTO
+            MESSAGE_HISTORY(OBJECT_ID, CONTENT, CREATE_USER, ALARM_ID, CREATE_TIME)
+        VALUES(
+        <if test="objectId != null and objectId != ''">#{objectId},</if>
+        <if test="objectId == null or objectId == ''">SEQ_MESSAGE_HISTORY.nextval,</if>
+
+        #{content},#{createUser}, #{alarmId}, sysdate
+        )
+    </insert>
+
+    <select id="selectId" resultType="java.lang.String" >
+        SELECT SEQ_MESSAGE_HISTORY.nextval FROM DUAL
+    </select>
+
+    <select id="select" resultMap="messageHistory">
+        SELECT * FROM MESSAGE_HISTORY
+    </select>
+
+    <select id="countMessageAlarm" resultType="java.lang.Long" >
+        SELECT
+            COUNT(*)
+        FROM
+            (
+                SELECT
+                    DISTINCT ALARM_ID
+                FROM
+                    MESSAGE_HISTORY
+            )
+    </select>
+
+    <select id="selectUnion" resultMap="messageHistoryUnion" parameterType="com.cetccity.operationcenter.webframework.backstage.message.qo.MessageHistoryQuery">
+        SELECT
+            t1.SEND_NUM, t4.LV_1_NAME, t4.LV_2_NAME, t3.*
+        FROM
+            (
+                SELECT
+                COUNT(*) AS SEND_NUM, ALARM_ID
+                FROM
+                MESSAGE_HISTORY m
+                <if test="staffIds != null and staffIds.size() > 0 " >
+                    JOIN
+                    (
+                        SELECT
+                            *
+                        FROM
+                            MESSAGE_HISTORY_STAFF
+                        WHERE
+                            STAFF_ID IN
+                            <foreach collection="staffIds" item="staffId" open="(" separator="," close=")">
+                                #{staffId}
+                            </foreach>
+                    ) ms
+                    ON
+                        m.OBJECT_ID = ms.MESSAGE_HISTORY_ID
+                </if>
+                <where>
+
+                    m.CREATE_TIME
+                    BETWEEN
+                    #{sendTimeBegin}
+                    AND
+                    <if test="sendTimeEnd != null" >
+                        #{sendTimeEnd}
+                    </if>
+                    <if test="sendTimeEnd == null" >
+                        sysdate
+                    </if>
+                    <if test="createUser != null" >
+                        AND
+                        m.CREATE_USER = #{createUser}
+                    </if>
+                </where>
+
+
+                GROUP BY
+                m.ALARM_ID
+            ) t1
+
+        JOIN
+            ALARM_INFORMATION t3
+        ON
+            t1.ALARM_ID = t3.OBJECT_ID
+        JOIN
+            ALARM_INFO_CODE t4
+        ON
+            t3.ALARM_TYPE_LV2 = t4.LV_2
+        <where>
+
+            <if test="alarmTypeCode != null and alarmTypeCode != ''">
+                AND
+                t3.ALARM_TYPE_LV2 = #{alarmTypeCode}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="selectByAlarmId" parameterType="java.lang.String" resultMap="messageHistory">
+        SELECT
+            *
+        FROM
+            MESSAGE_HISTORY
+        WHERE
+            ALARM_ID = #{alarm_id}
+    </select>
+
+
+</mapper>

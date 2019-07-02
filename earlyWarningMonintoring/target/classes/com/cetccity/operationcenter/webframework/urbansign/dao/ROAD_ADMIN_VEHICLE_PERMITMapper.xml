@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.urbansign.dao.ROAD_ADMIN_VEHICLE_PERMITMapper">
+
+    <select id="rightTwo" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT * FROM(
+        select to_char(PUBLISH_TIME,'yyyy-MM') X,SUM("VALUE") 数量 from ROAD_ADMIN_OFFENCES GROUP BY to_char(PUBLISH_TIME,'yyyy-MM') ORDER BY X DESC
+        )WHERE ROWNUM &lt;= 12 ORDER BY X
+    </select>
+
+    <select id="rightThree" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT a."KEY" X_NAME,b.数量 from
+          (SELECT "KEY",MAX(YJJC_CREATE_TIME) "time" from ROAD_ADMIN_VEHICLE_PERMIT group by "KEY")a,
+          (SELECT "KEY",NVl("VALUE",0) 数量,YJJC_CREATE_TIME FROM ROAD_ADMIN_VEHICLE_PERMIT)b
+            WHERE a."KEY" = b."KEY" and a."time" = b.YJJC_CREATE_TIME
+    </select>
+
+</mapper>

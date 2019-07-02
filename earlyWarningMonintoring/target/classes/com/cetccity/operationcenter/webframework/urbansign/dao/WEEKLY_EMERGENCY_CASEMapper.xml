@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.urbansign.dao.WEEKLY_EMERGENCY_CASEMapper">
+
+    <select id="rightOneToTime" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT m.X, NVL(a.NUM,0) 一般级别,NVL(b.NUM,0) 未达级别 ,NVL(c.NUM,0) 较大级别,NVL(d.NUM,0) 未定级别 FROM(
+            SELECT to_char(START_TIME,'yyyy-MM') X from WEEKLY_EMERGENCY_CASE where to_char(START_TIME,'yyyy') like concat(#{year},'%') GROUP BY to_char(START_TIME,'yyyy-MM') UNION
+            SELECT to_char(START_TIME,'yyyy-MM') X from WEEKLY_EMERGENCY_CASE where to_char(START_TIME,'yyyy') like concat(#{year},'%') GROUP BY to_char(START_TIME,'yyyy-MM') UNION
+            SELECT to_char(START_TIME,'yyyy-MM') X from WEEKLY_EMERGENCY_CASE where to_char(START_TIME,'yyyy') like concat(#{year},'%') GROUP BY to_char(START_TIME,'yyyy-MM') UNION
+            SELECT to_char(START_TIME,'yyyy-MM') X from WEEKLY_EMERGENCY_CASE where to_char(START_TIME,'yyyy') like concat(#{year},'%') GROUP BY to_char(START_TIME,'yyyy-MM')) m
+            LEFT JOIN
+            (SELECT NVL(COUNT(*),0) NUM ,to_char(START_TIME,'yyyy-MM') X
+            from WEEKLY_EMERGENCY_CASE WHERE ACCIDENT_TYPE = #{securityName} and to_char(START_TIME,'yyyy') like concat(#{year},'%') AND "LEVEL" = '一般级别' GROUP BY to_char(START_TIME,'yyyy-MM'))a ON m.X = a.X
+            LEFT JOIN
+            (SELECT NVL(COUNT(*),0) NUM ,to_char(START_TIME,'yyyy-MM') X
+            from WEEKLY_EMERGENCY_CASE WHERE ACCIDENT_TYPE = #{securityName} AND to_char(START_TIME,'yyyy') like concat(#{year},'%') AND "LEVEL" = '未达级别' GROUP BY to_char(START_TIME,'yyyy-MM'))b ON m.X = b.X
+            LEFT JOIN
+            (SELECT NVL(COUNT(*),0) NUM ,to_char(START_TIME,'yyyy-MM') X
+            from WEEKLY_EMERGENCY_CASE WHERE ACCIDENT_TYPE = #{securityName} AND to_char(START_TIME,'yyyy') like concat(#{year},'%') AND "LEVEL" = '较大级别' GROUP BY to_char(START_TIME,'yyyy-MM'))c ON m.X = c.X
+            LEFT JOIN
+            (SELECT NVL(COUNT(*),0) NUM ,to_char(START_TIME,'yyyy-MM') X
+            from WEEKLY_EMERGENCY_CASE WHERE ACCIDENT_TYPE = #{securityName} AND to_char(START_TIME,'yyyy') like concat(#{year},'%') AND "LEVEL" = '未定级别' GROUP BY to_char(START_TIME,'yyyy-MM'))d ON m.X = d.X
+        ORDER BY m.X
+    </select>
+
+    <select id="rightOneToTimeRemoval" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT a.NUM 一般级别,b.NUM 未达级别,c.NUM 较大级别,d.NUM 未定级别 FROM
+            (SELECT NVL(COUNT(*),0) NUM
+            from WEEKLY_EMERGENCY_CASE WHERE ACCIDENT_TYPE = #{securityName} and to_char(START_TIME,'yyyy-mm') like concat(#{month},'%') AND "LEVEL" = '一般级别' )a ,
+            (SELECT NVL(COUNT(*),0) NUM
+            from WEEKLY_EMERGENCY_CASE WHERE ACCIDENT_TYPE = #{securityName} AND to_char(START_TIME,'yyyy-mm') like concat(#{month},'%') AND "LEVEL" = '未达级别' )b ,
+            (SELECT NVL(COUNT(*),0) NUM
+            from WEEKLY_EMERGENCY_CASE WHERE ACCIDENT_TYPE = #{securityName} AND to_char(START_TIME,'yyyy-mm') like concat(#{month},'%') AND "LEVEL" = '较大级别' )c ,
+            (SELECT NVL(COUNT(*),0) NUM
+            from WEEKLY_EMERGENCY_CASE WHERE ACCIDENT_TYPE = #{securityName} AND to_char(START_TIME,'yyyy-mm') like concat(#{month},'%') AND "LEVEL" = '未定级别' )d
+    </select>
+
+    <select id="rightOneToStreet" parameterType="java.util.Map" resultType="java.util.HashMap">
+    SELECT m.X, NVL(a.NUM,0) 一般级别,NVL(b.NUM,0) 未达级别 ,NVL(c.NUM,0) 较大级别,NVL(d.NUM,0) 未定级别 FROM(
+      SELECT GRID_NAME X from WEEKLY_EMERGENCY_CASE where to_char(START_TIME,'yyyy') like concat(#{year},'%') GROUP BY GRID_NAME UNION
+        SELECT GRID_NAME X from WEEKLY_EMERGENCY_CASE where to_char(START_TIME,'yyyy') like concat(#{year},'%') GROUP BY GRID_NAME UNION
+        SELECT GRID_NAME X from WEEKLY_EMERGENCY_CASE where to_char(START_TIME,'yyyy') like concat(#{year},'%') GROUP BY GRID_NAME UNION
+        SELECT GRID_NAME X from WEEKLY_EMERGENCY_CASE where to_char(START_TIME,'yyyy') like concat(#{year},'%') GROUP BY GRID_NAME) m
+        LEFT JOIN
+        (SELECT NVL(COUNT(*),0) NUM ,GRID_NAME X
+        from WEEKLY_EMERGENCY_CASE WHERE ACCIDENT_TYPE = #{securityName} and to_char(START_TIME,'yyyy') like concat(#{year},'%') AND "LEVEL" = '一般级别' GROUP BY GRID_NAME)a ON m.X = a.X
+        LEFT JOIN
+        (SELECT NVL(COUNT(*),0) NUM ,GRID_NAME X
+        from WEEKLY_EMERGENCY_CASE WHERE ACCIDENT_TYPE = #{securityName} AND to_char(START_TIME,'yyyy') like concat(#{year},'%') AND "LEVEL" = '未达级别' GROUP BY GRID_NAME)b ON m.X = b.X
+        LEFT JOIN
+        (SELECT NVL(COUNT(*),0) NUM ,GRID_NAME X
+        from WEEKLY_EMERGENCY_CASE WHERE ACCIDENT_TYPE = #{securityName} AND to_char(START_TIME,'yyyy') like concat(#{year},'%') AND "LEVEL" = '较大级别' GROUP BY GRID_NAME)c ON m.X = c.X
+        LEFT JOIN
+        (SELECT NVL(COUNT(*),0) NUM ,GRID_NAME X
+    from WEEKLY_EMERGENCY_CASE WHERE ACCIDENT_TYPE = #{securityName} AND to_char(START_TIME,'yyyy') like concat(#{year},'%') AND "LEVEL" = '未定级别' GROUP BY GRID_NAME)d ON m.X = d.X
+    </select>
+
+    <select id="rightOneToStreetRemoval" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT m.X, NVL(a.NUM,0) 一般级别,NVL(b.NUM,0) 未达级别 ,NVL(c.NUM,0) 较大级别,NVL(d.NUM,0) 未定级别 FROM(
+        SELECT GRID_NAME X from WEEKLY_EMERGENCY_CASE where START_TIME &gt; to_date(#{startTime},'yyyy-MM') AND START_TIME &lt;= to_date(#{endTime},'yyyy-MM') GROUP BY GRID_NAME UNION
+        SELECT GRID_NAME X from WEEKLY_EMERGENCY_CASE where START_TIME &gt; to_date(#{startTime},'yyyy-MM') AND START_TIME &lt;= to_date(#{endTime},'yyyy-MM') GROUP BY GRID_NAME UNION
+        SELECT GRID_NAME X from WEEKLY_EMERGENCY_CASE where START_TIME &gt; to_date(#{startTime},'yyyy-MM') AND START_TIME &lt;= to_date(#{endTime},'yyyy-MM') GROUP BY GRID_NAME UNION
+        SELECT GRID_NAME X from WEEKLY_EMERGENCY_CASE where START_TIME &gt; to_date(#{startTime},'yyyy-MM') AND START_TIME &lt;= to_date(#{endTime},'yyyy-MM') GROUP BY GRID_NAME) m
+        LEFT JOIN
+        (SELECT NVL(COUNT(*),0) NUM ,GRID_NAME X
+        from WEEKLY_EMERGENCY_CASE WHERE ACCIDENT_TYPE = #{securityName} AND START_TIME &gt; to_date(#{startTime},'yyyy-MM') AND START_TIME &lt;= to_date(#{endTime},'yyyy-MM') AND "LEVEL" = '一般级别' GROUP BY GRID_NAME)a ON m.X = a.X
+        LEFT JOIN
+        (SELECT NVL(COUNT(*),0) NUM ,GRID_NAME X
+        from WEEKLY_EMERGENCY_CASE WHERE ACCIDENT_TYPE = #{securityName} AND START_TIME &gt; to_date(#{startTime},'yyyy-MM') AND START_TIME &lt;= to_date(#{endTime},'yyyy-MM') AND "LEVEL" = '未达级别' GROUP BY GRID_NAME)b ON m.X = b.X
+        LEFT JOIN
+        (SELECT NVL(COUNT(*),0) NUM ,GRID_NAME X
+        from WEEKLY_EMERGENCY_CASE WHERE ACCIDENT_TYPE = #{securityName} AND START_TIME &gt; to_date(#{startTime},'yyyy-MM') AND START_TIME &lt;= to_date(#{endTime},'yyyy-MM') AND "LEVEL" = '较大级别' GROUP BY GRID_NAME)c ON m.X = c.X
+        LEFT JOIN
+        (SELECT NVL(COUNT(*),0) NUM ,GRID_NAME X
+        from WEEKLY_EMERGENCY_CASE WHERE ACCIDENT_TYPE = #{securityName} AND START_TIME &gt; to_date(#{startTime},'yyyy-MM') AND START_TIME &lt;= to_date(#{endTime},'yyyy-MM') AND "LEVEL" = '未定级别' GROUP BY GRID_NAME)d ON m.X = d.X
+
+    </select>
+
+    <select id="rightOneToType" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT "TYPE" X, NVL(count("TYPE"),0) NUM from WEEKLY_EMERGENCY_CASE
+            where ACCIDENT_TYPE = #{securityName} AND to_char(START_TIME,'yyyy') like concat(#{year},'%')
+            GROUP BY "TYPE" ORDER BY NUM DESC
+    </select>
+
+    <select id="rightOneToTypeRemoval" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT "TYPE" X, NVL(count("TYPE"),0) NUM from WEEKLY_EMERGENCY_CASE
+        where ACCIDENT_TYPE = #{securityName} AND START_TIME BETWEEN to_date(#{startTime},'yyyy-MM') AND to_date(#{endTime},'yyyy-MM')
+        GROUP BY "TYPE" ORDER BY NUM DESC
+    </select>
+</mapper>

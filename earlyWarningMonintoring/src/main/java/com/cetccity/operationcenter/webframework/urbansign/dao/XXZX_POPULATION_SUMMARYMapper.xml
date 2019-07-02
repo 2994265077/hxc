@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.urbansign.dao.XXZX_POPULATION_SUMMARYMapper">
+
+    <select id="getUrbanSignRightOne" parameterType="com.cetccity.operationcenter.webframework.urbansign.dao.entity.XXZX_POPULATION_SUMMARYNode" resultType="java.util.HashMap">
+        select * from (
+        select m.X_TIME, NVl(a.PPU_COUNT_MONTH, 0) 外国人口, NVl(b.PPU_COUNT_MONTH, 0) 内地人口,NVl(c.PPU_COUNT_MONTH, 0) 户籍人口 ,NVl(d.PPU_COUNT_MONTH, 0) 港澳台人口 from
+        (SELECT substr(to_char(UPDATE_DT,'yyyy-MM-dd HH24:mi:ss'),0,7)	X_TIME FROM XXZX_POPULATION_SUMMARY group by to_char(UPDATE_DT,'yyyy-MM-dd HH24:mi:ss') union
+        SELECT substr(to_char(UPDATE_DT,'yyyy-MM-dd HH24:mi:ss'),0,7)	X_TIME FROM XXZX_POPULATION_SUMMARY group by to_char(UPDATE_DT,'yyyy-MM-dd HH24:mi:ss') union
+        SELECT substr(to_char(UPDATE_DT,'yyyy-MM-dd HH24:mi:ss'),0,7)	X_TIME FROM XXZX_POPULATION_SUMMARY group by to_char(UPDATE_DT,'yyyy-MM-dd HH24:mi:ss') union
+        SELECT substr(to_char(UPDATE_DT,'yyyy-MM-dd HH24:mi:ss'),0,7)	X_TIME FROM XXZX_POPULATION_SUMMARY group by to_char(UPDATE_DT,'yyyy-MM-dd HH24:mi:ss')) m
+        LEFT JOIN
+        (select sum(PPU_COUNT) PPU_COUNT_MONTH,substr(to_char(UPDATE_DT,'yyyy-MM-dd HH24:mi:ss'),0,7)	X_TIME
+        from XXZX_POPULATION_SUMMARY where PPU_TYPE = '外国人口' group by to_char(UPDATE_DT,'yyyy-MM-dd HH24:mi:ss')) a
+        ON m.X_TIME = a.X_TIME LEFT JOIN
+        (select sum(PPU_COUNT) PPU_COUNT_MONTH,substr(to_char(UPDATE_DT,'yyyy-MM-dd HH24:mi:ss'),0,7)	X_TIME
+        from XXZX_POPULATION_SUMMARY where PPU_TYPE = '内地人口' group by to_char(UPDATE_DT,'yyyy-MM-dd HH24:mi:ss')) b
+        on m.X_TIME = b.X_TIME left join
+        (select sum(PPU_COUNT) PPU_COUNT_MONTH,substr(to_char(UPDATE_DT,'yyyy-MM-dd HH24:mi:ss'),0,7)	X_TIME
+        from XXZX_POPULATION_SUMMARY where PPU_TYPE = '户籍人口' group by to_char(UPDATE_DT,'yyyy-MM-dd HH24:mi:ss')) c
+        on m.X_TIME = c.X_TIME left join
+        (select sum(PPU_COUNT) PPU_COUNT_MONTH,substr(to_char(UPDATE_DT,'yyyy-MM-dd HH24:mi:ss'),0,7)	X_TIME
+        from XXZX_POPULATION_SUMMARY where PPU_TYPE = '港澳台人口' group by to_char(UPDATE_DT,'yyyy-MM-dd HH24:mi:ss')) d
+        on m.X_TIME = d.X_TIME
+        order by m.X_TIME desc
+        )where rownum &lt;=12
+    </select>
+
+</mapper>

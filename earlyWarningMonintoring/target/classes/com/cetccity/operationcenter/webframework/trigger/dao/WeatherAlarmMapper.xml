@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.trigger.dao.WeatherAlarmMapper">
+
+    <select id="querySourceData" parameterType="java.util.Map" resultType="com.cetccity.operationcenter.webframework.trigger.entity.WeatherAlarm">
+        SELECT RELEASEAREA,ALERTCATEGORY,WARNINGLEVEL,RELEASETIME,ENDTIME,WARNINGCONTENT,REGION_CODE,STREET_CODE,
+            COMMUNITY_CODE,JD84,WD84,ADDRESS,OBJECT_ID,STREET_NAME,COMMUNITY_NAME,YJJC_CREATE_TIME,YJJC_UPDATE_TIME
+        from WEATHER_ALARM
+        <where>
+            <if test="begin != null">
+                and to_date(RELEASETIME,'yyyy-MM-dd HH24:mi:ss') &gt; #{begin}
+            </if>
+            <if test="end != null">
+                and to_date(RELEASETIME,'yyyy-MM-dd HH24:mi:ss') &lt;= #{end}
+            </if>
+        </where>
+        order by RELEASETIME asc
+    </select>
+</mapper>

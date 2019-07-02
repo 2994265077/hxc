@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.web.dao.QXFJ_BUILD_IMAGE_VMapper">
+    
+    <select id="getQXFJ_BUILD_IMAGE_V" parameterType="com.cetccity.operationcenter.webframework.web.model.incident.loadmap.QXFJ_BUILD_IMAGE_V" resultType="com.cetccity.operationcenter.webframework.web.model.incident.loadmap.QXFJ_BUILD_IMAGE_V">
+        select  BUILD_ID,CREATETIME,DESCRIBE,FILEPATH,FLOOR,ID,LB,NAME,TYPE,UPDATETIME,USERID,YXY_UPDATEDTIME,ADQ_UPDATE_TIME
+        from QXFJ_BUILD_IMAGE_V where 1=1
+        <if test="BUILD_ID != null">
+            and BUILD_ID = #{BUILD_ID}
+        </if>
+    </select>
+
+</mapper>

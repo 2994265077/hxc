@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.unifiedauth.dao.DeptMapper">
+     <sql id="columns">
+           DEPT_ID deptId,
+           PARENT_ID parentId,
+           FULL_NAME fullName,
+           TWO_NAME twoName,
+           THREE_NAME threeName,
+           DESCRIPTION description,
+           DN dn,
+           OFFICE_ADDRESS officeAddress,
+           PHONE phone,
+           FAX,
+           DEPT_LEVEL deptLevel,
+           DEPT_TYPE deptType,
+           DEPT_INDEX deptIndex,
+           UPDATETIME
+     </sql>
+    
+    <delete id="deleteDept">
+       delete from auth_dept
+    </delete>
+    
+     <insert id="batchInsertDeptInfo" parameterType="list" useGeneratedKeys="false">
+           insert into auth_dept
+          (DEPT_ID,
+           PARENT_ID,
+           FULL_NAME,
+           TWO_NAME,
+           THREE_NAME,
+           DESCRIPTION,
+           DN,
+           OFFICE_ADDRESS,
+           PHONE,
+           FAX,
+           DEPT_LEVEL,
+           DEPT_TYPE,
+           DEPT_INDEX,
+           UPDATETIME)
+        (
+        <foreach collection="list" item="d" separator="union all">
+         select
+         #{d.deptId},
+         #{d.parentId},
+         #{d.fullName},
+         #{d.twoName,jdbcType=VARCHAR},
+         #{d.threeName,jdbcType=VARCHAR},
+         #{d.description,jdbcType=VARCHAR},
+         #{d.dn},
+         #{d.officeAddress,jdbcType=VARCHAR},
+         #{d.phone,jdbcType=VARCHAR}, 
+         #{d.fax,jdbcType=VARCHAR}, 
+         #{d.deptLevel}, 
+         #{d.deptType,jdbcType=INTEGER}, 
+         #{d.deptIndex}, 
+         #{d.updatetime,jdbcType=TIMESTAMP}
+         from dual
+        </foreach>
+        )
+    </insert>
+    
+    <select id="queryDeptInfo" resultType="com.cetccity.operationcenter.webframework.oa.model.DeptInfo" parameterType="string">
+        select <include refid="columns"/>
+         ,
+         (select count(1) from auth_dept b where b.parent_id = a.dept_id) isChild
+         from auth_dept a
+        <where>
+         <if test="value != null and value != ''">
+            parent_id = #{value}
+         </if>
+        </where>
+        order by DEPT_INDEX
+    </select>
+</mapper>

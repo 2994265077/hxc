@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.alarmcenter.dao.ALARM_STATISTICMapper">
+
+    <insert id="insertALARM_STATISTIC" parameterType="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.ALARM_STATISTIC">
+        insert into ALARM_STATISTIC (UUID,LV_1_NAME,ALARM_TYPE_LV1,ALARM_NUM,CANCEL_ALARM,TIME,ALARM_TYPE_LV2,LV_2_NAME,OBJECT_ID)
+        values (#{UUID},#{LV_1_NAME},#{ALARM_TYPE_LV1},#{ALARM_NUM},#{CANCEL_ALARM},#{TIME},#{ALARM_TYPE_LV2},#{LV_2_NAME},#{OBJECT_ID})
+    </insert>
+
+    <select id="getALARM_STATISTIC" parameterType="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.ALARM_STATISTIC" resultType="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.ALARM_STATISTIC">
+        select  UUID,LV_1_NAME,ALARM_TYPE_LV1,ALARM_NUM,CANCEL_ALARM,TIME,ALARM_TYPE_LV2,LV_2_NAME
+        from ALARM_STATISTIC where 1=1
+        <if test="ALARM_TYPE_LV1 != null">
+            and ALARM_TYPE_LV1 = #{ALARM_TYPE_LV1}
+        </if>
+        <if test="ALARM_TYPE_LV2 != null">
+            and ALARM_TYPE_LV2 = #{ALARM_TYPE_LV2}
+        </if>
+        <if test="TIME != null">
+            and to_char(TIME) like concat(#{TIME},'%')
+        </if>
+    </select>
+
+    <select id="getSum" parameterType="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.ALARM_STATISTIC" resultType="java.lang.Integer">
+        select NVL(sum(ALARM_NUM),0)
+        from ALARM_STATISTIC where 1=1
+        <if test="ALARM_TYPE_LV1 != null">
+            and ALARM_TYPE_LV1 = #{ALARM_TYPE_LV1}
+        </if>
+        <if test="ALARM_TYPE_LV2 != null">
+            and ALARM_TYPE_LV2 = #{ALARM_TYPE_LV2}
+        </if>
+        <if test="TIME != null">
+            and to_char(TIME) like concat(#{TIME},'%')
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.unifiedauth.dao.SysRoleMenuMapper">
+
+	<update id="delete">
+		delete from SYS_ROLE_MENU
+		<where>
+			<if test="roleId != null">
+				and roleId = #{roleId}
+			</if>
+			<if test="menuId != null">
+				and menuId = #{menuId}
+			</if>
+		</where>
+	</update>
+
+	<select id="findMenusByRoleIds" resultType="com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu">
+		select distinct t.* from SYS_MENU t
+		inner join SYS_ROLE_MENU r on r.menuId = t.id
+		where
+		r.roleId in
+		<foreach collection="roleIds" index="index" item="roleId"
+			open="(" separator="," close=")">
+			#{roleId}
+		</foreach>
+		<if test="type != null">
+		   and type = #{type}
+		</if>
+		ORDER BY sort ASC
+	</select>
+</mapper>

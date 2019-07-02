@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.publichealth.dao.YJJC_QWJJ_SDM_INFO_VMapper">
+    <!--城市体征-公共安全-公共卫生-->
+    <select id="selectCountOfToday" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*) from YJJC_QWJJ_SDM_INFO_V where DIAG_TIME like #{time,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getYJJC_QWJJ_SDM_INFO_V" parameterType="com.cetccity.operationcenter.webframework.publichealth.dao.entity.YJJC_QWJJ_SDM_INFO_V" resultType="com.cetccity.operationcenter.webframework.publichealth.dao.entity.YJJC_QWJJ_SDM_INFO_V">
+        select AGE,DATE_OF_BIRTH,DEPT_CODE,DEPT_NAME,DIAG_CODE_INHOS,DIAG_NAME_INHOS,DIAG_SNO,DIAG_TIME,
+        (select CODE_IN_CHINESE FROM DS_VALUE_DICT WHERE TABLE_NAME = 'YJJC_QWJJ_SDM_INFO_V' AND COLUMN_NAME = 'DIAG_TYPE' AND CODE = DIAG_TYPE) AS DIAG_TYPE,
+        (select CODE_IN_CHINESE FROM DS_VALUE_DICT WHERE TABLE_NAME = 'YJJC_QWJJ_SDM_INFO_V' AND COLUMN_NAME = 'DIAG_TYPE_CODE' AND CODE = DIAG_TYPE_CODE) AS DIAG_TYPE_CODE,
+        DOCTOR_CODE,DOCTOR_NAME,ID,LAST_EDITED_TIME,ORG_CODE,ORG_NAME,OUT_SNO,
+        (select CODE_IN_CHINESE FROM DS_VALUE_DICT WHERE TABLE_NAME = 'YJJC_QWJJ_SDM_INFO_V' AND COLUMN_NAME = 'SEX_CODE' AND CODE = SEX_CODE) AS SEX_CODE,
+        UPLOAD_TIME,YXY_UPDATEDTIME,ADQ_UPDATE_TIME,REGION_CODE,STREET_CODE,COMMUNITY_CODE,JD84,WD84,ADDRESS,OBJECT_ID,STREET_NAME,
+        COMMUNITY_NAME,YJJC_CREATE_TIME,YJJC_UPDATE_TIME
+        from YJJC_QWJJ_SDM_INFO_V where 1=1
+        <if test="ORG_CODE != null">
+            and ORG_CODE = #{ORG_CODE}
+        </if>
+        order by DIAG_TIME desc
+    </select>
+
+    <select id="specialDiseasesTrend" resultType="com.cetccity.operationcenter.webframework.publichealth.api.model.EMPLOYEE_NUM">
+        select a.code_num as NUM, b.CODE_IN_CHINESE as chinese,a.CODE  from
+          (select count(DIAG_TYPE) code_num, DIAG_TYPE code
+          from YJJC_QWJJ_SDM_INFO_V
+          <where>
+              <if test="time != null">
+                  and to_char(DIAG_TIME,'yyyy-MM') LIKE CONCAT(#{time},'%')
+              </if>
+          </where>
+          group by DIAG_TYPE) a,
+          (select CODE_IN_CHINESE, code from DS_VALUE_DICT where TABLE_NAME = 'YJJC_QWJJ_SDM_INFO_V' AND COLUMN_NAME = 'DIAG_TYPE') b
+          where a.code = b.code
+          <if test="type != null">
+            and a.code = #{type}
+          </if>
+    </select>
+
+    <select id="specialDiseasesHospital" resultType="com.cetccity.operationcenter.webframework.publichealth.api.model.EMPLOYEE_NUM">
+        select a.code_num as NUM, b.CODE_IN_CHINESE as chinese,a.CODE  from
+        (select count(DIAG_TYPE) code_num, DIAG_TYPE code
+        from YJJC_QWJJ_SDM_INFO_V
+        <where>
+            <if test="ORG_CODE != null">
+                and ORG_CODE =#{ORG_CODE}
+            </if>
+        </where>
+        group by DIAG_TYPE) a,
+        (select CODE_IN_CHINESE, code from DS_VALUE_DICT where TABLE_NAME = 'YJJC_QWJJ_SDM_INFO_V' AND COLUMN_NAME = 'DIAG_TYPE') b
+        where a.code = b.code
+    </select>
+
+    <select id="getDIAG_TYPE_NUM" resultType="com.cetccity.operationcenter.webframework.publichealth.api.model.EMPLOYEE_NUM">
+        select a.code_num as NUM, b.CODE_IN_CHINESE as chinese,a.CODE  from
+        (select count(DIAG_TYPE) code_num, DIAG_TYPE code
+        from YJJC_QWJJ_SDM_INFO_V
+        group by DIAG_TYPE) a,
+        (select CODE_IN_CHINESE, code from DS_VALUE_DICT where TABLE_NAME = 'YJJC_QWJJ_SDM_INFO_V' AND COLUMN_NAME = 'DIAG_TYPE') b
+        where a.code = b.code
+    </select>
+
+    <select id="getDIAG_TYPE_CODE_NUM" resultType="com.cetccity.operationcenter.webframework.publichealth.api.model.EMPLOYEE_NUM">
+    select a.code_num as NUM, b.CODE_IN_CHINESE as chinese,a.CODE  from
+    (select count(DIAG_TYPE_CODE) code_num, DIAG_TYPE_CODE code
+    from YJJC_QWJJ_SDM_INFO_V
+    group by DIAG_TYPE_CODE) a,
+    (select CODE_IN_CHINESE, code from DS_VALUE_DICT where TABLE_NAME = 'YJJC_QWJJ_SDM_INFO_V' AND COLUMN_NAME = 'DIAG_TYPE_CODE') b
+    where a.code = b.code
+    </select>
+
+</mapper>

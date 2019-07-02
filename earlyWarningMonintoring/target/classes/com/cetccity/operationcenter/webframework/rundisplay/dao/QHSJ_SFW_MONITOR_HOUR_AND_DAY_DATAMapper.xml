@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.rundisplay.dao.QHSJ_SFW_MONITOR_HOUR_AND_DAY_DATAMapper">
+    <!--水质质量时间数据-->
+    <select id="getSFWStationDataOfTime" parameterType="java.util.Map" resultType="com.cetccity.operationcenter.webframework.rundisplay.dao.entity.QHSJ_SFW_MONITOR_HOUR_AND_DAY_DATA">
+        select  DATA_STATUS,ID,IS_REVISED,MN,MONITOR_FACTOR_CODE,MONITOR_TIME,MONITOR_VALUE,REVISED_MONITOR_VALUE,
+        SITE_CODE,STANDARD_VALUE,UPDATE_DATE,YXY_UPDATEDTIME,ADQ_UPDATE_TIME
+        from QHSJ_SFW_MONITOR_HOUR_DATA
+        where 1=1
+        <if test="id != null">
+            and SITE_CODE = #{id}
+        </if>
+        <if test="MONITOR_FACTOR_CODE != null">
+            and MONITOR_FACTOR_CODE = #{MONITOR_FACTOR_CODE}
+        </if>
+        <if test="startTime != null">
+            and MONITOR_TIME &gt;= to_date(#{startTime},'yyyy-MM-dd HH24:mi:ss')
+        </if>
+        <if test="endTime != null">
+            and MONITOR_TIME &lt; to_date(#{endTime},'yyyy-MM-dd HH24:mi:ss')
+        </if>
+        <if test="time != null">
+            and MONITOR_TIME = to_date(#{time},'yyyy-MM-dd HH24:mi:ss')
+        </if>
+        order by MONITOR_TIME desc
+    </select>
+
+    <select id="currentValue" resultMap="com.cetccity.operationcenter.webframework.rundisplay.dao.QhsjAirMonitorHourAndDayDataMapper.nameValueUnitModel">
+        SELECT
+            t1.FACTOR_NAME AS NAME, NVL(t2.MONITOR_VALUE, -1) AS VALUE, t1.FACTOR_UNIT AS UNIT
+        FROM
+        (
+                (
+                    SELECT
+                            FACTOR_NAME, FACTOR_CODE, FACTOR_UNIT, ROWNUM RN
+                    FROM
+                            QHSJ_ENTERPRISE_FACTOR_CODE
+                ) t1
+            LEFT JOIN
+                (
+                    SELECT
+                            MONITOR_VALUE, MONITOR_FACTOR_CODE
+                    FROM
+                    (
+                        SELECT
+                                MONITOR_VALUE, MONITOR_FACTOR_CODE, ROW_NUMBER() over( partition by MONITOR_FACTOR_CODE order by MONITOR_TIME desc) RN
+                        FROM
+                                QHSJ_SFW_MONITOR_HOUR_DATA
+                        WHERE
+                                SITE_CODE = #{siteCode}
+                        AND
+                                MONITOR_FACTOR_CODE IS NOT NULL
+                    ) WHERE RN = 1
+                ) t2
+            ON
+            t1.FACTOR_CODE = t2.MONITOR_FACTOR_CODE
+        )
+        ORDER BY t1.RN
+    </select>
+
+
+    <select id="getSFWStationDataOfDay" parameterType="java.util.Map" resultType="com.cetccity.operationcenter.webframework.rundisplay.dao.entity.QHSJ_SFW_MONITOR_HOUR_AND_DAY_DATA">
+        select  DATA_STATUS,ID,IS_REVISED,MN,MONITOR_FACTOR_CODE,MONITOR_TIME,MONITOR_VALUE,REVISED_MONITOR_VALUE,
+        SITE_CODE,STANDARD_VALUE,UPDATE_DATE,YXY_UPDATEDTIME,ADQ_UPDATE_TIME
+        from QHSJ_SFW_MONITOR_DAY_DATA
+        where 1=1
+        <if test="id != null">
+            and SITE_CODE = #{id}
+        </if>
+        <if test="MONITOR_FACTOR_CODE != null">
+            and MONITOR_FACTOR_CODE = #{MONITOR_FACTOR_CODE}
+        </if>
+        <if test="startTime != null">
+            and MONITOR_TIME &gt;= to_date(#{startTime},'yyyy-MM-dd')
+        </if>
+        <if test="endTime != null">
+            and MONITOR_TIME &lt; to_date(#{endTime},'yyyy-MM-dd')
+        </if>
+        <if test="time != null">
+            and MONITOR_TIME = to_date(#{time},'yyyy-MM-dd')
+        </if>
+        order by MONITOR_TIME desc
+    </select>
+
+</mapper>

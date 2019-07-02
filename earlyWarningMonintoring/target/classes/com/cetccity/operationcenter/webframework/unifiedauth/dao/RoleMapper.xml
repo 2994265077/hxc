@@ -1,0 +1,75 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cetccity.operationcenter.webframework.unifiedauth.dao.RoleMapper">
+
+    <insert id="insertRole" parameterType="com.cetccity.operationcenter.webframework.unifiedauth.entity.RoleEntity">
+        INSERT INTO auth_roles(role_id, role_name, description)
+        VALUES (SEQ_AUTH_ROLES.nextVal, #{roleEntity.role_name}, #{roleEntity.description})
+    </insert>
+
+    <select id="queryAll" resultType="com.cetccity.operationcenter.webframework.unifiedauth.entity.RoleEntity">
+        SELECT role_id, role_name, description, create_time, update_time FROM auth_roles
+    </select>
+
+    <select id="queryRoleById" resultType="com.cetccity.operationcenter.webframework.unifiedauth.entity.RoleEntity">
+        SELECT role_id, role_name, description, create_time, update_time FROM auth_roles WHERE role_id = #{role_id}
+    </select>
+
+    <update id="update" parameterType="com.cetccity.operationcenter.webframework.unifiedauth.entity.RoleEntity">
+        UPDATE auth_roles
+        <trim prefix="set" suffixOverrides=",">
+            <if test=" role_name != null">role_name = #{role_name}, </if>
+            <if test=" description != null">description = #{description}, </if>
+            update_time = sysdate
+        </trim>
+        WHERE  role_id = #{role_id}
+    </update>
+
+
+    <select id="queryRoleInfo" resultMap="com.cetccity.operationcenter.webframework.unifiedauth.dao.PermissionMapper.permissionEntity">
+
+        SELECT
+            t2.*
+        FROM
+            (
+                SELECT
+                    *
+                FROM
+                    auth_role_permissions
+                WHERE
+                    role_id = #{role_id}
+            ) t1
+        LEFT JOIN
+            auth_permissions t2
+        ON
+            t1.permission_id = t2.permission_id
+
+    </select>
+
+    <select id="queryPermissionIds" resultType="java.lang.String">
+
+        SELECT
+            t2.PERMISSION_ID
+        FROM
+            (
+                SELECT
+                    *
+                FROM
+                    auth_role_permissions
+                WHERE
+                    role_id = #{role_id}
+            ) t1
+        JOIN
+            auth_permissions t2
+        ON
+            t1.permission_id = t2.permission_id
+
+    </select>
+
+    <select id="countAll" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM auth_roles
+    </select>
+
+</mapper>

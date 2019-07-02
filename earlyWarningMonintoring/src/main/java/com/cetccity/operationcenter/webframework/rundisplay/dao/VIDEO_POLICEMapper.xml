@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.rundisplay.dao.VIDEO_POLICEMapper">
+
+    <select id="getVIDEO_POLICE" parameterType="com.cetccity.operationcenter.webframework.rundisplay.dao.entity.VIDEO_POLICE" resultType="com.cetccity.operationcenter.webframework.rundisplay.dao.entity.VIDEO_POLICE">
+        select ID,CAMERAID,DISTRICT,GB_CODE,
+        ADDRESS,NAME,IP,START_DATE,STATE,RECORD,CATEGORY,APPEARANCE,RESOLUTION,CREATE_TIME,UPDATE_TIME,UPDATE_STATUS,
+        UUID,RESERVED2,RESERVED3,RESERVED4,RESERVED5,REGION_CODE,STREET_CODE,COMMUNITY_CODE,JD84,WD84
+        from VIDEO_POLICE where 1=1
+        <if test="CAMERAID != null">
+            and CAMERAID = #{CAMERAID}
+        </if>
+        <if test="STREET_CODE != null">
+            and STREET_CODE = #{STREET_CODE}
+        </if>
+    </select>
+
+</mapper>

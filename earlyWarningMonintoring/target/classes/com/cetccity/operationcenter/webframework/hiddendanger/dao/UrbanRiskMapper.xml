@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.hiddendanger.dao.UrbanRiskMapper">
+
+    <select id="getURBAN_RISKObj" parameterType="java.lang.String" resultType="com.cetccity.operationcenter.webframework.web.model.incident.loadmap.URBAN_RISK">
+        select  ROWID,DANGER_NAME,OBJECT_TYPE,IS_SANXIAO,JD84,WD84,DETAIL_ADDRESS,PLACE_TYPE,AUDITOR,
+        LIABILITY_SUBJECT,LIABILITY_CONTACTS,LIABILITY_TEL,RISK_ADDRESS,ORG_NAME,ORG_CONTACTS,ORG_TEL,ORG_ADDRESS,
+        RISK_ASSESS_DETAIL_SCORE,RISK_ASSESS_LSCORE,RISK_ASSESS_ESCORE,RISK_ASSESS_CSCORE,RISK_ASSESS_MAN_NAME,
+        RISK_ASSESS_TYPE_NAMES,RISK_ASSESS_TYPE_NAME,RISK_ASSESS_LV,RISK_ASSESS_DETAIL_LV,RISK_ASSESS_AUDIT_MAN,
+        RISK_ASSESS_AUDIT_DATE,RISK_ASSESS_AUDIT_INTRO,RISK_ASSESS_DATE,PLACE_TYPE_CODE,
+        REGION_NAME,STREET_CODE,COMMUNITY_CODE,REGION_CODE,COMMUNITY_NAME,STREET_NAME
+        from URBAN_RISK
+        where 1=1
+        <if test="id != null">
+            and ROWID = #{id}
+        </if>
+    </select>
+
+    <select id="getURBAN_RISKList" parameterType="com.cetccity.operationcenter.webframework.web.model.incident.loadmap.URBAN_RISK" resultType="com.cetccity.operationcenter.webframework.web.model.incident.loadmap.URBAN_RISK">
+        select DANGER_NAME,OBJECT_TYPE,IS_SANXIAO,JD84,WD84,DETAIL_ADDRESS,PLACE_TYPE,AUDITOR,
+        LIABILITY_SUBJECT,LIABILITY_CONTACTS,LIABILITY_TEL,RISK_ADDRESS,ORG_NAME,ORG_CONTACTS,ORG_TEL,ORG_ADDRESS,
+        RISK_ASSESS_DETAIL_SCORE,RISK_ASSESS_LSCORE,RISK_ASSESS_ESCORE,RISK_ASSESS_CSCORE,RISK_ASSESS_MAN_NAME,
+        RISK_ASSESS_TYPE_NAMES,RISK_ASSESS_TYPE_NAME,RISK_ASSESS_LV,RISK_ASSESS_DETAIL_LV,RISK_ASSESS_AUDIT_MAN,
+        RISK_ASSESS_AUDIT_DATE,RISK_ASSESS_AUDIT_INTRO,RISK_ASSESS_DATE,PLACE_TYPE_CODE,
+        REGION_NAME,STREET_CODE,COMMUNITY_CODE,REGION_CODE,COMMUNITY_NAME,STREET_NAME
+        from URBAN_RISK
+        where 1=1
+        <if test="DANGER_NAME != null">
+            and DANGER_NAME = #{DANGER_NAME}
+        </if>
+
+    </select>
+
+    <select id="getCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select  count(*)
+        from URBAN_RISK
+        where 1=1
+        <if test="PLACE_TYPE_CODE != null">
+            and PLACE_TYPE_CODE = #{PLACE_TYPE_CODE}
+        </if>
+        <if test="RISK_ASSESS_TYPE_NAME != null">
+            and RISK_ASSESS_TYPE_NAME = #{RISK_ASSESS_TYPE_NAME}
+        </if>
+        <if test="STREET_CODE != null">
+            and STREET_CODE = #{STREET_CODE}
+        </if>
+        <if test="RISK_ASSESS_DATE != null">
+            and RISK_ASSESS_DATE like concat(concat('%',#{RISK_ASSESS_DATE}),'%')
+        </if>
+
+    </select>
+
+</mapper>

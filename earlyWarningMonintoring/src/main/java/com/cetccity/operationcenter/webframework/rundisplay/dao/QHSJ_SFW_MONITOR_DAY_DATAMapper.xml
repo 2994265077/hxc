@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.rundisplay.dao.QHSJ_SFW_MONITOR_DAY_DATAMapper">
+    <!--空气质量时间数据-->
+    <select id="getSFWStationDataOfDay" parameterType="java.util.Map" resultType="com.cetccity.operationcenter.webframework.rundisplay.dao.entity.QHSJ_SFW_MONITOR_DAY_DATA">
+        select  CREATETIME,CREATOR,DATA_STATUS,ID,IS_REVISED,MN,
+        MONITOR_FACTOR_CODE,MONITOR_TIME,MONITOR_VALUE,REVISED_MONITOR_VALUE,SITE_CODE,STANDARD_VALUE,UPDATER,
+        UPDATETIME,UPDATE_DATE,YXY_UPDATEDTIME,ADQ_UPDATE_TIME,OBJECT_ID,YJJC_CREATE_TIME,YJJC_UPDATE_TIME
+        from QHSJ_SFW_MONITOR_DAY_DATA
+        where 1=1
+        <if test="SITE_CODE != null">
+            and SITE_CODE = #{SITE_CODE}
+        </if>
+        <if test="MONITOR_FACTOR_CODE != null">
+            and MONITOR_FACTOR_CODE = #{MONITOR_FACTOR_CODE}
+        </if>
+        <if test="DAY != null">
+            and to_char(MONITOR_TIME,'yyyy-MM-dd HH24:mi:ss') like concat(#{DAY},'%')
+        </if>
+    </select>
+
+</mapper>

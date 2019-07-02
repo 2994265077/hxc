@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.web.dao.video.VideoIflyMapper">
+  <resultMap id="BaseResultMap" type="com.cetccity.operationcenter.webframework.web.model.video.VideoIflyModel">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="IFLY1" jdbcType="VARCHAR" property="ifly1" />
+    <result column="IFLY2" jdbcType="VARCHAR" property="ifly2" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ID, IFLY1, IFLY2
+  </sql>
+  <select id="selectByExample" parameterType="com.cetccity.operationcenter.webframework.web.model.video.VideoIflyModelExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ZHFTYJJCPT.VIDEO_IFLY
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.math.BigDecimal" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ZHFTYJJCPT.VIDEO_IFLY
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
+    delete from ZHFTYJJCPT.VIDEO_IFLY
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.cetccity.operationcenter.webframework.web.model.video.VideoIflyModelExample">
+    delete from ZHFTYJJCPT.VIDEO_IFLY
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.cetccity.operationcenter.webframework.web.model.video.VideoIflyModel">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.math.BigDecimal">
+      Oracle
+    </selectKey>
+    insert into ZHFTYJJCPT.VIDEO_IFLY (IFLY1, IFLY2)
+    values (#{ifly1,jdbcType=VARCHAR}, #{ifly2,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cetccity.operationcenter.webframework.web.model.video.VideoIflyModel">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.math.BigDecimal">
+      SELECT MAX(ID)+1 as id FROM VIDEO_IFLY
+    </selectKey>
+    insert into ZHFTYJJCPT.VIDEO_IFLY
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="ifly1 != null">
+        IFLY1,
+      </if>
+      <if test="ifly2 != null">
+        IFLY2,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=OTHER},
+      </if>
+      <if test="ifly1 != null">
+        #{ifly1,jdbcType=VARCHAR},
+      </if>
+      <if test="ifly2 != null">
+        #{ifly2,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cetccity.operationcenter.webframework.web.model.video.VideoIflyModelExample" resultType="java.lang.Long">
+    select count(*) from ZHFTYJJCPT.VIDEO_IFLY
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update ZHFTYJJCPT.VIDEO_IFLY
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.ifly1 != null">
+        IFLY1 = #{record.ifly1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ifly2 != null">
+        IFLY2 = #{record.ifly2,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update ZHFTYJJCPT.VIDEO_IFLY
+    set ID = #{record.id,jdbcType=DECIMAL},
+      IFLY1 = #{record.ifly1,jdbcType=VARCHAR},
+      IFLY2 = #{record.ifly2,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cetccity.operationcenter.webframework.web.model.video.VideoIflyModel">
+    update ZHFTYJJCPT.VIDEO_IFLY
+    <set>
+      <if test="ifly1 != null">
+        IFLY1 = #{ifly1,jdbcType=VARCHAR},
+      </if>
+      <if test="ifly2 != null">
+        IFLY2 = #{ifly2,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cetccity.operationcenter.webframework.web.model.video.VideoIflyModel">
+    update ZHFTYJJCPT.VIDEO_IFLY
+    set IFLY1 = #{ifly1,jdbcType=VARCHAR},
+      IFLY2 = #{ifly2,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

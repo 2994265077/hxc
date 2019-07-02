@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.backstage.iot.dao.ALARM_PUSH_AVILABLEMapper">
+
+    <select id="iotDeviceAttributeList" parameterType="java.util.Map" resultType="com.cetccity.operationcenter.webframework.backstage.iot.dao.entity.ALARM_PUSH_AVILABLE">
+      select a."DESC",a.IS_ENABLED isEnabled,(SELECT COUNT(DEVICE_TYPE) NUM FROM IOT_DEVICE WHERE DEVICE_TYPE = a.DEVICE_TYPE) num,
+       a.UNIT,a.ALARM_CANCEL_TIME,a.DEVICE_TYPE
+       from ALARM_PUSH_AVILABLE a
+       where a.PUSH_TYPE = '1'
+    </select>
+
+</mapper>

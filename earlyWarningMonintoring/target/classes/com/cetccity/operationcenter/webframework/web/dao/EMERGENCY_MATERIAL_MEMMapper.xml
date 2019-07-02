@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.web.dao.EMERGENCY_MATERIAL_MEMMapper">
+
+    <select id="getEMERGENCY_MATERIAL_MEM" parameterType="com.cetccity.operationcenter.webframework.web.model.incident.loadmap.EMERGENCY_MATERIAL_MEM" resultType="com.cetccity.operationcenter.webframework.web.model.incident.loadmap.EMERGENCY_MATERIAL_MEM">
+        select NAME,MATERIAL_NAME,MATERIAL_NUM,TOTAL_MONEY,LEVEL_CODE,ADDRESS,POST_CODE,
+        TELEPHONE,FAX,REGION,STORAGE_PLACE,FZR,CONTACTS,MANAGE_DEPT,MATERIAL_DESC,STORAGE_MODE
+        from EMERGENCY_MATERIAL_MEM
+        where 1=1
+        <if test="NAME != null">
+            and NAME = #{NAME}
+        </if>
+
+    </select>
+
+</mapper>

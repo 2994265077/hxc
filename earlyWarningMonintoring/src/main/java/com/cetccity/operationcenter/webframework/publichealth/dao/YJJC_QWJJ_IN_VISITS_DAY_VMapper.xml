@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.publichealth.dao.YJJC_QWJJ_IN_VISITS_DAY_VMapper">
+
+    <select id="getYJJC_QWJJ_IN_VISITS_DAY_V" parameterType="com.cetccity.operationcenter.webframework.publichealth.dao.entity.YJJC_QWJJ_IN_VISITS_DAY_V" resultType="com.cetccity.operationcenter.webframework.publichealth.dao.entity.YJJC_QWJJ_IN_VISITS_DAY_V">
+        select BUSI_DATE,DEPT_CODE,DEPT_NAME,ID,IN_H_NO,LEAVE_H_NO,M_IN_H_NO,M_LEAVE_H_NO,ORG_CODE,ORG_NAME,REC_CREATE_TIME,
+        REC_MODIFY_TIME,VISITS_TIMES,YXY_UPDATEDTIME,ADQ_UPDATE_TIME,REGION_CODE,STREET_CODE,COMMUNITY_CODE,
+        JD84,WD84,ADDRESS,OBJECT_ID,STREET_NAME,COMMUNITY_NAME,YJJC_CREATE_TIME,YJJC_UPDATE_TIME
+        from YJJC_QWJJ_IN_VISITS_DAY_V where 1=1
+        <if test="ORG_CODE != null">
+            and ORG_CODE = #{ORG_CODE}
+        </if>
+        order by REC_CREATE_TIME desc
+    </select>
+
+    <select id="getLatelyYearnCount" parameterType="java.lang.String" resultType="java.lang.String">
+        select count(*)
+        from YJJC_QWJJ_IN_VISITS_DAY_V
+        <where>
+            <if test="month != null">
+                and BUSI_DATE like concat(#{month},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getHospitalTwoYearCount" parameterType="java.util.Map" resultType="java.lang.String">
+        select count(*)
+        from YJJC_QWJJ_IN_VISITS_DAY_V
+        <where>
+            <if test="ORG_CODE != null">
+                and ORG_CODE = #{ORG_CODE}
+            </if>
+            <if test="startTime != null">
+                and BUSI_DATE &gt; to_date(#{startTime},'yyyy-MM-dd HH24:mi:ss')
+            </if>
+            <if test="endTime != null">
+                and BUSI_DATE &lt;= to_date(#{endTime},'yyyy-MM-dd HH24:mi:ss')
+            </if>
+        </where>
+    </select>
+
+    <select id="hospitalizationHospitalDepartment" parameterType="java.util.Map" resultType="java.util.HashMap">
+        select DEPT_NAME "name",sum(IN_H_NO) "value" from YJJC_QWJJ_IN_VISITS_DAY_V
+        <where>
+            <if test="lastTime != null and currentTime != null">
+                and BUSI_DATE BETWEEN to_date(#{lastTime},'yyyy-MM-dd HH24:mi:ss') AND to_date(#{currentTime},'yyyy-MM-dd HH24:mi:ss')
+            </if>
+            <if test="ORG_CODE != null">
+                and ORG_CODE = #{ORG_CODE}
+            </if>
+        </where>
+        GROUP BY DEPT_NAME
+    </select>
+</mapper>

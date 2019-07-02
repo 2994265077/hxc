@@ -1,0 +1,101 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cetccity.operationcenter.webframework.unifiedauth.dao.PermissionMapper">
+
+    <resultMap id="pNode" type="com.cetccity.operationcenter.webframework.unifiedauth.entity.PermissionNode">
+        <id property="permission_id" javaType="java.lang.String" column="PERMISSION_ID"></id>
+        <result property="permission_name" javaType="java.lang.String" column="PERMISSION_NAME"></result>
+        <result property="permission_str" javaType="java.lang.String" column="PERMISSION_STR"></result>
+        <result property="permission_url" javaType="java.lang.String" column="PERMISSION_URL"></result>
+        <result property="description" javaType="java.lang.String" column="DESCRIPTION"></result>
+        <result property="parent_id" javaType="java.lang.String" column="PARENT"></result>
+        <result property="parent" javaType="java.lang.Boolean" column="IS_PARENT"></result>
+    </resultMap>
+
+    <resultMap id="permissionEntity" type="com.cetccity.operationcenter.webframework.unifiedauth.entity.PermissionEntity">
+        <id property="permission_id" javaType="java.lang.String" column="PERMISSION_ID"></id>
+        <result property="permission_name" javaType="java.lang.String" column="PERMISSION_NAME"></result>
+        <result property="permission_str" javaType="java.lang.String" column="PERMISSION_STR"></result>
+        <result property="permission_url" javaType="java.lang.String" column="PERMISSION_URL"></result>
+        <result property="description" javaType="java.lang.String" column="DESCRIPTION"></result>
+        <result property="parent_id" javaType="java.lang.String" column="PARENT"></result>
+        <result property="parent" javaType="java.lang.Boolean" column="IS_PARENT"></result>
+    </resultMap>
+
+
+    <select id="queryAll" resultMap="permissionEntity">
+        SELECT * FROM auth_permissions
+    </select>
+
+    <select id="queryAllForTree" resultMap="pNode">
+          SELECT * FROM auth_permissions
+    </select>
+
+    <insert id="save" parameterType="com.cetccity.operationcenter.webframework.unifiedauth.entity.PermissionEntity">
+        INSERT
+        INTO
+            AUTH_PERMISSIONS(PERMISSION_ID, PERMISSION_STR, PERMISSION_NAME, PERMISSION_URL, DESCRIPTION, PARENT,IS_PARENT, CREATE_TIME)
+        VALUES (SEQ_AUTH_PERMISSIONS.nextval, #{permission_str}, #{permission_name}, #{permission_url}, #{description}, #{parent_id}, #{parent}, sysdate)
+    </insert>
+
+    <update id="updateSelectedKey" parameterType="com.cetccity.operationcenter.webframework.unifiedauth.entity.PermissionEntity">
+        UPDATE
+            AUTH_PERMISSIONS
+        SET
+            UPDATE_TIME = sysdate
+            <if test="permission_str != null">
+                , PERMISSION_STR=#{permission_str}
+            </if>
+            <if test="permission_name != null">
+                , PERMISSION_NAME=#{permission_name}
+            </if>
+            <if test="permission_url != null">
+                , PERMISSION_URL=#{permission_url}
+            </if>
+            <if test="description != null">
+                , DESCRIPTION=#{description}
+            </if>
+            <if test="parent_id != null">
+                , PARENT=#{parent_id}
+            </if>
+            <if test="parent != null">
+                , IS_PARENT=#{parent}
+            </if>
+        WHERE
+            PERMISSION_ID = #{permission_id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE AUTH_PERMISSIONS WHERE PERMISSION_ID = #{permission_id}
+    </delete>
+
+    <select id="countById" resultType="java.lang.Long" parameterType="java.lang.String">
+        SELECT
+            COUNT(*)
+        FROM
+            AUTH_PERMISSIONS
+        WHERE
+            PERMISSION_ID = #{permission_id}
+    </select>
+
+    <select id="countByParent" resultType="java.lang.Long" parameterType="java.lang.String">
+        SELECT
+            COUNT(*)
+        FROM
+            AUTH_PERMISSIONS
+        WHERE
+            PARENT = #{parent}
+    </select>
+
+    <select id="queryById" resultMap="permissionEntity" parameterType="java.lang.String">
+        SELECT
+            *
+        FROM
+            AUTH_PERMISSIONS
+        WHERE
+            PERMISSION_ID = #{permission_id}
+    </select>
+
+</mapper>

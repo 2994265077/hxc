@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.urbansign.dao.CityComponentMapper">
+
+    <select id="queryTotalByStreet" resultType="java.util.HashMap">
+        SELECT a.street_name, IOT_DEVICE 物联网, MONITOR 监测站, CAMERA 摄像头, BJ 城市部件 FROM
+        (SELECT street_code, street_name FROM COMMUNITY_CODE WHERE street_code IS NOT NULL GROUP BY street_code,street_name ) a LEFT JOIN
+        -- SELECT a.street_code, IOT_DEVICE, MONITOR FROM
+        ----物联感知
+        (SELECT street_code, COUNT(street_code) IOT_DEVICE FROM IOT_DEVICE WHERE street_code IS NOT NULL GROUP BY street_code) b
+        ON a.street_code = b.street_code LEFT JOIN
+        ----监测站
+        (
+        SELECT street_code, SUM(MONITOR) MONITOR FROM (
+            ------水质
+            SELECT street_code, COUNT(street_code) MONITOR FROM QHSJ_ENTERPRISE_BASICINFO WHERE street_code IS NOT NULL GROUP BY street_code UNION ALL
+            ------空气
+            SELECT street_code, COUNT(street_code) MONITOR FROM QHSJ_SURF_WATER_BASICINFO WHERE street_code IS NOT NULL GROUP BY street_code UNION ALL
+            ------地表水
+            SELECT street_code, COUNT(street_code) MONITOR FROM QHSJ_T_AIR_BASICINFO WHERE street_code IS NOT NULL GROUP BY street_code
+        ) GROUP BY street_code
+        )c
+        on a.street_code = c.street_code LEFT JOIN
+
+        ----摄像头
+        (SELECT street_code, COUNT(street_code) CAMERA FROM VIDEO_POLICE WHERE street_code IS NOT NULL GROUP BY street_code) d
+        on a.street_code = d.street_code LEFT JOIN
+
+        ----城市部件
+        (
+        SELECT street_code, SUM(BJ) BJ FROM (
+
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0102 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0103 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0118 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0121 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0132 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0133 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0135 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0138 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0201 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0203 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0217 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0301 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0310 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0502 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0601 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0602 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ2114 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ2118 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ2124 WHERE street_code IS NOT NULL GROUP BY street_code
+        ) GROUP BY STREET_CODE
+        )e on a.street_code = e.street_code
+    </select>
+    <select id="queryIotEventTypeAndDate" resultType="java.util.HashMap">
+        SELECT PRODUCE_TIME, IOT_CODE.DEVICE_NAME  FROM IOT_EVENT JOIN IOT_DEVICE ON IOT_EVENT.DEVICE_CODE = IOT_DEVICE.DEVICE_CODE
+        LEFT JOIN IOT_CODE ON IOT_DEVICE.DEVICE_TYPE = IOT_CODE.DEVICE_TYPE
+    </select>
+
+    <select id="countIotByDate" resultType="java.util.HashMap">
+        SELECT
+            TO_CHAR(PRODUCE_TIME, ${formatter}) AS PRODUCE_TIME, IOT_CODE.DEVICE_NAME, COUNT(IOT_CODE.DEVICE_NAME) AS COUNT
+        FROM
+            IOT_EVENT
+        JOIN
+            IOT_DEVICE
+        ON
+            IOT_EVENT.DEVICE_CODE = IOT_DEVICE.DEVICE_CODE
+        JOIN
+            IOT_CODE
+        ON
+            IOT_DEVICE.DEVICE_TYPE = IOT_CODE.DEVICE_TYPE
+		GROUP BY
+		TO_CHAR(PRODUCE_TIME, ${formatter}) ,IOT_CODE.DEVICE_NAME
+    </select>
+
+    <select id="countIot" resultType="java.lang.Integer">
+        SELECT COUNT(DEVICE_CODE) FROM IOT_DEVICE
+    </select>
+    <select id="queryCameraNumByStreet" resultType="java.util.HashMap">
+        SELECT  b.street_name, a.cameranum 摄像头 FROM
+        (SELECT street_code, COUNT(street_code) cameranum FROM VIDEO_POLICE WHERE street_code IS NOT NULL GROUP BY street_code) a
+        left join
+        (SELECT street_code, street_name FROM community_code GROUP BY street_code, street_name) b
+        on a.street_code = b.street_code
+    </select>
+    <select id="queryCityComponentByStreet" resultType="java.util.HashMap">
+        SELECT  b.street_name, a.BJ 城市部件 FROM
+        (SELECT street_code, SUM(BJ) BJ FROM (
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0102 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0103 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0118 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0121 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0132 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0133 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0135 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0138 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0201 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0203 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0217 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0301 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0310 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0502 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0601 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ0602 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ2114 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ2118 WHERE street_code IS NOT NULL GROUP BY street_code union all
+        SELECT street_code, COUNT(street_code) BJ FROM BJ2124 WHERE street_code IS NOT NULL GROUP BY street_code
+        ) GROUP BY STREET_CODE) a
+        left join
+        (SELECT street_code, street_name FROM community_code GROUP BY street_code, street_name) b
+        on a.street_code = b.street_code
+    </select>
+    <select id="querySiteValueByMonth" resultType="java.util.HashMap">
+        SELECT
+            CASE
+            WHEN
+                a.MONTH IS NOT NULL
+            THEN
+                a.MONTH
+            WHEN
+                b.MONTH IS NOT NULL
+            THEN
+                b.MONTH
+            ELSE
+                c.MONTH END MONTH , NVl(a.VALUE, 0) 污染源废水站点, NVl(b.VALUE, 0) 环境空气站点,NVl(c.VALUE, 0) 地表水
+        FROM
+            (
+                SELECT
+                    ROUND(AVG(MONITOR_VALUE), 0) VALUE, TO_CHAR(MONITOR_TIME,'yyyy-mm') MONTH
+                FROM
+                    QHSJ_ENTERPRISE_HOUR_DATA
+                <where>
+                    <if test="begin != null" >
+                        MONITOR_TIME &gt;= #{begin}
+                    </if>
+                </where>
+                GROUP BY
+                    TO_CHAR(MONITOR_TIME,'yyyy-mm')
+            ) a
+
+        FULL OUTER JOIN
+            (
+                SELECT
+                    ROUND(AVG(MONITOR_VALUE), 0) VALUE,TO_CHAR(MONITOR_TIME,'yyyy-mm') MONTH
+                FROM
+                    QHSJ_AIR_MONITOR_HOUR_DATA
+                <where>
+                    <if test="begin != null" >
+                        MONITOR_TIME &gt;= #{begin}
+                    </if>
+                </where>
+                GROUP BY
+                    TO_CHAR(MONITOR_TIME,'yyyy-mm')
+            ) b
+        ON
+            a.MONTH = b.MONTH
+        FULL OUTER JOIN
+            (
+                SELECT
+                    ROUND(AVG(MONITOR_VALUE), 0) VALUE, TO_CHAR(MONITOR_TIME,'yyyy-mm') MONTH
+                FROM
+                    QHSJ_SFW_MONITOR_HOUR_DATA
+                <where>
+                    <if test="begin != null" >
+                        MONITOR_TIME &gt;= #{begin}
+                    </if>
+                </where>
+                GROUP BY
+                    TO_CHAR(MONITOR_TIME,'yyyy-mm')
+            ) c
+        ON
+            a.MONTH = c.MONTH
+        ORDER BY
+            a.MONTH
+    </select>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.trigger.dao.EmergencyCaseAlarmTriggerMapper">
+
+    <select id="querySourceData" parameterType="java.util.Map" resultType="com.cetccity.operationcenter.webframework.trigger.entity.WeeklyEmergencyCase">
+        SELECT ID,"LEVEL",NAME,TYPE,TYPE_CODE,ADDRESS,DESCRIPTION,DEATH_PEOPLE,INJURE_PEOPLE,PROPERTY_DAMAGE,
+            REASON,RELATE_PEOPLE,SEND_UNIT,X,Y,XY,START_TIME,GRID_NAME,REGISTER_PEOPLE_NAME,REGISTER_TIME,
+            JD84,WD84,REGION_CODE,STREET_CODE,COMMUNITY_CODE,OBJECT_ID,ACCIDENT_TYPE,YJJC_CREATE_TIME,
+            YJJC_UPDATE_TIME,STREET_NAME,COMMUNITY_NAME
+        from WEEKLY_EMERGENCY_CASE
+        <where>
+            <if test="begin != null">
+                and START_TIME &gt; #{begin}
+            </if>
+            <if test="end != null">
+                and START_TIME &lt;= #{end}
+            </if>
+                and ("LEVEL" = '较大级别' or "LEVEL" = '一般级别')
+        </where>
+        order by START_TIME asc
+    </select>
+</mapper>

@@ -1,0 +1,7 @@
+sms\Sms.class
+sms\SmsSearchBean.class
+util\MD5Encoder.class
+util\MySSLProtocolSocketFactory$1.class
+util\MySSLProtocolSocketFactory$TrustAnyTrustManager.class
+util\MySSLProtocolSocketFactory.class
+sms\SmsBean.class

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.rundisplay.dao.QhsjAqiInfoMapper">
+
+    <resultMap id="aqiLevelCount" type="com.cetccity.operationcenter.webframework.rundisplay.dao.entity.AirLevelCount">
+        <result property="aqiLevel" column="AQI_LEVEL" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="monitorTime" column="MONITOR_TIME" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="count" column="COUNT" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!--空气质量时间数据-->
+    <select id="getQHSJ_AQI_INFO" parameterType="com.cetccity.operationcenter.webframework.rundisplay.dao.entity.QHSJ_AQI_INFO" resultType="com.cetccity.operationcenter.webframework.rundisplay.dao.entity.QHSJ_AQI_INFO">
+        select  OBJECT_ID,MONITOR_TIME,SITE_CODE,AQI_VALUE,YJJC_CREATE_TIME,YJJC_UPDATE_TIME
+        from QHSJ_AQI_INFO
+        where 1=1
+        <if test="SITE_CODE != null">
+            and SITE_CODE = #{SITE_CODE}
+        </if>
+        <if test="MONITOR_TIME != null">
+            and to_char(MONITOR_TIME,'yyyy-MM-dd HH24:mi:ss') like concat(#{MONITOR_TIME},'%')
+        </if>
+        order by MONITOR_TIME
+    </select>
+
+    <select id="getQHSJ_AQI_INFODataOfTime" parameterType="com.cetccity.operationcenter.webframework.rundisplay.dao.entity.QHSJ_AQI_INFO" resultType="com.cetccity.operationcenter.webframework.rundisplay.dao.entity.QHSJ_AQI_INFO">
+        select  OBJECT_ID,MONITOR_TIME,SITE_CODE,AQI_VALUE,YJJC_CREATE_TIME,YJJC_UPDATE_TIME
+        from QHSJ_AQI_INFO
+        where 1=1
+        <if test="SITE_CODE != null">
+            and SITE_CODE = #{SITE_CODE}
+        </if>
+        <if test="MONITOR_TIME != null">
+            and to_char(MONITOR_TIME,'yyyy-MM-dd HH24:mi:ss') like concat(#{MONITOR_TIME},'%')
+        </if>
+        <if test="startTime != null">
+            and MONITOR_TIME &gt;= to_date(#{startTime},'yyyy-MM-dd HH24:mi:ss')
+        </if>
+        <if test="endTime != null">
+            and MONITOR_TIME &lt; to_date(#{endTime},'yyyy-MM-dd HH24:mi:ss')
+        </if>
+        order by MONITOR_TIME
+    </select>
+    
+    <select id="selectAirLevelDayCount" resultMap="aqiLevelCount">
+        <!-- 统计每天 24小时内有的空气质量等级分布（一天24小时有在每个等级下的质量） -->
+        SELECT
+            AQI_LEVEL,  MONITOR_TIME, COUNT(*) AS COUNT
+        FROM
+            (
+                <!-- 根据日期和小时分组，根据每小时内空气质量平均值计算空气质量等级 -->
+                SELECT
+                    TO_CHAR(MONITOR_TIME, 'yyyy-mm-dd') AS MONITOR_TIME, TO_CHAR(MONITOR_TIME, 'hh24') as HOUR,
+                    CASE WHEN AVG(AQI_VALUE) &lt;= 50
+                    THEN '优'
+                    WHEN AVG(AQI_VALUE) &lt;= 100
+                    THEN '良'
+                    WHEN AVG(AQI_VALUE) &lt;= 150
+                    THEN '轻度污染'
+                    WHEN AVG(AQI_VALUE) &lt;= 200
+                    THEN '中度污染'
+                    WHEN AVG(AQI_VALUE) &lt;= 300
+                    THEN '重度污染'
+                    ELSE '严重污染'
+                    END AQI_LEVEL
+                FROM
+                    "QHSJ_AQI_INFO"
+                WHERE
+                    MONITOR_TIME >= #{min_monitor_time}
+                GROUP BY
+                    TO_CHAR(MONITOR_TIME, 'yyyy-mm-dd') , TO_CHAR(MONITOR_TIME, 'hh24')
+            )
+        GROUP BY
+            AQI_LEVEL, MONITOR_TIME
+    </select>
+</mapper>

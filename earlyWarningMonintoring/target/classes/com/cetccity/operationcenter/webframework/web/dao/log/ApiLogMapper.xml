@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.web.dao.log.ApiLogMapper">
+    <resultMap id="apiLog" type="com.cetccity.operationcenter.webframework.web.log.entity.ApiLog">
+        <id column="OBJECT_ID" property="id" />
+        <result column="HTTP_METHOD" property="httpMethod" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="MATCHED_PATH" property="matchedPath" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="REAL_PATH" property="realPath" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="SUCCESS" property="success" javaType="boolean" jdbcType="VARCHAR"/>
+        <result column="CONSUMED_TIME" property="consumedTime" javaType="long" jdbcType="DOUBLE"/>
+        <result column="FAILED_CAUSE" property="failedCause" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="YJJC_CREATE_TIME" property="requestTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+    </resultMap>
+
+    <parameterMap id="apiLog" type="com.cetccity.operationcenter.webframework.web.log.entity.ApiLog">
+        <parameter property="id" javaType="long" jdbcType="DOUBLE"/>
+        <parameter property="httpMethod" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <parameter property="matchedPath" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <parameter property="realPath" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <parameter property="success" javaType="boolean" jdbcType="VARCHAR"/>
+        <parameter property="consumedTime" javaType="long" jdbcType="DOUBLE"/>
+        <parameter property="failedCause" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <parameter property="requestTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+    </parameterMap>
+
+    <insert id="insert" parameterMap="apiLog">
+        INSERT INTO
+        API_PERFORMANCE_LOG(OBJECT_ID, HTTP_METHOD, MATCHED_PATH, REAL_PATH, SUCCESS, CONSUMED_TIME, FAILED_CAUSE, YJJC_CREATE_TIME)
+        values (API_PERFORMANCE_LOG_SEQ.Nextval, #{httpMethod, jdbcType=VARCHAR}, #{matchedPath,jdbcType=VARCHAR}, #{realPath,jdbcType=VARCHAR}, #{success,jdbcType=VARCHAR}, #{consumedTime,jdbcType=VARCHAR}, #{failedCause,jdbcType=VARCHAR}, #{requestTime,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="select" resultMap="apiLog">
+        SELECT
+            *
+        FROM
+            API_PERFORMANCE_LOG
+    </select>
+
+</mapper>

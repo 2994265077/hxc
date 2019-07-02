@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cetccity.operationcenter.webframework.backstage.community.dao.CommunityRoleMapper">
+
+    <resultMap id="communityNode" type="com.cetccity.operationcenter.webframework.backstage.community.entity.CommunityNode">
+        <result property="communityCode" column="community_code" javaType="java.lang.String" />
+        <result property="communityName" column="community_name" javaType="java.lang.String" />
+        <result property="objectId" column="OBJECT_ID" javaType="java.lang.String" />
+    </resultMap>
+
+    <resultMap id="streetNode" type="com.cetccity.operationcenter.webframework.backstage.community.entity.StreetNode">
+        <result property="streetCode" column="street_code" javaType="java.lang.String" />
+        <result property="streetName" column="street_name" javaType="java.lang.String" />
+    </resultMap>
+
+    <resultMap id="regionNode" type="com.cetccity.operationcenter.webframework.backstage.community.entity.RegionNode">
+        <result property="regionCode" column="region_code" javaType="java.lang.String" />
+        <result property="regionName" column="region_name" javaType="java.lang.String" />
+    </resultMap>
+
+
+    <insert id="save" >
+        INSERT INTO AUTH_ROLE_COMMUNITY(ROLE_ID, COMMUNITY_ID, CREATE_TIME, UPDATE_TIME) VALUES (#{role_id}, #{community_id}, sysdate, sysdate)
+    </insert>
+
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM AUTH_ROLE_COMMUNITY WHERE ROLE_ID = #{role_id}
+    </delete>
+
+    <select id="selectCommunityIdsByRole" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT COMMUNITY_ID FROM AUTH_ROLE_COMMUNITY WHERE ROLE_ID = #{role_id}
+    </select>
+
+    <sql id="roleCommunityJoin">
+        FROM
+            AUTH_ROLE_COMMUNITY t1
+        JOIN
+            COMMUNITY_CODE t2
+        ON
+            t1.COMMUNITY_ID = t2.OBJECT_ID
+        AND
+            t1.ROLE_ID in <foreach collection="role_ids" item="role_id" open="(" close=")" separator=",">#{role_id}</foreach>
+    </sql>
+    
+    <select id="communityNamesByRole" parameterType="java.util.List" resultMap="communityNode">
+        SELECT
+            DISTINCT t2.COMMUNITY_NAME, t2.COMMUNITY_CODE, t2.OBJECT_ID
+
+        <include refid="roleCommunityJoin" />
+    </select>
+
+    <select id="streetNamesByRole" parameterType="java.util.List" resultMap="streetNode">
+        SELECT
+        DISTINCT t2.STREET_NAME, t2.STREET_CODE
+
+        <include refid="roleCommunityJoin" />
+    </select>
+
+    <select id="regionNamesByRole" parameterType="java.util.List" resultMap="regionNode">
+        SELECT
+        DISTINCT t2.REGION_NAME, t2.REGION_CODE
+
+        <include refid="roleCommunityJoin" />
+    </select>
+
+    <select id="communityTreeByRole" parameterType="java.util.List" resultMap="com.cetccity.operationcenter.webframework.backstage.community.dao.CommunityInfoMapper.communityInfo">
+        SELECT t2.*
+        <include refid="roleCommunityJoin" />
+    </select>
+
+    <select id="countCommunityByRole" parameterType="java.util.List" resultType="java.lang.Long">
+        SELECT COUNT(t2.OBJECT_ID)
+        <include refid="roleCommunityJoin" />
+    </select>
+
+
+</mapper>

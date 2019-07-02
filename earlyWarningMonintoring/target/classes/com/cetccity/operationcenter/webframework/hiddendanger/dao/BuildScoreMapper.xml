@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.hiddendanger.dao.BuildScoreMapper">
+
+    <resultMap id="buildOfDangerModel" type="com.cetccity.operationcenter.webframework.web.model.build.BuildOfDangerModel">
+        <result property="buildName" column="BUILD_NAME" javaType="java.lang.String" />
+        <result property="dangerReason" column="DANGER_REASON" javaType="java.lang.String" />
+        <result property="dangerScore" column="DANGER_SCORE" javaType="java.lang.String" />
+        <result property="firePolice" column="FIRE_POLICE" javaType="java.lang.String" />
+        <result property="firePoliceTel" column="FIRE_POLICE_TEL" javaType="java.lang.String" />
+    </resultMap>
+
+    <resultMap id="loadMapBuildGrade" type="com.cetccity.operationcenter.webframework.web.model.build.LoadMapBuildGrade">
+        <result property="BLDG_NO" column="BUILD_ID" javaType="java.lang.String" />
+        <result property="level" column="DANGER_LEVEL" javaType="java.lang.Integer" />
+        <result property="score" column="SCORE" javaType="java.lang.String" />
+    </resultMap>
+
+    <select id="getBuildScoreList" parameterType="com.cetccity.operationcenter.webframework.hiddendanger.dao.entity.BUILD_SCORE" resultType="com.cetccity.operationcenter.webframework.hiddendanger.dao.entity.BUILD_SCORE">
+        select BUILD_ID,SCORE,SCORE_DETAIL,YJJC_CREATE_TIME,YJJC_UPDATE_TIME,DANGER_LEVEL,REGION_CODE,
+          ADDRESS,COMMUNITY_CODE,STREET_CODE,JD84,WD84,STREET_NAME,COMMUNITY_NAME,CALCULATION_TIME,MAINDANGER
+        from BUILD_SCORE where 1=1
+        <if test="BUILD_ID != null">
+            and BUILD_ID = #{BUILD_ID}
+        </if>
+        <if test="CALCULATION_TIME != null">
+            and CALCULATION_TIME = #{CALCULATION_TIME}
+        </if>
+    </select>
+
+    <insert id="saveBuildScoreOfBuildid" parameterType="com.cetccity.operationcenter.webframework.hiddendanger.dao.entity.BUILD_SCORE">
+        insert into BUILD_SCORE (BUILD_ID,SCORE,SCORE_DETAIL,YJJC_CREATE_TIME,YJJC_UPDATE_TIME,
+        DANGER_LEVEL,CALCULATION_TIME,MAINDANGER)
+        values (#{BUILD_ID},#{SCORE},#{SCORE_DETAIL},sysdate,sysdate,#{DANGER_LEVEL},#{CALCULATION_TIME},#{MAINDANGER})
+    </insert>
+
+    <select id="topNDangerScore" resultMap="buildOfDangerModel">
+        SELECT
+            t1.SCORE AS DANGER_SCORE, t1.DANGER_LEVEL, t1.MAINDANGER AS DANGER_REASON,
+            NVL(t2.BUILD_NAME, '无名称') AS BUILD_NAME, NVL(t3.ZTZR_NAME, '无') AS FIRE_POLICE, NVL(t3.ZTZR_TEL, '无') AS FIRE_POLICE_TEL
+        FROM
+            (
+                SELECT * FROM
+                    (
+                        SELECT
+                            t.*, ROWNUM RN
+                        FROM
+                        (
+                            SELECT
+                            BUILD_ID,SCORE,DANGER_LEVEL,MAINDANGER
+                            FROM
+                            BUILD_SCORE
+                            WHERE
+                            <if test="dateStr != null and dateStr != ''">
+                                CALCULATION_TIME = #{dateStr}
+                            </if>
+                            <if test="dateStr == null or dateStr == ''">
+                                CALCULATION_TIME = TO_CHAR(sysdate, 'yyyy-mm-dd')
+                            </if>
+                            ORDER BY
+                            SCORE DESC
+                        ) t
+                    )
+                WHERE
+                <if test="size > 0">
+                    RN &lt;= #{size}
+                </if>
+                <if test="size lte 0">
+                    RN &lt;= 10
+                </if>
+
+            ) t1
+        LEFT JOIN
+            (
+                SELECT
+                    BUILDID,BUILD_NAME
+                FROM
+                    T_BUILD_INFO_V
+            ) t2
+        ON
+            t1.BUILD_ID = t2.BUILDID
+        LEFT JOIN
+            (
+                SELECT
+                    BUILD_ID,ZTZR_NAME,ZTZR_TEL
+                FROM
+                    QXFJ_BUILD_ZTZR_V
+            ) t3
+        ON
+            t1.BUILD_ID = t3.BUILD_ID
+    </select>
+
+    <select id="loadMap" resultMap="loadMapBuildGrade">
+        SELECT
+            BUILD_ID,SCORE,DANGER_LEVEL
+        FROM
+            BUILD_SCORE
+        WHERE
+        <if test="dateStr != null and dateStr != ''">
+            CALCULATION_TIME = #{dateStr}
+        </if>
+        <if test="dateStr == null or dateStr == ''">
+            CALCULATION_TIME = TO_CHAR(sysdate, 'yyyy-mm-dd')
+        </if>
+        AND
+            DANGER_LEVEL != 3
+    </select>
+
+
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.hiddendanger.dao.RiskPointMapper">
+
+    <select id="findRISK_POINTDetail" parameterType="java.lang.String" resultType="com.cetccity.operationcenter.webframework.hiddendanger.dao.entity.RISK_POINT">
+        select SERIAL_NUMBER,DANGER_TYPE,TRADE_TYPE,TRADE_DETAIL_TYPE,TYPE_NAME,PARAMS,DANGER_POINT_NAME,
+          DANGER_TYPE_NAME,DISASTER_TYPE,DETAIL_NAME,PRONE_ACC_TYPE,INFLUNCE_AREA,INFLUNCE_PEOPLE,PROPERTIE_LOSS,
+          ENV_INFLUNCE,SOCIAL_INFLUNCE,EXPOSE_FREQUNCE,RISK_SEVERITY,OPERATE_HAZARDOUS,CITY,REGION,STREET,
+          DETAIL_ADDRESS,LON,LAT,UNIT_NAME,POINT_MANAGER,CONN_TEL,SECURITY_MANAGER,CONN_TEL_0,
+          POINT_EXPERT,CONN_TEL_1,SUPERVISE_MANAGER,CONN_TEL_2,POINT_LEADER,CONN_TEL_3,SUPERVISE_UNIT,
+          DANGER_LEVEL,HIDDEN_DANGER,EMERGENCY_MEASURES,CONTROL_MEASURES,ENTERPRISE_PLAN,
+          GIS_LOCATION,INFO_FILLER,INCIDT_POSSIBILITY,OBJECT_ID,YJJC_CREATE_TIME,YJJC_UPDATE_TIME,
+          JD84,WD84,REGION_CODE,STREET_CODE,COMMUNITY_CODE,ADDRESS,STREET_NAME,COMMUNITY_NAME
+        from RISK_POINT
+        <where>
+          <if test="id != null">
+            and ROWID = #{id}
+          </if>
+        </where>
+    </select>
+
+    <select id="riskPointDrillDown" resultType="java.util.HashMap">
+        SELECT 红,黄,橙,蓝 FROM
+        (SELECT count(*) 红 FROM RISK_POINT WHERE DANGER_LEVEL = '红'),
+        (SELECT count(*) 黄 FROM RISK_POINT WHERE DANGER_LEVEL = '黄'),
+        (SELECT count(*) 橙 FROM RISK_POINT WHERE DANGER_LEVEL = '橙'),
+        (SELECT count(*) 蓝 FROM RISK_POINT WHERE DANGER_LEVEL = '蓝')
+  </select>
+
+
+    <select id="urbanSignProductionSafetyBi" resultType="java.util.HashMap">
+       SELECT M.STREET_NAME X,NVL(A.NUM,0) 红,NVL(B.NUM,0) 橙,NVL(C.NUM,0) 黄,NVL(D.NUM,0) 蓝 FROM(
+         SELECT STREET_NAME from RISK_POINT WHERE STREET_NAME is not null GROUP BY STREET_NAME UNION
+         SELECT STREET_NAME from RISK_POINT WHERE STREET_NAME is not null GROUP BY STREET_NAME UNION
+         SELECT STREET_NAME from RISK_POINT WHERE STREET_NAME is not null GROUP BY STREET_NAME UNION
+         SELECT STREET_NAME from RISK_POINT WHERE STREET_NAME is not null GROUP BY STREET_NAME)M
+         LEFT JOIN
+        (SELECT COUNT(*) NUM ,STREET_NAME FROM RISK_POINT WHERE STREET_NAME is not null and DANGER_LEVEL = '红' GROUP BY STREET_NAME)A ON M.STREET_NAME = A.STREET_NAME
+         LEFT JOIN
+        (SELECT COUNT(*) NUM ,STREET_NAME FROM RISK_POINT WHERE STREET_NAME is not null and DANGER_LEVEL = '橙' GROUP BY STREET_NAME)B ON M.STREET_NAME = B.STREET_NAME
+         LEFT JOIN
+        (SELECT COUNT(*) NUM ,STREET_NAME FROM RISK_POINT WHERE STREET_NAME is not null and DANGER_LEVEL = '黄' GROUP BY STREET_NAME)C ON M.STREET_NAME = C.STREET_NAME
+         LEFT JOIN
+        (SELECT COUNT(*) NUM ,STREET_NAME FROM RISK_POINT WHERE STREET_NAME is not null and DANGER_LEVEL = '蓝' GROUP BY STREET_NAME)D ON M.STREET_NAME = D.STREET_NAME
+    </select>
+
+    <select id="selectByDangerLevel" resultType="com.cetccity.operationcenter.webframework.trigger.entity.RiskPoint">
+        SELECT
+        *
+        FROM
+        RISK_POINT
+        <where>
+            <if test="dangerLevels != null">
+
+                <foreach collection="dangerLevels" item="dangerLevel" separator="OR">
+                    DANGER_LEVEL = #{dangerLevel.value}
+                </foreach>
+
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByDangerLevelAndMinId" resultType="com.cetccity.operationcenter.webframework.trigger.entity.RiskPoint">
+        SELECT
+        *
+        FROM
+        RISK_POINT
+        <where>
+            <if test="min_id != null">
+                Object_ID > #{min_id} AND
+            </if>
+            <if test="dangerLevels != null">
+
+                <foreach collection="dangerLevels" item="dangerLevel" separator="OR">
+                    DANGER_LEVEL = #{dangerLevel.value}
+                </foreach>
+
+            </if>
+
+        </where>
+    </select>
+    
+</mapper>

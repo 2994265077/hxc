@@ -1,0 +1,228 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cetccity.operationcenter.webframework.hiddendanger.dao.FireHiddenDangerChartMapper">
+
+    <resultMap id="nameValueTypeModel" type="com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueTypeModel">
+        <result property="name" column="NAME" javaType="java.lang.String" />
+        <result property="value" column="VALUE" javaType="java.lang.Integer" />
+    </resultMap>
+
+    <select id="selectBuildIdAndStreetCode" resultType="java.util.HashMap">
+        SELECT a.buildid, c.street_name FROM T_BUILD_INFO_V a,
+        (SELECT b.street_code, b.street_name FROM COMMUNITY_CODE b group by b.street_name, b.street_code) c
+        where a.street_code = c.street_code
+    </select>
+
+    <select id="selectBuilderLevelCount" resultType="com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueTypeModel">
+        SELECT
+        t2.SCORE AS name, COUNT(*) as value
+        FROM
+            (
+                SELECT
+                    STREET_CODE, LDDM
+                FROM
+                    "BLK_BUILDING"
+                <where>
+                    <if test="streetCode != null and streetCode != ''">
+                        STREET_CODE = #{streetCode}
+                    </if>
+                </where>
+
+            ) t1
+        JOIN
+            (
+                SELECT
+                    BUILD_ID,CASE
+                    <foreach collection="buildDangerLevels" item="item">WHEN SCORE &lt;= #{item.maxScore} THEN
+                        #{item.name}
+                    </foreach>
+                    END SCORE
+                FROM
+                    BUILD_SCORE
+                WHERE
+                    CALCULATION_TIME = #{date}
+            ) t2
+        ON
+            t1.LDDM = t2.BUILD_ID
+        GROUP BY
+            t2.SCORE
+    </select>
+
+    <select id="selectStreetBuilderLevelCount" resultType="com.cetccity.operationcenter.webframework.hiddendanger.dao.entity.StreetBuilderLevel" >
+        SELECT
+        t1.SCORE AS dangerLevel, t2.STREET_NAME AS name, COUNT(*) AS count
+        FROM
+            (
+                SELECT BUILD_ID,CASE
+                <foreach collection="buildDangerLevels" item="item">
+                    WHEN SCORE &lt;= #{item.maxScore} THEN
+                    #{item.name}
+                </foreach>
+                END SCORE
+                FROM
+                    BUILD_SCORE
+                where
+                    CALCULATION_TIME = #{date}
+            ) t1
+        JOIN
+            (
+                SELECT
+                    a.LDDM BUILD_ID, b.street_name
+                FROM
+                    BLK_BUILDING a,
+                (
+                    SELECT
+                        street_code, street_name
+                    FROM
+                        COMMUNITY_CODE
+                    GROUP BY
+                        street_name, street_code
+                ) b
+                WHERE
+                    a.street_code = b.street_code
+                <if test="streetCode != null and streetCode != ''">
+                    AND a.STREET_CODE = #{streetCode}
+                    AND b.STREET_CODE = #{streetCode}
+                </if>
+            ) t2
+        ON
+            t1.BUILD_ID = t2.BUILD_ID
+        GROUP BY
+            t1.SCORE, t2.STREET_NAME
+        HAVING
+        COUNT(*) &gt;= 0
+    </select>
+
+    <select id="selectStreetBuilderLevelCountByStreet" resultType="com.cetccity.operationcenter.webframework.hiddendanger.dao.entity.StreetBuilderLevel" >
+        SELECT
+        t1.SCORE AS dangerLevel, t2.community_name AS name, COUNT(*) AS count
+        FROM
+            (
+                SELECT BUILD_ID,CASE
+                <foreach collection="buildDangerLevels" item="item">
+                    WHEN SCORE &lt;= #{item.maxScore} THEN
+                    #{item.name}
+                </foreach>
+                END SCORE
+                FROM
+                    BUILD_SCORE
+                where
+                    CALCULATION_TIME = #{date}
+            ) t1
+        JOIN
+            (
+                SELECT
+                    a.buildid BUILD_ID, b.community_name
+                FROM
+                    T_BUILD_INFO_V a,
+                (
+                    SELECT
+                        community_code, community_name
+                    FROM
+                        COMMUNITY_CODE
+                    WHERE
+                        street_name = #{street_name}
+                    GROUP BY
+                        community_code, community_name
+                ) b
+                WHERE
+                    a.community_code = b.community_code
+            ) t2
+        ON
+                t1.BUILD_ID = t2.BUILD_ID
+        GROUP BY
+            t1.SCORE, t2.community_name
+        HAVING
+            COUNT(*) > 0
+    </select>
+
+    <select id="countDangerByDate" resultMap="nameValueTypeModel">
+        SELECT
+            t2.STREET_NAME AS name, COUNT(*) AS value
+        FROM
+            (
+                SELECT BUILD_ID
+                FROM
+                    BUILD_SCORE
+                WHERE
+                    CALCULATION_TIME = #{date}
+                AND
+                    SCORE > #{min_score}
+            ) t1
+        JOIN
+            (
+                SELECT
+                    a.buildid BUILD_ID, b.street_name
+                FROM
+                    T_BUILD_INFO_V a,
+                    (
+                        SELECT
+                            street_code, street_name
+                        FROM
+                            COMMUNITY_CODE
+                        GROUP BY
+                            street_name, street_code
+                    ) b
+                WHERE
+                a.street_code = b.street_code
+                <if test="streetCode != null and streetCode != ''">
+                    AND a.STREET_CODE = #{streetCode}
+                    AND b.STREET_CODE = #{streetCode}
+                </if>
+            ) t2
+        ON
+            t1.BUILD_ID = t2.BUILD_ID
+        GROUP BY
+            t2.STREET_NAME
+        HAVING
+            COUNT(*) > 0
+    </select>
+
+    <select id="countDangerByDateAndStreet" resultMap="nameValueTypeModel" >
+        SELECT
+            t2.community_name AS name, NVL(COUNT(*), 0) AS value
+        FROM
+            (
+                SELECT
+                    BUILD_ID
+                FROM
+                    BUILD_SCORE
+                where
+                    CALCULATION_TIME = #{date}
+                AND
+                    SCORE > #{min_score}
+            ) t1
+        RIGHT JOIN
+            (
+            SELECT
+                a.buildid BUILD_ID, b.community_name
+            FROM
+                T_BUILD_INFO_V a,
+                (
+                    SELECT
+                        community_code, community_name
+                    FROM
+                        COMMUNITY_CODE
+                    <if test="street_name != null">
+                        <where>
+                            street_name = #{street_name}
+                        </where>
+                    </if>
+
+                    GROUP BY
+                        community_code, community_name
+                ) b
+            WHERE
+                a.community_code = b.community_code
+            ) t2
+        ON
+            t1.BUILD_ID = t2.BUILD_ID
+        GROUP BY
+            t2.community_name
+        HAVING
+            COUNT(*) > 0
+    </select>
+
+</mapper>

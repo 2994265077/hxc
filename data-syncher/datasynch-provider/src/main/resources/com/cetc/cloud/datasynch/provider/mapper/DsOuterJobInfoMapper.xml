@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetc.cloud.datasynch.provider.mapper.DsOuterJobInfoMapper">
+    <resultMap id="BaseResultMap" type="com.cetc.cloud.datasynch.api.model.DsOuterJobModel">
+        <result column="JOB_CLASS_NAME" jdbcType="VARCHAR" property="job_class_name"/>
+        <result column="TABLE_NAME" jdbcType="VARCHAR" property="table_name"/>
+        <result column="URL" jdbcType="VARCHAR" property="url"/>
+        <result column="BODY" jdbcType="VARCHAR" property="body"/>
+        <result column="PARAMS" jdbcType="VARCHAR" property="params"/>
+        <result column="HEADERS" jdbcType="VARCHAR" property="headers"/>
+        <result column="OBJECT_ID" jdbcType="INTEGER" property="object_id"/>
+        <result column="CREATE_TIME" jdbcType="DATE" property="create_time"/>
+        <result column="UPDATE_TIME" jdbcType="DATE" property="update_time"/>
+        <result column="METHOD" jdbcType="VARCHAR" property="method"/>
+        <result column="TOKEN_LINK_ID" jdbcType="INTEGER" property="token_link_id"/>
+        <result column="RESULT_EXTRACT_RULE" jdbcType="VARCHAR" property="result_extract_rule"/>
+        <result column="TOKEN_KEY_NAME" jdbcType="VARCHAR" property="token_key_name"/>
+        <result column="CRON_EXPRESSION" jdbcType="VARCHAR" property="cron_expression"/>
+    </resultMap>
+
+    <sql id="BaseTable">
+        DS_OUTER_JOB_INFO
+    </sql>
+
+    <sql id="BaseColumns">
+        URL,BODY,TABLE_NAME,PARAMS,HEADERS,OBJECT_ID,CREATE_TIME,UPDATE_TIME,METHOD,TOKEN_LINK_ID,RESULT_EXTRACT_RULE,TOKEN_KEY_NAME,CRON_EXPRESSION,JOB_CLASS_NAME
+    </sql>
+
+    <sql id="BaseColumns_Insert_Event">
+        OBJECT_ID,URL,BODY,TABLE_NAME,PARAMS,HEADERS,METHOD,TOKEN_LINK_ID,RESULT_EXTRACT_RULE,TOKEN_KEY_NAME,CRON_EXPRESSION,JOB_CLASS_NAME
+    </sql>
+
+    <select id="getModelByTableName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumns"/>
+        FROM <include refid="BaseTable"/>
+        WHERE TABLE_NAME = #{tableName}
+    </select>
+    <select id="getModelByObjectId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumns"/>
+        FROM <include refid="BaseTable"/>
+        WHERE OBJECT_ID = #{objectId}
+    </select>
+    <select id="getOuterJobList"  resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumns"/>
+        FROM <include refid="BaseTable"/>
+        WHERE JOB_CLASS_NAME IS NOT NULL
+    </select>
+</mapper>

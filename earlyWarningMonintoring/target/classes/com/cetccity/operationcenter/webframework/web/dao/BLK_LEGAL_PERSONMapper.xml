@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.web.dao.BLK_LEGAL_PERSONMapper">
+
+    <select id="getBLK_LEGAL_PERSON" parameterType="com.cetccity.operationcenter.webframework.web.model.incident.loadmap.BLK_LEGAL_PERSON" resultType="com.cetccity.operationcenter.webframework.web.model.incident.loadmap.BLK_LEGAL_PERSON">
+        select  a.ID,a.TYSHXYDM,a.GSZZZCH,a.JGMC,b.CODE_IN_CHINESE as JGXX,a.JGDZ,a.FMJG,a.FZRID,a.FRZJDM,a.FRZJHM,a.FZRXM,
+        a.CJR,a.BZ,a.CJRQ,a.XGR,a.XGRQ,a.YSBGXSJ,a.YSBSJLY,a.BZDZ,a.SHENG,a.SHENGDM,a.SHI,a.SHIDM,a.QU,a.QUDM,a.JD,a.JDDM,
+        a.SQ,a.SQDM,a.WG,a.WGDM,a.DL,a.DLDM,a.XQ,a.XQDM,a.LD,a.LDDM,a.FW,a.FWDM,a.CJSJ,a.GXSJ,a.SJLYFS,a.SJLY,a.DYWGCODE,a.CODE,
+        a.ADDRCODE,a.ADDRDESC,a.YYZT,a.LON,a.LAT,a.TASK_ID,a.USER_ID,a.STATUS,LRR,a.LRRQ,GXR,a.FRDH,a.SFZCFR,a.HYFL,
+        a.JYFW,a.SSZTFL,a.BFRQ,a.CLASSFIY,a.SYSTEM_NAME,a.FRGDDH,a.STREET_CODE,a.COMMUNITY_CODE
+        from BLK_LEGAL_PERSON a,DS_VALUE_DICT b where 1=1
+        and b.TABLE_NAME = 'BLK_LEGAL_PERSON'
+        and b.COLUMN_NAME = 'JGXX'
+        and b.CODE = a.JGXX
+        <if test="LDDM != null">
+            and LDDM = #{LDDM}
+        </if>
+    </select>
+
+    <select id="getCount" parameterType="com.cetccity.operationcenter.webframework.web.model.incident.loadmap.BLK_LEGAL_PERSON" resultType="java.lang.Integer">
+        select  COUNT(*)
+        from BLK_LEGAL_PERSON where 1=1
+        <if test="YYZT != null">
+            and YYZT = #{YYZT}
+        </if>
+        <if test="HYFL != null">
+            and HYFL = #{HYFL}
+        </if>
+        <if test="STREET_CODE != null">
+            and STREET_CODE = #{STREET_CODE}
+        </if>
+        <if test="COMMUNITY_CODE != null">
+            and COMMUNITY_CODE = #{COMMUNITY_CODE}
+        </if>
+    </select>
+
+</mapper>

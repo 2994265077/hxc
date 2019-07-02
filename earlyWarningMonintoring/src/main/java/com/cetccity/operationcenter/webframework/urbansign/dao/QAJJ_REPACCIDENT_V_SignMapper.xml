@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.urbansign.dao.QAJJ_REPACCIDENT_V_SignMapper">
+    <!--今日重大安全事故-->
+    <select id="safetyAccidentCount" parameterType="java.lang.String" resultType="com.cetccity.operationcenter.webframework.urbansign.dao.entity.QAJJ_REPACCIDENT_V">
+        select TOTALBOO as totalboo,TOTALGBH as totalgbh,TOTALDEAD as totaldead from QAJJ_REPACCIDENT_V where ACCIDENTTIME like #{time,jdbcType=VARCHAR}
+    </select>
+    <!--城市体征-公共安全-安全生产-->
+    <select id="selectCountOfToday" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*) from QAJJ_REPACCIDENT_V where ACCIDENTTIME like #{time,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cetccity.operationcenter.webframework.trigger.dao.IotAlarmTriggerMapper">
+
+    <resultMap id="iotEventBase" type="com.cetccity.operationcenter.webframework.trigger.entity.iot.IotEventUnion" >
+        <result column="NAME" property="deviceName" javaType="java.lang.String"></result>
+        <result column="DEVICE_CODE" property="deviceCode" javaType="java.lang.String"></result>
+        <result column="WD84" property="wd84" javaType="java.lang.String"></result>
+        <result column="JD84" property="jd84" javaType="java.lang.String"></result>
+        <result column="ADDRESS" property="address" javaType="java.lang.String"></result>
+        <result column="CREATE_TIME" property="createTime" javaType="java.time.LocalDateTime"></result>
+        <result column="UPDATE_TIME" property="updateTime" javaType="java.time.LocalDateTime"></result>
+        <result column="REGION_CODE" property="regionCode" javaType="java.lang.String"></result>
+        <result column="STREET_CODE" property="streetCode" javaType="java.lang.String"></result>
+        <result column="COMMUNITY_CODE" property="communityCode" javaType="java.lang.String"></result>
+        <result column="STREET_NAME" property="streetName" javaType="java.lang.String"></result>
+        <result column="COMMUNITY_NAME" property="communityName" javaType="java.lang.String"></result>
+        <result column="UUID" property="uuid" javaType="java.lang.String"></result>
+        <result column="DEVICE_TYPE" property="deviceType" javaType="java.lang.String"></result>
+        <result column="IOT_DEVICE_ID" property="deviceId" javaType="java.lang.String"></result>
+        <result column="EVENT_LEVEL" property="eventLevel" javaType="java.lang.String"></result>
+        <result column="DATA_CODE" property="dataCode" javaType="java.lang.String"></result>
+        <result column="PRODUCE_TIME" property="produceTime" javaType="java.time.LocalDateTime"></result>
+        <result column="DATA_VALUE" property="dataValue" javaType="java.lang.Double"></result>
+        <result column="IOT_EVENT_ID" property="iotEventId" javaType="java.lang.String"></result>
+        <result column="DEVICE_NAME" property="deviceTypeName" javaType="java.lang.String"></result>
+        <result column="EVENT_CODE" property="eventCode" javaType="java.lang.String"></result>
+    </resultMap>
+
+    <select id="querySourceData" parameterType="java.util.Map" resultType="com.cetccity.operationcenter.webframework.trigger.entity.iot.IotEvent">
+        SELECT ID,EVENT_ID,EVENT_CODE,EVENT_NAME,EVENT_LEVEL,EVENT_STATE,EVENT_DESC,PRODUCE_TIME,END_TIME,DURATION,
+        UPDATE_TIME,UPDATE_STATE,UUID,DEVICE_CODE,DATA_CODE,DATA_VALUE,PARA_CODE,PARA_VALUE,IS_PROCESSED,
+        PROCESSOR,PROCESS_UNIT,PROCESS_SYSTEM,PROCESS_TIME,PROCESS_WAY,RESERVED1,RESERVED2,RESERVED3,
+        RESERVED4,RESERVED5,REGION_CODE,STREET_CODE,COMMUNITY_CODE,JD84,WD84,ADDRESS,STREET_NAME,COMMUNITY_NAME,
+        OBJECT_ID
+        from IOT_EVENT
+        <where>
+            <if test="begin != null">
+                and PRODUCE_TIME &gt;= to_date(#{begin},'yyyy-MM-dd HH24:mi:ss')
+            </if>
+            <if test="end != null">
+                and PRODUCE_TIME &lt; to_date(#{end},'yyyy-MM-dd HH24:mi:ss')
+            </if>
+        </where>
+        order by PRODUCE_TIME
+    </select>
+
+    <select id="querySource" resultMap="iotEventBase">
+        SELECT
+              t3.*, NVL(t4.DEVICE_NAME, '未备案设备')
+        FROM
+                (
+                    SELECT
+                        t1.NAME, t1.DEVICE_CODE, t1.WD84, t1.JD84, t1.ADDRESS, t1.CREATE_TIME, t1.UPDATE_TIME,
+                        t1.REGION_CODE, t1.STREET_CODE, t1.COMMUNITY_CODE, t1.STREET_NAME, t1.COMMUNITY_NAME,
+                        t1.UUID, t1.DEVICE_TYPE, t1.OBJECT_ID AS IOT_DEVICE_ID, t2.EVENT_LEVEL,
+                        t2.DATA_CODE, t2.PRODUCE_TIME, t2.EVENT_CODE, t2.DATA_VALUE, t2.OBJECT_ID AS IOT_EVENT_ID
+                    FROM
+                        IOT_DEVICE t1
+                    JOIN
+                        IOT_EVENT t2
+                    ON
+                        t1.DEVICE_CODE = t2.DEVICE_CODE
+                    <where>
+                        <if test="begin != null">
+                            and t2.PRODUCE_TIME &gt; #{begin}
+                        </if>
+                        <if test="data_code != null">
+                            and t2.DATA_CODE = data_code;
+                        </if>
+                    </where>
+                ) t3
+            LEFT JOIN
+                IOT_CODE t4
+            ON
+                t3.DEVICE_TYPE = t4.DEVICE_TYPE
+    </select>
+
+
+    <select id="querySourceByMinId" resultMap="iotEventBase">
+        SELECT
+        t3.*, NVL(t4.DEVICE_NAME, '未备案设备')
+        FROM
+        (
+        SELECT
+        t1.NAME, t1.DEVICE_CODE, t1.WD84, t1.JD84, t1.ADDRESS, t1.CREATE_TIME, t1.UPDATE_TIME,
+        t1.REGION_CODE, t1.STREET_CODE, t1.COMMUNITY_CODE, t1.STREET_NAME, t1.COMMUNITY_NAME,
+        t1.UUID, t1.DEVICE_TYPE, t1.OBJECT_ID AS IOT_DEVICE_ID, t2.EVENT_LEVEL,
+        t2.DATA_CODE, t2.PRODUCE_TIME, t2.EVENT_CODE, t2.DATA_VALUE, t2.OBJECT_ID AS IOT_EVENT_ID
+        FROM
+        IOT_DEVICE t1
+        JOIN
+        IOT_EVENT t2
+        ON
+        t1.DEVICE_CODE = t2.DEVICE_CODE
+        <where>
+            <if test="object_id != null">
+                and t2.OBJECT_ID &gt; #{object_id}
+            </if>
+        </where>
+        ) t3
+        LEFT JOIN
+        IOT_CODE t4
+        ON
+        t3.DEVICE_TYPE = t4.DEVICE_TYPE
+    </select>
+
+</mapper>

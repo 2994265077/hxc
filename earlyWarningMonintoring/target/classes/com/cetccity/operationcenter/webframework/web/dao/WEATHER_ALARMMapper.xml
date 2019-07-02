@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.web.dao.WEATHER_ALARMMapper">
+    <!--空气质量时间数据-->
+    <select id="getWEATHER_ALARMOfToday" parameterType="java.lang.String" resultType="com.cetccity.operationcenter.webframework.web.model.incident.loadmap.WEATHER_ALARM">
+        select  ID,RELEASEAREA,ALERTCATEGORY,WARNINGLEVEL,RELEASETIME,ENDTIME,WARNINGCONTENT
+        from WEATHER_ALARM
+        where 1=1 and RELEASETIME like CONCAT((#{time_weather}), '%')
+        order by ID DESC
+    </select>
+
+</mapper>

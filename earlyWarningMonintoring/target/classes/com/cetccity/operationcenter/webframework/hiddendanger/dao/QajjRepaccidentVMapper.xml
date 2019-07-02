@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.hiddendanger.dao.QajjRepaccidentVMapper">
+
+    <select id="getQAJJ_REPACCIDENT_V" parameterType="com.cetccity.operationcenter.webframework.hiddendanger.dao.entity.QAJJ_REPACCIDENT_V" resultType="com.cetccity.operationcenter.webframework.hiddendanger.dao.entity.QAJJ_REPACCIDENT_V">
+        SELECT LEADER,REASONCODE,SURVEYDESC,ACCIDENTTIME,ACCIDENTARGEADDRESS,ADDRESS,TYPECODE,ACCIDENTLEVEL,INNERID
+        FROM QAJJ_REPACCIDENT_V
+        WHERE 1=1
+        <if test="INNERID != null">
+            and INNERID = #{INNERID}
+        </if>
+    </select>
+
+</mapper>

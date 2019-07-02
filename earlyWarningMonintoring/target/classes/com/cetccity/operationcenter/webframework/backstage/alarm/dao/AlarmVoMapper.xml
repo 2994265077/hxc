@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.backstage.alarm.dao.AlarmVoMapper">
+
+
+    <resultMap id="alarmVo" type="com.cetccity.operationcenter.webframework.backstage.alarm.domain.AlarmVo">
+        <result property="alarmTypeLv1Name" column="ALARM_TYPE_LV1_NAME" javaType="java.lang.String"></result>
+        <result property="alarmTypeLv2Name" column="ALARM_TYPE_LV2_NAME" javaType="java.lang.String"></result>
+        <result property="yjjcUpdateTime" column="YJJC_UPDATE_TIME" javaType="java.time.LocalDateTime"></result>
+        <result property="yjjcCreateTime" column="YJJC_CREATE_TIME" javaType="java.time.LocalDateTime"></result>
+        <result property="channel" column="CHANNEL" javaType="java.lang.String"></result>
+        <result property="sendState" column="SEND_STATE" javaType="java.lang.String"></result>
+        <result property="disposalState" column="DISPOSAL_STATE" javaType="java.lang.String"></result>
+        <result property="alarmTypeLv2" column="ALARM_TYPE_LV2" javaType="java.lang.String"></result>
+        <result property="alarmTypeLv1" column="ALARM_TYPE_LV1" javaType="java.lang.String"></result>
+        <result property="alarmLevel" column="ALARM_LEVEL" javaType="java.lang.String"></result>
+        <result property="contents" column="CONTENTS" javaType="java.lang.String"></result>
+        <result property="alarmState" column="ALARM_STATE" javaType="java.lang.String"></result>
+        <result property="releasePerson" column="RELEASE_PERSON" javaType="java.lang.String"></result>
+        <result property="cancelTime" column="CANCEL_TIME" javaType="java.time.LocalDateTime"></result>
+        <result property="releaseTime" column="RELEASE_TIME" javaType="java.time.LocalDateTime"></result>
+        <result property="systemId" column="SYSTEM_ID" javaType="java.lang.String"></result>
+        <result property="originTableName" column="ORIGIN_TABLE_NAME" javaType="java.lang.String"></result>
+        <result property="fRowId" column="F_ROW_ID" javaType="java.lang.String"></result>
+        <result property="objectId" column="OBJECT_ID" javaType="java.lang.String"></result>
+        <result property="lddm" column="LDDM" javaType="java.lang.String"></result>
+        <result property="communityName" column="COMMUNITY_NAME" javaType="java.lang.String"></result>
+        <result property="streetName" column="STREET_NAME" javaType="java.lang.String"></result>
+        <result property="address" column="ADDRESS" javaType="java.lang.String"></result>
+        <result property="communityCode" column="COMMUNITY_CODE" javaType="java.lang.String"></result>
+        <result property="streetCode" column="STREET_CODE" javaType="java.lang.String"></result>
+        <result property="regionCode" column="REGION_CODE" javaType="java.lang.String"></result>
+        <result property="wd84" column="WD84" javaType="java.lang.String"></result>
+        <result property="jd84" column="JD84" javaType="java.lang.String"></result>
+        <result property="fObjectRowId" column="F_OBJECT_ROW_ID" javaType="java.lang.String"></result>
+        <result property="alarmObject" column="ALARM_OBJECT" javaType="java.lang.String"></result>
+    </resultMap>
+
+    <select id="query" parameterType="com.cetccity.operationcenter.webframework.backstage.alarm.qo.AlarmQueryObject" resultMap="alarmVo" >
+        SELECT
+            t1.*, t2.LV_2_NAME as ALARM_TYPE_LV2_NAME
+        FROM
+            (
+                SELECT
+                *
+                FROM
+                ALARM_INFORMATION
+                <if test="alarm_query_vo != null">
+                    <where>
+                        <if test="alarm_query_vo.streetCode != null and alarm_query_vo.streetCode.length() > 0">
+                            AND STREET_CODE = #{alarm_query_vo.streetCode}
+                        </if>
+                        <if test="alarm_query_vo.alarmTypeLv2 != null and alarm_query_vo.alarmTypeLv2.length() > 0">
+                            AND ALARM_TYPE_LV2 = #{alarm_query_vo.alarmTypeLv2}
+                        </if>
+                        <if test="alarm_query_vo.alarmState != null and alarm_query_vo.alarmState.length() > 0">
+                            AND ALARM_STATE = #{alarm_query_vo.alarmState}
+                        </if>
+                        <if test="alarm_query_vo.sendState != null and alarm_query_vo.sendState.length() > 0">
+                            AND SEND_STATE = #{alarm_query_vo.sendState}
+                        </if>
+                        <if test="alarm_query_vo.disposalState != null and alarm_query_vo.disposalState.length() > 0">
+                            AND DISPOSAL_STATE = #{alarm_query_vo.disposalState}
+                        </if>
+                        <if test="alarm_query_vo.channel != null and alarm_query_vo.channel.length() > 0">
+                            AND CHANNEL = #{alarm_query_vo.channel}
+                        </if>
+                        <if test="alarm_query_vo.releaseTimeRange != null">
+                            AND
+                            RELEASE_TIME
+                            BETWEEN
+                                <if test="alarm_query_vo.releaseTimeRange.begin != null">
+                                    #{alarm_query_vo.releaseTimeRange.begin}
+                                </if>
+                                <if test=" alarm_query_vo.releaseTimeRange.begin == null">
+                                    TO_DATE('1970', 'yyyy')
+                                </if>
+                            AND
+                                <if test="alarm_query_vo.releaseTimeRange.end != null">
+                                    #{alarm_query_vo.releaseTimeRange.end}
+                                </if>
+                                <if test="alarm_query_vo.releaseTimeRange.end == null">
+                                    SYSDATE
+                                </if>
+                        </if>
+                    </where>
+                </if>
+            )
+            t1
+        LEFT JOIN
+            ALARM_INFO_CODE t2
+        ON t1.ALARM_TYPE_LV2 = t2.LV_2
+    </select>
+
+    <select id="queryById" parameterType="java.lang.String" resultMap="alarmVo" >
+        SELECT
+            t1.*, t2.LV_2_NAME as ALARM_TYPE_LV2_NAME, t2.LV_1_NAME AS ALARM_TYPE_LV1_NAME
+        FROM
+            (
+                SELECT
+                    *
+                FROM
+                    ALARM_INFORMATION
+                WHERE
+                    OBJECT_ID = #{id}
+            ) t1
+        LEFT JOIN
+            ALARM_INFO_CODE t2
+        ON
+            t1.ALARM_TYPE_LV2 = t2.LV_2
+    </select>
+
+
+</mapper>

@@ -1,0 +1,75 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.cetccity.operationcenter.webframework.web.log.support.ApiLogAspect",
+      "name": "api.log",
+      "type": "com.cetccity.operationcenter.webframework.web.log.support.ApiLogAspect"
+    },
+    {
+      "sourceType": "com.cetccity.operationcenter.webframework.web.config.PrimaryHikariDataSourceConfig",
+      "name": "spring.datasource",
+      "sourceMethod": "primaryDataSource()",
+      "type": "javax.sql.DataSource"
+    },
+    {
+      "sourceType": "com.cetccity.operationcenter.webframework.web.config.OaHikariDataSourceConfig",
+      "name": "spring.oa",
+      "sourceMethod": "oaDataDource()",
+      "type": "javax.sql.DataSource"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.cetccity.operationcenter.webframework.web.log.support.ApiLogAspect",
+      "name": "api.log.api-log-consumer",
+      "type": "com.cetccity.operationcenter.webframework.web.log.consumer.ApiLogConsumer"
+    },
+    {
+      "sourceType": "com.cetccity.operationcenter.webframework.web.log.support.ApiLogAspect",
+      "name": "api.log.exclude",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.cetccity.operationcenter.webframework.web.log.support.ApiLogAspect",
+      "name": "api.log.exclude-paths",
+      "type": "java.util.HashSet<java.lang.String>"
+    },
+    {
+      "sourceType": "com.cetccity.operationcenter.webframework.web.log.support.ApiLogAspect",
+      "name": "api.log.exclude-prefix",
+      "type": "java.util.List<java.lang.String>"
+    },
+    {
+      "sourceType": "com.cetccity.operationcenter.webframework.web.log.support.ApiLogAspect",
+      "name": "api.log.exclude-starts",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.cetccity.operationcenter.webframework.web.log.support.ApiLogAspect",
+      "name": "api.log.include",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.cetccity.operationcenter.webframework.web.log.support.ApiLogAspect",
+      "name": "api.log.include-paths",
+      "type": "java.util.HashSet<java.lang.String>"
+    },
+    {
+      "sourceType": "com.cetccity.operationcenter.webframework.web.log.support.ApiLogAspect",
+      "name": "api.log.include-prefix",
+      "type": "java.util.List<java.lang.String>"
+    },
+    {
+      "sourceType": "com.cetccity.operationcenter.webframework.web.log.support.ApiLogAspect",
+      "name": "api.log.include-starts",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.cetccity.operationcenter.webframework.web.log.support.ApiLogAspect",
+      "defaultValue": 0,
+      "name": "api.log.threshold",
+      "type": "java.lang.Long"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.urbansign.dao.ROAD_ADMIN_PROBLEMMapper">
+
+    <select id="rightFour" parameterType="java.util.Map" resultType="com.cetccity.operationcenter.webframework.urbansign.dao.entity.ROAD_ADMIN_PROBLEM">
+        SELECT * FROM(
+          select PUBLISH_TIME,"VALUE" from ROAD_ADMIN_PROBLEM ORDER BY PUBLISH_TIME DESC
+        )WHERE ROWNUM =1
+    </select>
+
+</mapper>

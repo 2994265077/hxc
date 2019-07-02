@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.urbansign.dao.HISTORY_FIREMapper">
+
+    <!--今日伤亡人数-->
+    <select id="casualtiesCount" parameterType="java.lang.String" resultType="com.cetccity.operationcenter.webframework.urbansign.api.model.HISTORY_FIRE_NUM">
+        select HURT_NUM as hurtnum,DEAD_NUM as deadnum from HISTORY_FIRE where START_TIME like #{time,jdbcType=VARCHAR}
+    </select>
+
+    <!--城市体征-公共安全-消防安全-->
+    <select id="selectCountOfToday" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*) from HISTORY_FIRE where START_TIME like #{time,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getHISTORY_FIREOfMonth" parameterType="java.lang.String" resultType="com.cetccity.operationcenter.webframework.urbansign.dao.entity.HISTORY_FIRE">
+        select ID,YEAR,REGION_BELONG,FIRE_NUM,START_TIME,FIRE_ADDRESS,UNIT_NAME,HURT_NUM,DEAD_NUM,
+	    AFFECTED_HOUSEHOLDS,DIRECT_LOSS,FIRE_CAUSE,FIRE_PLACE_TYPE,AUDIT_STATUS
+        from HISTORY_FIRE
+    </select>
+
+</mapper>

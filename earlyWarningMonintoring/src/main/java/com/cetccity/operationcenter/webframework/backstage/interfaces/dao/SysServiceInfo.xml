@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.backstage.interfaces.dao.SysServiceInfoMapper">
+
+    <sql id="columns">
+        t.SERVICE_ID,t.NAME,t.DESCRIPTION,t.IMG_PATH,t.SORT,t.CATA_ID,t.SER_ID,t.SYS_ID,t.COMPANY_ID,t.schedule,t.CREATE_DATE,t.UPDATE_DATE,t.CREATE_USER_ID,t.UPDATE_USER_ID
+    </sql>
+
+    <sql id="table">
+        SYS_SERVICE_INFO t
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="param.name!= null and param.name != ''">
+                NAME like '%'||#{param.name}||'%'
+            </if>
+            <if test="param.description!= null and param.description != ''">
+                DESCRIPTION like '%'||#{param.description}||'%'
+            </if>
+            <if test="param.cataId!= null and param.cataId != ''">
+                CATA_ID = #{param.cataId}
+            </if>
+            <if test="param.serId!= null and param.serId != ''">
+                SER_ID = #{param.serId}
+            </if>
+            <if test="param.sysId!= null and param.sysId != ''">
+                SYS_ID = #{param.sysId}
+            </if>
+            <if test="param.companyId!= null and param.companyId != ''">
+                COMPANY_ID = #{param.companyId}
+            </if>
+            <if test="param.status!= null and param.status != ''">
+                status = #{param.status}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" resultType="long">
+        select count(1) from <include refid="table"/> left join SYS_SERVICE s on t.SERVICE_ID=s.SERVICE_ID
+        <include refid="where"/>
+    </select>
+
+    <select id="findByPageParam" resultType="com.cetc.cloud.vo.sysService.SysServiceInfoVo">
+        select * from (
+        select <include refid="columns"/>,status,row_number() over(order by t.UPDATE_DATE desc) as rownumber
+        from <include refid="table"/> left join SYS_SERVICE s on t.SERVICE_ID=s.SERVICE_ID
+        <include refid="where"/>
+        ) p
+        <if test="pageSize!= null and pageNo != null">
+            where p.rownumber BETWEEN #{pageSize}*(#{pageNo}-1)+1 AND #{pageNo}*#{pageSize}
+        </if>
+    </select>
+
+    <select id="createServiceId" resultType="java.lang.Long" >
+
+        select SEQ_SERVICE_ID.nextval from dual
+    </select>
+
+    <insert id="save" >
+        insert into <include refid="table"/> (<include refid="columns"/>)
+        values (#{serviceId,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR},#{imgPath,jdbcType=VARCHAR},#{sort,jdbcType=VARCHAR},#{cataId,jdbcType=NUMERIC},#{serId,jdbcType=NUMERIC},#{sysId,jdbcType=NUMERIC},#{companyId,jdbcType=NUMERIC},#{schedule,jdbcType=NUMERIC},#{createDate,jdbcType=TIMESTAMP},#{updateDate,jdbcType=TIMESTAMP},#{createUserId,jdbcType=NUMERIC},#{updateUserId,jdbcType=NUMERIC})
+    </insert>
+
+    <update id="update">
+        update <include refid="table"/>
+        set NAME=#{name,jdbcType=VARCHAR},DESCRIPTION=#{description,jdbcType=VARCHAR},IMG_PATH=#{imgPath,jdbcType=VARCHAR},SORT=#{sort,jdbcType=NUMERIC},CATA_ID=#{cataId,jdbcType=NUMERIC},SER_ID=#{serId,jdbcType=NUMERIC},SYS_ID=#{sysId,jdbcType=NUMERIC},COMPANY_ID=#{companyId,jdbcType=NUMERIC},schedule=#{schedule,jdbcType=NUMERIC},UPDATE_DATE=#{updateDate,jdbcType=TIMESTAMP},UPDATE_USER_ID=#{updateUserId,jdbcType=NUMERIC}
+        where SERVICE_ID=#{serviceId}
+    </update>
+    <select id="findById" resultType="com.cetc.cloud.model.sysService.SysServiceInfo">
+        select  <include refid="columns"/>
+        from <include refid="table"/>
+        where SERVICE_ID=#{serviceId}
+    </select>
+</mapper>

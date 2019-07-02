@@ -1,0 +1,126 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cetccity.operationcenter.webframework.hiddendanger.dao.EmergencyFireHiddenDangerChartMapper">
+
+    <select id="count5Num" resultMap="com.cetccity.operationcenter.webframework.hiddendanger.dao.AllRegionHiddenDangerChartMapper.nameValueTypeModel">
+        --应急资源
+        ----避难场所
+        SELECT
+            COUNT(*) AS VALUE, '避难场所' AS NAME
+        FROM
+            EMERGENCY_SHELTER
+        WHERE
+            REGION_CODE = '440304'
+        <if test="streetCode != null and streetCode != ''">
+            AND STREET_CODE = #{streetCode}
+        </if>
+        UNION ALL
+        ----救援队伍
+        SELECT
+            COUNT(*) AS VALUE, '救援队伍' AS NAME
+        FROM
+            EMERGENCY_RESCUE_TEAM
+        WHERE
+            REGION_CODE = '440304'
+        <if test="streetCode != null and streetCode != ''">
+            AND STREET_CODE = #{streetCode}
+        </if>
+        UNION ALL
+        ----危险源
+        SELECT
+            COUNT(rowid) AS VALUE,  '危险源' AS NAME
+        FROM
+            EMERGENCY_HARZARD
+        WHERE
+            REGION_CODE = '440304'
+        <if test="streetCode != null and streetCode != ''">
+            AND STREET_CODE = #{streetCode}
+        </if>
+        UNION ALL
+        ----应急仓库
+        SELECT
+            COUNT(rowid) AS VALUE,  '应急仓库' AS NAME
+        FROM
+            EMERGENCY_WAREHOUSE
+        WHERE
+            REGION_CODE = '440304'
+        <if test="streetCode != null and streetCode != ''">
+            AND STREET_CODE = #{streetCode}
+        </if>
+        UNION ALL
+        ----应急物资
+        SELECT
+            SUM(material_num) AS VALUE,  '应急物资' AS NAME
+        FROM
+            EMERGENCY_MATERIAL_MEM
+        WHERE
+            REGION_CODE = '440304'
+        <if test="streetCode != null and streetCode != ''">
+            AND STREET_CODE = #{streetCode}
+        </if>
+    </select>
+
+    <select id="queryEmergencyShelterCapacity" resultMap="com.cetccity.operationcenter.webframework.hiddendanger.dao.AllRegionHiddenDangerChartMapper.nameValueTypeModel">
+        SELECT
+            COUNT(*) AS VALUE, '100人以下' AS NAME
+        FROM
+            EMERGENCY_SHELTER
+        WHERE
+            ACCOM_POPULATION &lt;= 100
+        <if test="streetCode != null and streetCode != ''">
+            AND STREET_CODE = #{streetCode}
+        </if>
+        UNION ALL
+        SELECT
+            COUNT(*) AS VALUE, '100-1000' AS NAME
+        FROM
+            EMERGENCY_SHELTER
+        WHERE
+            ACCOM_POPULATION &gt; 100
+        AND
+            ACCOM_POPULATION &lt;= 1000
+        <if test="streetCode != null and streetCode != ''">
+            AND STREET_CODE = #{streetCode}
+        </if>
+        UNION ALL
+        SELECT
+            COUNT(*) AS VALUE, '1000人以上' AS NAME
+        FROM
+            EMERGENCY_SHELTER
+        WHERE
+            ACCOM_POPULATION &gt; 1000
+        <if test="streetCode != null and streetCode != ''">
+            AND STREET_CODE = #{streetCode}
+        </if>
+    </select>
+
+    <select id="queryEmergencyHarzardType" resultMap="com.cetccity.operationcenter.webframework.hiddendanger.dao.AllRegionHiddenDangerChartMapper.nameValueTypeModel">
+        SELECT
+            POSSIBLE_DISASTER_FORMS AS NAME, COUNT(*) AS VALUE
+        FROM
+            EMERGENCY_HARZARD
+        <where>
+            <if test="streetCode != null and streetCode != ''">
+                AND STREET_CODE = #{streetCode}
+            </if>
+        </where>
+        GROUP BY
+            POSSIBLE_DISASTER_FORMS
+    </select>
+
+    <select id="queryEmergencyHouseAndSource" resultMap="com.cetccity.operationcenter.webframework.hiddendanger.dao.AllRegionHiddenDangerChartMapper.nameValueTypeModel">
+        SELECT
+            a.NAME AS NAME, SUM(b.MATERIAL_NUM) AS VALUE
+        FROM
+            EMERGENCY_WAREHOUSE a, EMERGENCY_MATERIAL_MEM b
+        WHERE
+            a.NAME = b.ADDRESS
+        <if test="streetCode != null and streetCode != ''">
+            AND b.STREET_CODE = #{streetCode}
+        </if>
+        GROUP BY
+            a.NAME
+    </select>
+</mapper>

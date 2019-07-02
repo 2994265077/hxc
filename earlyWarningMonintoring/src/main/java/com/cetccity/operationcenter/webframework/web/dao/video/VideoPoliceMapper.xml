@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.web.dao.video.VideoPoliceMapper">
+  <resultMap id="BaseResultMap" type="com.cetccity.operationcenter.webframework.web.model.video.VideoPoliceModel">
+    <result column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="CAMERAID" jdbcType="VARCHAR" property="cameraid" />
+    <result column="DISTRICT" jdbcType="VARCHAR" property="district" />
+    <result column="GB_CODE" jdbcType="VARCHAR" property="gbCode" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="JD84" jdbcType="VARCHAR" property="jd84" />
+    <result column="WD84" jdbcType="VARCHAR" property="wd84" />
+    <result column="IP" jdbcType="VARCHAR" property="ip" />
+    <result column="START_DATE" jdbcType="VARCHAR" property="startDate" />
+    <result column="STATE" jdbcType="VARCHAR" property="state" />
+    <result column="RECORD" jdbcType="VARCHAR" property="record" />
+    <result column="CATEGORY" jdbcType="VARCHAR" property="category" />
+    <result column="APPEARANCE" jdbcType="VARCHAR" property="appearance" />
+    <result column="RESOLUTION" jdbcType="VARCHAR" property="resolution" />
+    <result column="CREATE_TIME" jdbcType="DATE" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="DATE" property="updateTime" />
+    <result column="UPDATE_STATUS" jdbcType="VARCHAR" property="updateStatus" />
+    <result column="UUID" jdbcType="VARCHAR" property="uuid" />
+    <result column="REGION_CODE" jdbcType="VARCHAR" property="regionCode" />
+    <result column="STREET_CODE" jdbcType="VARCHAR" property="streetCode" />
+    <result column="COMMUNITY_CODE" jdbcType="VARCHAR" property="communityCode" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ID, CAMERAID, DISTRICT, GB_CODE, ADDRESS, NAME, JD84, WD84, IP, START_DATE, STATE,
+    RECORD, CATEGORY, APPEARANCE, RESOLUTION, CREATE_TIME, UPDATE_TIME, UPDATE_STATUS, 
+    UUID, REGION_CODE, STREET_CODE, COMMUNITY_CODE
+  </sql>
+  <select id="selectByExample" parameterType="com.cetccity.operationcenter.webframework.web.model.video.VideoPoliceModelExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ZHFTYJJCPT.VIDEO_POLICE
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.cetccity.operationcenter.webframework.web.model.video.VideoPoliceModelExample">
+    delete from ZHFTYJJCPT.VIDEO_POLICE
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.cetccity.operationcenter.webframework.web.model.video.VideoPoliceModel">
+    <selectKey keyProperty="id" order="AFTER" resultType="String">
+      Oracle
+    </selectKey>
+    insert into ZHFTYJJCPT.VIDEO_POLICE (CAMERAID, DISTRICT, GB_CODE, 
+      ADDRESS, NAME, JD84,
+      WD84, IP, START_DATE, 
+      STATE, RECORD, CATEGORY,
+      APPEARANCE, RESOLUTION, CREATE_TIME, 
+      UPDATE_TIME, UPDATE_STATUS, UUID, 
+      REGION_CODE, STREET_CODE, COMMUNITY_CODE
+      )
+    values (#{cameraid,jdbcType=VARCHAR}, #{district,jdbcType=VARCHAR}, #{gbCode,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{jd84,jdbcType=VARCHAR}, 
+      #{wd84,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{startDate,jdbcType=VARCHAR}, 
+      #{state,jdbcType=VARCHAR}, #{record,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR}, 
+      #{appearance,jdbcType=VARCHAR}, #{resolution,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, 
+      #{updateTime,jdbcType=DATE}, #{updateStatus,jdbcType=VARCHAR}, #{uuid,jdbcType=VARCHAR}, 
+      #{regionCode,jdbcType=VARCHAR}, #{streetCode,jdbcType=VARCHAR}, #{communityCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cetccity.operationcenter.webframework.web.model.video.VideoPoliceModel">
+    <selectKey keyProperty="id" order="AFTER" resultType="String">
+      Oracle
+    </selectKey>
+    insert into ZHFTYJJCPT.VIDEO_POLICE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="cameraid != null">
+        CAMERAID,
+      </if>
+      <if test="district != null">
+        DISTRICT,
+      </if>
+      <if test="gbCode != null">
+        GB_CODE,
+      </if>
+      <if test="address != null">
+        ADDRESS,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="jd84 != null">
+        JD84,
+      </if>
+      <if test="wd84 != null">
+        WD84,
+      </if>
+      <if test="ip != null">
+        IP,
+      </if>
+      <if test="startDate != null">
+        START_DATE,
+      </if>
+      <if test="state != null">
+        STATE,
+      </if>
+      <if test="record != null">
+        RECORD,
+      </if>
+      <if test="category != null">
+        CATEGORY,
+      </if>
+      <if test="appearance != null">
+        APPEARANCE,
+      </if>
+      <if test="resolution != null">
+        RESOLUTION,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="updateStatus != null">
+        UPDATE_STATUS,
+      </if>
+      <if test="uuid != null">
+        UUID,
+      </if>
+      <if test="regionCode != null">
+        REGION_CODE,
+      </if>
+      <if test="streetCode != null">
+        STREET_CODE,
+      </if>
+      <if test="communityCode != null">
+        COMMUNITY_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="cameraid != null">
+        #{cameraid,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null">
+        #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="gbCode != null">
+        #{gbCode,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="jd84 != null">
+        #{jd84,jdbcType=VARCHAR},
+      </if>
+      <if test="wd84 != null">
+        #{wd84,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null">
+        #{startDate,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="record != null">
+        #{record,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null">
+        #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="appearance != null">
+        #{appearance,jdbcType=VARCHAR},
+      </if>
+      <if test="resolution != null">
+        #{resolution,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=DATE},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=DATE},
+      </if>
+      <if test="updateStatus != null">
+        #{updateStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="uuid != null">
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="regionCode != null">
+        #{regionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="streetCode != null">
+        #{streetCode,jdbcType=VARCHAR},
+      </if>
+      <if test="communityCode != null">
+        #{communityCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cetccity.operationcenter.webframework.web.model.video.VideoPoliceModelExample" resultType="java.lang.Long">
+    select count(*) from ZHFTYJJCPT.VIDEO_POLICE
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update ZHFTYJJCPT.VIDEO_POLICE
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.cameraid != null">
+        CAMERAID = #{record.cameraid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.district != null">
+        DISTRICT = #{record.district,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gbCode != null">
+        GB_CODE = #{record.gbCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null">
+        ADDRESS = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        `NAME` = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.jd84 != null">
+        JD84 = #{record.jd84,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wd84 != null">
+        WD84 = #{record.wd84,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ip != null">
+        IP = #{record.ip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.startDate != null">
+        START_DATE = #{record.startDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.state != null">
+        `STATE` = #{record.state,jdbcType=VARCHAR},
+      </if>
+      <if test="record.record != null">
+        RECORD = #{record.record,jdbcType=VARCHAR},
+      </if>
+      <if test="record.category != null">
+        CATEGORY = #{record.category,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appearance != null">
+        APPEARANCE = #{record.appearance,jdbcType=VARCHAR},
+      </if>
+      <if test="record.resolution != null">
+        RESOLUTION = #{record.resolution,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        CREATE_TIME = #{record.createTime,jdbcType=DATE},
+      </if>
+      <if test="record.updateTime != null">
+        UPDATE_TIME = #{record.updateTime,jdbcType=DATE},
+      </if>
+      <if test="record.updateStatus != null">
+        UPDATE_STATUS = #{record.updateStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uuid != null">
+        UUID = #{record.uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regionCode != null">
+        REGION_CODE = #{record.regionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.streetCode != null">
+        STREET_CODE = #{record.streetCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.communityCode != null">
+        COMMUNITY_CODE = #{record.communityCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update ZHFTYJJCPT.VIDEO_POLICE
+    set ID = #{record.id,jdbcType=DECIMAL},
+      CAMERAID = #{record.cameraid,jdbcType=VARCHAR},
+      DISTRICT = #{record.district,jdbcType=VARCHAR},
+      GB_CODE = #{record.gbCode,jdbcType=VARCHAR},
+      ADDRESS = #{record.address,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      JD84 = #{record.jd84,jdbcType=VARCHAR},
+      WD84 = #{record.wd84,jdbcType=VARCHAR},
+      IP = #{record.ip,jdbcType=VARCHAR},
+      START_DATE = #{record.startDate,jdbcType=VARCHAR},
+      STATE = #{record.state,jdbcType=VARCHAR},
+      RECORD = #{record.record,jdbcType=VARCHAR},
+      CATEGORY = #{record.category,jdbcType=VARCHAR},
+      APPEARANCE = #{record.appearance,jdbcType=VARCHAR},
+      RESOLUTION = #{record.resolution,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=DATE},
+      UPDATE_TIME = #{record.updateTime,jdbcType=DATE},
+      UPDATE_STATUS = #{record.updateStatus,jdbcType=VARCHAR},
+      UUID = #{record.uuid,jdbcType=VARCHAR},
+      REGION_CODE = #{record.regionCode,jdbcType=VARCHAR},
+      STREET_CODE = #{record.streetCode,jdbcType=VARCHAR},
+      COMMUNITY_CODE = #{record.communityCode,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+
+  <select id="selectsummaryInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select NAME,ADDRESS,CATEGORY,GB_CODE from VIDEO_POLICE where CAMERAID = #{CAMERAID}
+  </select>
+
+</mapper>

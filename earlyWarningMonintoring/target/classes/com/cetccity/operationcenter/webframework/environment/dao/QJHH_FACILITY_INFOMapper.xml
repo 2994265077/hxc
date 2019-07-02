@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.environment.dao.QJHH_FACILITY_INFOMapper">
+
+    <!--<select id="loadMap" parameterType="java.util.Map" resultType="com.cetccity.operationcenter.webframework.environment.dao.entity.QJHH_FACILITY_INFO">
+        select "UID","TYPE",ADDRESS,JD84,WD84,STATUS
+        from QJHH_FACILITY_INFO
+        <where>
+            <if test="SEWERAGE_ID != null">
+                and "SEWERAGE_ID" = #{SEWERAGE_ID}
+            </if>
+            <if test="TYPE != null">
+                and "TYPE" = #{TYPE}
+            </if>
+            <if test="STREET_CODE != null">
+                and STREET_CODE = #{STREET_CODE}
+            </if>
+            <if test="currentMonth != null">
+                and to_char(CREATE_TIME,'yyyy-MM-dd HH24:mi:ss') LIKE CONCAT(#{currentMonth},'%')
+            </if>
+        </where>
+    </select>-->
+
+    <select id="loadMap" parameterType="java.util.Map" resultType="com.cetccity.operationcenter.webframework.environment.dao.entity.QJHH_FACILITY_INFO">
+        select s."UID",s."TYPE",s.jd84,s.wd84,s.status, nvl(b.status,'正常') risk, b.check_time
+            from QJHH_FACILITY_INFO s
+            left join
+            (select a.*, qpi2.status
+            from (select max(qpi.CHECK_TIME) check_time, qpi.facility_id
+            from QJHH_PATROL_INFO qpi
+            where qpi.CHECK_TIME &gt; to_date(#{lastDay}, 'yyyy-MM-dd HH24:mi:ss')
+            AND qpi.CHECK_TIME &lt;= to_date(#{currentDay}, 'yyyy-MM-dd HH24:mi:ss')
+            group by qpi.facility_id) a
+            left join QJHH_PATROL_INFO qpi2
+            on a.facility_id = qpi2.facility_id
+            and a.check_time = qpi2.check_time
+            ) b on s."UID" = b.facility_id
+        <where>
+            <if test="SEWERAGE_ID != null">
+                and s."SEWERAGE_ID" = #{SEWERAGE_ID}
+            </if>
+            <if test="TYPE != null">
+                and s."TYPE" = #{TYPE}
+            </if>
+            <if test="STREET_CODE != null">
+                and s.STREET_CODE = #{STREET_CODE}
+            </if>
+        </where>
+            ORDER BY check_time DESC
+    </select>
+
+    <select id="getList" parameterType="com.cetccity.operationcenter.webframework.environment.dao.entity.QJHH_FACILITY_INFO" resultType="com.cetccity.operationcenter.webframework.environment.dao.entity.QJHH_FACILITY_INFO">
+        select "UID",USER_ID,"TYPE",ADDRESS,"NAME",LNG,LAT,UNIT,REMARK,CREATOR,CREATE_TIME,LAST_EDITOR,LAST_EDIT_TIME,
+        OBJECT_ID,YJJC_CREATE_TIME,YJJC_UPDATE_TIME,REGION_CODE,STREET_CODE,COMMUNITY_CODE,STREET_NAME,
+        COMMUNITY_NAME,JD84,WD84
+        from QJHH_FACILITY_INFO
+        <where>
+            <if test="UID != null">
+                and "UID" = #{UID}
+            </if>
+        </where>
+    </select>
+
+    <select id="getTip" parameterType="java.lang.String" resultType="java.util.LinkedHashMap">
+        select "UID","TYPE",ADDRESS,CREATE_TIME,YJJC_CREATE_TIME,YJJC_UPDATE_TIME,REGION_CODE,
+        STREET_CODE,COMMUNITY_CODE,STREET_NAME,COMMUNITY_NAME,JD84,WD84,STATUS,SEWERAGE_ID
+        from QJHH_FACILITY_INFO
+        <where>
+            <if test="UID != null">
+                and "UID" = #{UID}
+            </if>
+        </where>
+    </select>
+
+    <select id="count" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select NVl(count(*), 0)
+        from QJHH_FACILITY_INFO
+        <where>
+            <if test="SEWERAGE_ID != null">
+                and SEWERAGE_ID = #{SEWERAGE_ID}
+            </if>
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+            <if test="STATUS != null">
+                and STATUS = #{STATUS}
+            </if>
+            <if test="month != null">
+                and to_char(CREATE_TIME,'yyyy-MM-dd HH24:mi:ss') like concat(#{month},'%')
+            </if>
+            <if test="lastMonthCount != null">
+                and to_char(CREATE_TIME,'yyyy-MM') &lt;= #{lastMonthCount}
+            </if>
+        </where>
+    </select>
+
+    <select id="rightTwo" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT * FROM(
+        select m.X_TIME,NVl(a.value, 0) 正常排水设施数量, NVl(b.value, 0) 异常排水设施数量 from
+        (select to_char(CREATE_TIME,'yyyy-MM') X_TIME from QJHH_FACILITY_INFO GROUP BY to_char(CREATE_TIME,'yyyy-MM') union
+        select to_char(CREATE_TIME,'yyyy-MM') X_TIME from QJHH_FACILITY_INFO GROUP BY to_char(CREATE_TIME,'yyyy-MM')) m
+        LEFT JOIN
+        (select NVl(count(*), 0) value,to_char(CREATE_TIME,'yyyy-MM') X_TIME from QJHH_FACILITY_INFO
+        <where>
+                and status = 1
+            <if test="SEWERAGE_ID != null">
+                and SEWERAGE_ID = #{SEWERAGE_ID}
+            </if>
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where>
+        GROUP BY to_char(CREATE_TIME,'yyyy-MM'))a
+        on m.X_TIME = a.X_TIME LEFT JOIN
+        (select NVl(count(*), 0) value,to_char(CREATE_TIME,'yyyy-MM') X_TIME from QJHH_FACILITY_INFO
+        <where>
+                and status = 2
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where>
+        GROUP BY to_char(CREATE_TIME,'yyyy-MM'))b
+        ON m.X_TIME = b.X_TIME
+        ORDER BY X_TIME DESC
+        )WHERE ROWNUM &lt;= 12 ORDER BY X_TIME
+    </select>
+
+    <select id="rightTwoRemoval" parameterType="java.util.Map" resultType="java.util.HashMap">
+        select a.value 正常排水设施数量,b.value 异常排水设施数量 from
+        (select NVl(count(*), 0) value from QJHH_FACILITY_INFO
+        <where>
+            and status = 1
+            <if test="SEWERAGE_ID != null">
+                and SEWERAGE_ID = #{SEWERAGE_ID}
+            </if>
+            and CREATE_TIME &lt;= to_date(#{month},'yyyy-MM')
+        </where>
+        )a,
+        (select NVl(count(*), 0) value from QJHH_FACILITY_INFO
+        <where>
+             and status = 2
+             <if test="SEWERAGE_ID != null">
+                and SEWERAGE_ID = #{SEWERAGE_ID}
+             </if>
+             and CREATE_TIME &lt;= to_date(#{month},'yyyy-MM')
+        </where>
+        )b
+    </select>
+
+    <select id="rightThree" parameterType="java.util.Map" resultType="java.util.HashMap">
+          select m."TYPE" X_NAME,NVl(a.value, 0) 正常排水设施数量, NVl(b.value, 0) 异常排水设施数量 from(
+          SELECT "TYPE" FROM QJHH_FACILITY_INFO GROUP BY "TYPE" union
+          SELECT "TYPE" FROM QJHH_FACILITY_INFO GROUP BY "TYPE")m
+        LEFT JOIN
+          (select NVl(count(*), 0) value,"TYPE" from QJHH_FACILITY_INFO
+          <where>
+               and status = 1
+              <if test="SEWERAGE_ID != null">
+                  and SEWERAGE_ID = #{SEWERAGE_ID}
+              </if>
+              <if test="month != null">
+               and to_char(CREATE_TIME,'yyyy-MM-dd HH24:mi:ss') like concat(#{month},'%')
+              </if>
+          </where>
+        GROUP BY "TYPE")a on m."TYPE" = a."TYPE"
+        LEFT JOIN
+          (select NVl(count(*), 0) value,"TYPE" from QJHH_FACILITY_INFO
+            <where>
+                and status = 2
+                <if test="SEWERAGE_ID != null">
+                    and SEWERAGE_ID = #{SEWERAGE_ID}
+                </if>
+                <if test="month != null">
+                  and to_char(CREATE_TIME,'yyyy-MM-dd HH24:mi:ss') like concat(#{month},'%')
+                </if>
+            </where>
+        GROUP BY "TYPE")b on m."TYPE" = b."TYPE"
+    </select>
+
+    <select id="rightFour" parameterType="java.util.Map" resultType="java.util.HashMap">
+        select m."STREET_NAME" X,NVl(a.value, 0) 正常排水设施数量, NVl(b.value, 0) 异常排水设施数量 from(
+        SELECT "STREET_NAME" FROM QJHH_FACILITY_INFO WHERE STREET_NAME is not null GROUP BY "STREET_NAME" union
+        SELECT "STREET_NAME" FROM QJHH_FACILITY_INFO WHERE STREET_NAME is not null GROUP BY "STREET_NAME")m
+        LEFT JOIN
+        (select NVl(count(*), 0) value,"STREET_NAME" from QJHH_FACILITY_INFO
+        <where>
+                and status = 1
+            <if test="SEWERAGE_ID != null">
+                and SEWERAGE_ID = #{SEWERAGE_ID}
+            </if>
+        </where>
+        GROUP BY "STREET_NAME")a on m."STREET_NAME" = a."STREET_NAME"
+        LEFT JOIN
+        (select NVl(count(*), 0) value,"STREET_NAME" from QJHH_FACILITY_INFO
+        <where>
+                and status = 2
+            <if test="SEWERAGE_ID != null">
+                and SEWERAGE_ID = #{SEWERAGE_ID}
+            </if>
+        </where>
+        GROUP BY "STREET_NAME")b on m."STREET_NAME" = b."STREET_NAME"
+    </select>
+
+    <select id="rightFive" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
+        select m."TYPE" X, NVl(a1.value, 0) 园岭街道总数, NVl(a2.value, 0) 园岭街道正常数,NVl(a3.value, 0) 园岭街道异常数,
+            NVl(b1.value, 0) 华富街道总数, NVl(b2.value, 0) 华富街道正常数,NVl(b3.value, 0) 华富街道异常数,
+            NVl(c1.value, 0) 沙头街道总数, NVl(c2.value, 0) 沙头街道正常数,NVl(c3.value, 0) 沙头街道异常数,
+            NVl(d1.value, 0) 莲花街道总数, NVl(d2.value, 0) 莲花街道正常数,NVl(d3.value, 0) 莲花街道异常数,
+            NVl(e1.value, 0) 香蜜湖街道总数, NVl(e2.value, 0) 香蜜湖街道正常数,NVl(e3.value, 0) 香蜜湖街道异常数,
+            NVl(f1.value, 0) 福保街道总数, NVl(f2.value, 0) 福保街道正常数,NVl(f3.value, 0) 福保街道异常数,
+            NVl(g1.value, 0) 梅林街道总数, NVl(g2.value, 0) 梅林街道正常数,NVl(g3.value, 0) 梅林街道异常数,
+            NVl(h1.value, 0) 南园街道总数, NVl(h2.value, 0) 南园街道正常数,NVl(h3.value, 0) 南园街道异常数,
+            NVl(i1.value, 0) 福田街道总数, NVl(i2.value, 0) 福田街道正常数,NVl(i3.value, 0) 福田街道异常数,
+            NVl(j1.value, 0) 华强北街道总数, NVl(j2.value, 0) 华强北街道正常数,NVl(j3.value, 0) 华强北街道异常数 from
+            (SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE" union
+            SELECT "TYPE" from QJHH_FACILITY_INFO GROUP BY "TYPE")m
+            LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '园岭' GROUP BY "TYPE") a1 ON m."TYPE" = a1."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '园岭' AND STATUS = 1 GROUP BY "TYPE") a2 on m."TYPE" = a2."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '园岭' AND STATUS = 2 GROUP BY "TYPE") a3 on m."TYPE" = a3."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '华富' GROUP BY "TYPE") b1 ON m."TYPE" = b1."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '华富' AND STATUS = 1 GROUP BY "TYPE") b2 on m."TYPE" = b2."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '华富' AND STATUS = 2 GROUP BY "TYPE") b3 on m."TYPE" = b3."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '沙头' GROUP BY "TYPE") c1 ON m."TYPE" = c1."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '沙头' AND STATUS = 1 GROUP BY "TYPE") c2 on m."TYPE" = c2."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '沙头' AND STATUS = 2 GROUP BY "TYPE") c3 on m."TYPE" = c3."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '莲花' GROUP BY "TYPE") d1 ON m."TYPE" = d1."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '莲花' AND STATUS = 1 GROUP BY "TYPE") d2 on m."TYPE" = d2."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '莲花' AND STATUS = 2 GROUP BY "TYPE") d3 on m."TYPE" = d3."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '香蜜湖' GROUP BY "TYPE") e1 ON m."TYPE" = e1."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '香蜜湖' AND STATUS = 1 GROUP BY "TYPE") e2 on m."TYPE" = e2."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '香蜜湖' AND STATUS = 2 GROUP BY "TYPE") e3 on m."TYPE" = e3."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '福保' GROUP BY "TYPE") f1 ON m."TYPE" = f1."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '福保' AND STATUS = 1 GROUP BY "TYPE") f2 on m."TYPE" = f2."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '福保' AND STATUS = 2 GROUP BY "TYPE") f3 on m."TYPE" = f3."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '梅林' GROUP BY "TYPE") g1 ON m."TYPE" = g1."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '梅林' AND STATUS = 1 GROUP BY "TYPE") g2 on m."TYPE" = g2."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '梅林' AND STATUS = 2 GROUP BY "TYPE") g3 on m."TYPE" = g3."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '南园' GROUP BY "TYPE") h1 ON m."TYPE" = h1."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '南园' AND STATUS = 1 GROUP BY "TYPE") h2 on m."TYPE" = h2."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '南园' AND STATUS = 2 GROUP BY "TYPE") h3 on m."TYPE" = h3."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '福田' GROUP BY "TYPE") i1 ON m."TYPE" = i1."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '福田' AND STATUS = 1 GROUP BY "TYPE") i2 on m."TYPE" = i2."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '福田' AND STATUS = 2 GROUP BY "TYPE") i3 on m."TYPE" = i3."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '华强北' GROUP BY "TYPE") j1 ON m."TYPE" = j1."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '华强北' AND STATUS = 1 GROUP BY "TYPE") j2 on m."TYPE" = j2."TYPE" LEFT JOIN
+            (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '华强北' AND STATUS = 2 GROUP BY "TYPE") j3 on m."TYPE" = j3."TYPE"
+    </select>
+
+</mapper>

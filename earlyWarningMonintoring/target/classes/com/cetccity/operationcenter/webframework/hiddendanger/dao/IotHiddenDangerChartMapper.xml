@@ -1,0 +1,83 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cetccity.operationcenter.webframework.hiddendanger.dao.IotHiddenDangerChartMapper">
+
+    <resultMap id="barOrLineModel" type="com.cetccity.operationcenter.webframework.core.chart.engine.model.BarOrLineModel">
+        <result property="name" column="DEVICE_NAME" javaType="java.lang.String" />
+        <collection property="data" resultMap="com.cetccity.operationcenter.webframework.hiddendanger.dao.AllRegionHiddenDangerChartMapper.nameValueTypeModel" />
+    </resultMap>
+
+    <select id="countCameraAndIot" resultMap="com.cetccity.operationcenter.webframework.hiddendanger.dao.AllRegionHiddenDangerChartMapper.nameValueTypeModel">
+        SELECT
+            COUNT(*) AS VALUE, '传感器' AS NAME
+        FROM
+            IOT_DEVICE
+        <where>
+            <if test="streetCode != null and streetCode != ''">
+                AND STREET_CODE = #{streetCode}
+            </if>
+        </where>
+        UNION ALL
+        SELECT
+            COUNT(CAMERAID) AS VALUE, '摄像头' AS NAME
+        FROM
+            VIDEO_POLICE
+        <where>
+            <if test="streetCode != null and streetCode != ''">
+                AND STREET_CODE = #{streetCode}
+            </if>
+        </where>
+    </select>
+    <select id="countIotByType" resultMap="com.cetccity.operationcenter.webframework.hiddendanger.dao.AllRegionHiddenDangerChartMapper.nameValueTypeModel">
+        SELECT
+            DEVICE_NAME AS NAME, COUNT(DEVICE_TYPE) AS VALUE
+        FROM
+            (
+                SELECT
+                    b.DEVICE_TYPE, b.DEVICE_NAME
+                FROM
+                    IOT_DEVICE a, IOT_CODE b
+                WHERE
+                    a.DEVICE_TYPE = b.DEVICE_TYPE
+                <if test="streetCode != null and streetCode != ''">
+                    AND a.STREET_CODE = #{streetCode}
+                </if>
+            )
+        GROUP BY
+            DEVICE_TYPE, DEVICE_NAME
+    </select>
+
+    <select id="countIot" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM IOT_DEVICE JOIN IOT_CODE ON IOT_DEVICE.DEVICE_TYPE = IOT_CODE.DEVICE_TYPE
+    </select>
+
+    <select id="queryAlarmAndTime" resultType="java.util.HashMap">
+        SELECT a.produce_time, b.device_type, c.device_name FROM IOT_EVENT a, IOT_DEVICE b, IOT_CODE c
+        where a.device_code = b.device_code and b.device_type = c.device_type
+    </select>
+
+    <select id="countDeviceEventByMonth" resultMap="barOrLineModel" parameterType="java.time.YearMonth">
+        SELECT
+                PRODUCE_TIME AS NAME, DEVICE_TYPE, DEVICE_NAME, COUNT(*) AS VALUE
+        FROM (
+                SELECT
+                        TO_CHAR(a.PRODUCE_TIME, 'yyyy-MM') AS PRODUCE_TIME, b.device_type AS DEVICE_TYPE, c.device_name AS DEVICE_NAME
+                FROM
+                        IOT_EVENT a, IOT_DEVICE b, IOT_CODE c
+                WHERE
+                        a.device_code = b.device_code
+                        AND
+                        b.device_type = c.device_type
+                        <if test="yearMonth != null">
+                            AND a.PRODUCE_TIME &gt;= TO_DATE(#{yearMonth},'yyyy-mm')
+                        </if>
+                        <if test="streetCode != null and streetCode != ''">
+                            AND b.STREET_CODE = #{streetCode}
+                        </if>
+              )
+        GROUP BY
+                DEVICE_TYPE, DEVICE_NAME, PRODUCE_TIME
+    </select>
+</mapper>

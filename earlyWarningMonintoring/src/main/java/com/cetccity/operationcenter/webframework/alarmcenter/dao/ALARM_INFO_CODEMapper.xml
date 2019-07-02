@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.alarmcenter.dao.ALARM_INFO_CODEMapper">
+
+    <select id="getALARM_INFO_CODE" parameterType="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.ALARM_INFO_CODE" resultType="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.ALARM_INFO_CODE">
+        select OBJECT_ID,LV_1,LV_1_NAME,LV_2,LV_2_NAME
+        from ALARM_INFO_CODE where 1=1
+        <if test="LV_1 != null">
+            and LV_1 = #{LV_1}
+        </if>
+        order by LV_2
+    </select>
+    
+    <select id="getRemovalALARM_INFO_CODE" parameterType="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.ALARM_INFO_CODE" resultType="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.ALARM_INFO_CODE">
+        select  distinct LV_1,LV_1_NAME
+        from ALARM_INFO_CODE where 1=1
+        <if test="LV_1 != null">
+            and LV_1 = #{LV_1}
+        </if>
+        order by LV_1
+    </select>
+
+    <select id="getLowerOneDrillDown" parameterType="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.ALARM_INFO_CODE" resultType="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.ALARM_INFO_CODE">
+        select LV_1,LV_1_NAME,LV_2,LV_2_NAME
+        from ALARM_INFO_CODE where 1=1
+        <if test="LV_1 != null">
+            and LV_1 = #{LV_1}
+        </if>
+        order by LV_2
+    </select>
+
+</mapper>

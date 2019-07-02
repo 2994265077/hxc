@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.alarmcenter.dao.DUTY_TABLEMapper">
+    <resultMap id="BaseResultMap" type="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.DUTY_TABLE">
+        <id column="OBJECT_ID" jdbcType="INTEGER" property="OBJECT_ID"/>
+        <result column="SCHEDULE_TIME" jdbcType="VARCHAR" property="SCHEDULE_TIME"/>
+        <result column="DEPT_NAME" jdbcType="VARCHAR" property="DEPT_NAME"/>
+        <result column="DUTY_LEADER" jdbcType="VARCHAR" property="DUTY_LEADER"/>
+        <result column="DUTY_LEADER_POSITION" jdbcType="VARCHAR" property="DUTY_LEADER_POSITION"/>
+        <result column="DUTY_LEADER_PHONE" jdbcType="VARCHAR" property="DUTY_LEADER_PHONE"/>
+        <result column="DUTY_SEC" jdbcType="VARCHAR" property="DUTY_SEC"/>
+        <result column="DUTY_SEC_POSITION" jdbcType="VARCHAR" property="DUTY_SEC_POSITION"/>
+        <result column="DUTY_SEC_PHONE" jdbcType="VARCHAR" property="DUTY_SEC_PHONE"/>
+        <result column="DUTY_CLERK" jdbcType="VARCHAR" property="DUTY_CLERK"/>
+        <result column="DUTY_CLERK_POSITION" jdbcType="VARCHAR" property="DUTY_CLERK_POSITION"/>
+        <result column="DUTY_CLERK_PHONE" jdbcType="VARCHAR" property="DUTY_CLERK_PHONE"/>
+        <result column="DUTY_CODE" jdbcType="VARCHAR" property="DUTY_CODE"/>
+        <result column="YJJC_CREATE_TIME" jdbcType="DATE" property="YJJC_CREATE_TIME"/>
+        <result column="YJJC_UPDATE_TIME" jdbcType="DATE" property="YJJC_UPDATE_TIME"/>
+        <result column="DUTY_DAY" jdbcType="VARCHAR" property="DUTY_DAY"/>
+    </resultMap>
+
+    <select id="getSEQ_DUTY_TABLE" resultType="java.lang.Integer">
+        select SEQ_DUTY_TABLE.nextval from dual
+    </select>
+
+    <insert id="save" parameterType="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.DUTY_TABLE">
+        INSERT INTO DUTY_TABLE (OBJECT_ID,SCHEDULE_TIME,DEPT_NAME,
+          DUTY_LEADER,DUTY_LEADER_POSITION,DUTY_LEADER_PHONE,
+          DUTY_SEC,DUTY_SEC_POSITION,DUTY_SEC_PHONE,
+          DUTY_CLERK,DUTY_CLERK_POSITION,DUTY_CLERK_PHONE,
+          DUTY_CODE,YJJC_CREATE_TIME,YJJC_UPDATE_TIME,DUTY_DAY)
+        VALUES(#{OBJECT_ID},#{SCHEDULE_TIME},#{DEPT_NAME},
+          #{DUTY_LEADER},#{DUTY_LEADER_POSITION},#{DUTY_LEADER_PHONE},
+          #{DUTY_SEC},#{DUTY_SEC_POSITION},#{DUTY_SEC_PHONE},
+          #{DUTY_CLERK},#{DUTY_CLERK_POSITION},#{DUTY_CLERK_PHONE},
+          #{DUTY_CODE},sysdate,sysdate,
+          to_date(#{DUTY_DAY},'YYYY-MM-DD'))
+    </insert>
+
+    <select id="getDUTY_TABLE" parameterType="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.DUTY_TABLE" resultType="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.DUTY_TABLE">
+        select  OBJECT_ID,SCHEDULE_TIME,DEPT_NAME,
+        DUTY_LEADER,DUTY_LEADER_POSITION,DUTY_LEADER_PHONE,
+        DUTY_SEC,DUTY_SEC_POSITION,DUTY_SEC_PHONE,
+        DUTY_CLERK,DUTY_CLERK_POSITION,DUTY_CLERK_PHONE,
+        DUTY_CODE,YJJC_CREATE_TIME,YJJC_UPDATE_TIME,DUTY_DAY
+        from DUTY_TABLE
+        <where>
+            <if test="DUTY_CODE != null">
+                and DUTY_CODE = #{DUTY_CODE}
+            </if>
+            <if test="DUTY_DAY != null">
+                and DUTY_DAY = to_date(#{DUTY_DAY},'YYYY-MM-DD HH24:mi:ss')
+            </if>
+        </where>
+        order by OBJECT_ID
+    </select>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete
+        from DUTY_TABLE
+        <where>
+            <if test="fileCode != null">
+                and DUTY_CODE = #{fileCode}
+            </if>
+        </where>
+    </delete>
+
+</mapper>

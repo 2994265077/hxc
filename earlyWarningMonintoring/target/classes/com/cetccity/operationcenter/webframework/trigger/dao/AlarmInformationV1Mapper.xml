@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.trigger.dao.AlarmInformationV1Mapper">
+
+    <select id="selectAlarmInformation" parameterType="com.cetccity.operationcenter.webframework.trigger.entity.AlarmInformation" resultType="com.cetccity.operationcenter.webframework.trigger.entity.AlarmInformation">
+        select OBJECT_ID,ALARM_OBJECT,F_ROW_ID,ORIGIN_TABLE_NAME,SYSTEM_ID,RELEASE_TIME,CANCEL_TIME,RELEASE_PERSON,
+        ALARM_STATE,CONTENTS,ALARM_LEVEL,ALARM_TYPE_LV1,ALARM_TYPE_LV2,DISPOSAL_STATE,SEND_STATE,CHANNEL,YJJC_CREATE_TIME,
+        YJJC_UPDATE_TIME,LDDM,JD84,WD84,REGION_CODE,STREET_CODE,COMMUNITY_CODE,ADDRESS,STREET_NAME,COMMUNITY_NAME
+        from ALARM_INFORMATION
+        <where>
+            <if test="ORIGIN_TABLE_NAME != null">
+                and ORIGIN_TABLE_NAME = #{ORIGIN_TABLE_NAME}
+            </if>
+            <if test="ALARM_STATE != null">
+                and ALARM_STATE = #{ALARM_STATE}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByAlarmInformationAndDateRange" resultType="com.cetccity.operationcenter.webframework.trigger.entity.AlarmInformation">
+        SELECT OBJECT_ID,ALARM_OBJECT,F_ROW_ID,ORIGIN_TABLE_NAME,SYSTEM_ID,RELEASE_TIME,CANCEL_TIME,RELEASE_PERSON,
+        ALARM_STATE,CONTENTS,ALARM_LEVEL,ALARM_TYPE_LV1,ALARM_TYPE_LV2,DISPOSAL_STATE,SEND_STATE,CHANNEL,YJJC_CREATE_TIME,
+        YJJC_UPDATE_TIME,LDDM,JD84,WD84,REGION_CODE,STREET_CODE,COMMUNITY_CODE,ADDRESS,STREET_NAME,COMMUNITY_NAME
+        FROM ALARM_INFORMATION
+        <where>
+            <!-- 可在此随意添加查询条件 -->
+            <if test="alarmInformation.ORIGIN_TABLE_NAME != null">
+                AND ORIGIN_TABLE_NAME = #{alarmInformation.ORIGIN_TABLE_NAME}
+            </if>
+            <if test="alarmInformation.DISPOSAL_STATE != null">
+                AND DISPOSAL_STATE = #{alarmInformation.DISPOSAL_STATE}
+            </if>
+            <if test="alarmInformation.ALARM_STATE != null">
+                AND ALARM_STATE = #{alarmInformation.ALARM_STATE}
+            </if>
+            <if test="alarmInformation.ALARM_TYPE_LV1 != null">
+                AND ALARM_TYPE_LV1 = #{alarmInformation.ALARM_TYPE_LV1}
+            </if>
+            <if test="alarmInformation.ALARM_TYPE_LV2 != null">
+                AND ALARM_TYPE_LV2 = #{alarmInformation.ALARM_TYPE_LV2}
+            </if>
+            <if test="alarmInformation.F_ROW_ID != null">
+                AND F_ROW_ID = #{alarmInformation.F_ROW_ID}
+            </if>
+            <if test="dateRange != null">
+                AND RELEASE_TIME BETWEEN TO_DATE(#{dateRange.begin},'yyyy-MM-dd HH24:mi:ss') AND TO_DATE(#{dateRange.end},'yyyy-MM-dd HH24:mi:ss')
+            </if>
+        </where>
+        order by OBJECT_ID desc
+    </select>
+
+    <select id="queryLastAlarmDataReleaseTime" parameterType="com.cetccity.operationcenter.webframework.trigger.entity.AlarmInformation" resultType="com.cetccity.operationcenter.webframework.trigger.entity.AlarmInformation">
+        select OBJECT_ID,ALARM_OBJECT,F_ROW_ID,ORIGIN_TABLE_NAME,SYSTEM_ID,RELEASE_TIME,CANCEL_TIME,RELEASE_PERSON,
+        ALARM_STATE,CONTENTS,ALARM_LEVEL,ALARM_TYPE_LV1,ALARM_TYPE_LV2,DISPOSAL_STATE,SEND_STATE,CHANNEL,YJJC_CREATE_TIME,
+        YJJC_UPDATE_TIME,LDDM,JD84,WD84,REGION_CODE,STREET_CODE,COMMUNITY_CODE,ADDRESS,STREET_NAME,COMMUNITY_NAME
+        from ALARM_INFORMATION
+        <where>
+          <if test="ORIGIN_TABLE_NAME != null">
+              and ORIGIN_TABLE_NAME = #{ORIGIN_TABLE_NAME}
+          </if>
+        </where>
+        order by RELEASE_TIME desc
+    </select>
+
+    <select id="queryLastAlarmData" parameterType="com.cetccity.operationcenter.webframework.trigger.entity.AlarmInformation" resultType="com.cetccity.operationcenter.webframework.trigger.entity.AlarmInformation">
+        select OBJECT_ID,ALARM_OBJECT,F_ROW_ID,ORIGIN_TABLE_NAME,SYSTEM_ID,RELEASE_TIME,CANCEL_TIME,RELEASE_PERSON,
+        ALARM_STATE,CONTENTS,ALARM_LEVEL,ALARM_TYPE_LV1,ALARM_TYPE_LV2,DISPOSAL_STATE,SEND_STATE,CHANNEL,YJJC_CREATE_TIME,
+        YJJC_UPDATE_TIME,LDDM,JD84,WD84,REGION_CODE,STREET_CODE,COMMUNITY_CODE,ADDRESS,STREET_NAME,COMMUNITY_NAME
+        from ALARM_INFORMATION
+        <where>
+          <if test="ORIGIN_TABLE_NAME != null">
+              and ORIGIN_TABLE_NAME = #{ORIGIN_TABLE_NAME}
+          </if>
+          <if test="F_OBJECT_ROW_ID != null">
+              and F_OBJECT_ROW_ID = #{F_OBJECT_ROW_ID}
+          </if>
+            <if test="F_ROW_ID != null">
+                and F_ROW_ID = #{F_ROW_ID}
+            </if>
+        </where>
+        order by OBJECT_ID desc
+    </select>
+
+    <update id="updateState" parameterType="com.cetccity.operationcenter.webframework.trigger.entity.AlarmInformation">
+        update ALARM_INFORMATION
+            <set>
+                <if test="ALARM_STATE != null">
+                    ALARM_STATE = #{ALARM_STATE},
+                </if>
+                <if test="CANCEL_TIME != null">
+                    CANCEL_TIME = #{CANCEL_TIME},
+                </if>
+            </set>
+        where SYSTEM_ID = #{SYSTEM_ID,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateBatchSelected" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close="end;">
+            UPDATE ALARM_INFORMATION
+            <set>
+                YJJC_UPDATE_TIME = SYSDATE,
+                <if test="item.F_ROW_ID != null">
+                    F_ROW_ID = #{item.F_ROW_ID},
+                </if>
+                <if test="item.ORIGIN_TABLE_NAME != null">
+                    ORIGIN_TABLE_NAME = #{item.ORIGIN_TABLE_NAME},
+                </if>
+                <if test="item.SYSTEM_ID != null">
+                    SYSTEM_ID = #{item.SYSTEM_ID},
+                </if>
+                <if test="item.RELEASE_TIME != null">
+                    RELEASE_TIME = #{item.RELEASE_TIME},
+                </if>
+                <if test="item.CANCEL_TIME != null">
+                    CANCEL_TIME = #{item.CANCEL_TIME},
+                </if>
+                <if test="item.RELEASE_PERSON != null">
+                    RELEASE_PERSON = #{item.RELEASE_PERSON},
+                </if>
+                <if test="item.ALARM_STATE != null">
+                    ALARM_STATE = #{item.ALARM_STATE},
+                </if>
+                <if test="item.CONTENTS != null">
+                    CONTENTS = #{item.CONTENTS},
+                </if>
+                <if test="item.ALARM_LEVEL != null">
+                    ALARM_LEVEL = #{item.ALARM_LEVEL},
+                </if>
+                <if test="item.ALARM_TYPE_LV1 != null">
+                    ALARM_TYPE_LV1 = #{item.ALARM_TYPE_LV1},
+                </if>
+                <if test="item.ALARM_TYPE_LV2 != null">
+                    ALARM_TYPE_LV2 = #{item.ALARM_TYPE_LV2},
+                </if>
+                <if test="item.DISPOSAL_STATE != null">
+                    DISPOSAL_STATE = #{item.DISPOSAL_STATE},
+                </if>
+                <if test="item.SEND_STATE != null">
+                    SEND_STATE = #{item.SEND_STATE},
+                </if>
+                <if test="item.CHANNEL != null">
+                    CHANNEL = #{item.CHANNEL},
+                </if>
+                <if test="item.ALARM_OBJECT != null">
+                    ALARM_OBJECT = #{item.ALARM_OBJECT},
+                </if>
+                <if test="item.F_OBJECT_ROW_ID != null">
+                    F_OBJECT_ROW_ID = #{item.F_OBJECT_ROW_ID},
+                </if>
+                <if test="item.JD84 != null">
+                    JD84 = #{item.JD84},
+                </if>
+                <if test="item.WD84 != null">
+                    WD84 = #{item.WD84},
+                </if>
+                <if test="item.REGION_CODE != null">
+                    REGION_CODE = #{item.REGION_CODE},
+                </if>
+                <if test="item.STREET_CODE != null">
+                    STREET_CODE = #{item.STREET_CODE},
+                </if>
+                <if test="item.COMMUNITY_CODE != null">
+                    COMMUNITY_CODE = #{item.COMMUNITY_CODE},
+                </if>
+                <if test="item.ADDRESS != null">
+                    ADDRESS = #{item.ADDRESS},
+                </if>
+                <if test="item.STREET_NAME != null">
+                    STREET_NAME = #{item.STREET_NAME},
+                </if>
+                <if test="item.COMMUNITY_NAME != null">
+                    COMMUNITY_NAME = #{item.COMMUNITY_NAME},
+                </if>
+                <if test="item.LDDM != null">
+                    LDDM = #{item.LDDM},
+                </if>
+            </set>
+            WHERE OBJECT_ID = #{item.OBJECT_ID,jdbcType=VARCHAR} ;
+        </foreach>
+    </update>
+
+    <update id="cancelFFLAlarm" parameterType="com.cetccity.operationcenter.webframework.trigger.entity.AlarmInformation">
+        update ALARM_INFORMATION
+        <set>
+            <if test="ALARM_STATE != null">
+                ALARM_STATE = #{ALARM_STATE},
+            </if>
+                CANCEL_TIME = sysdate,
+        </set>
+        where ORIGIN_TABLE_NAME = #{ORIGIN_TABLE_NAME,jdbcType=VARCHAR}
+        and OBJECT_ID = #{OBJECT_ID,jdbcType=VARCHAR}
+    </update>
+
+    <insert id="insert" parameterType="com.cetccity.operationcenter.webframework.trigger.entity.AlarmInformation">
+        insert into ALARM_INFORMATION (OBJECT_ID,F_ROW_ID,ORIGIN_TABLE_NAME,SYSTEM_ID,RELEASE_TIME,CANCEL_TIME,RELEASE_PERSON,ALARM_STATE,
+            CONTENTS,ALARM_LEVEL,ALARM_TYPE_LV1,ALARM_TYPE_LV2,DISPOSAL_STATE,SEND_STATE,CHANNEL,YJJC_CREATE_TIME,
+            YJJC_UPDATE_TIME,ALARM_OBJECT,F_OBJECT_ROW_ID,JD84,WD84,REGION_CODE,STREET_CODE,COMMUNITY_CODE,ADDRESS,
+            STREET_NAME,COMMUNITY_NAME,LDDM)
+        values (SEQ_ALARM_INFORMATION.nextval,#{F_ROW_ID,jdbcType=VARCHAR},#{ORIGIN_TABLE_NAME,jdbcType=VARCHAR},#{SYSTEM_ID,jdbcType=VARCHAR},
+            #{RELEASE_TIME,jdbcType=DATE},#{CANCEL_TIME,jdbcType=DATE},#{RELEASE_PERSON,jdbcType=VARCHAR},#{ALARM_STATE,jdbcType=VARCHAR},#{CONTENTS,jdbcType=VARCHAR},
+            #{ALARM_LEVEL,jdbcType=VARCHAR},#{ALARM_TYPE_LV1,jdbcType=VARCHAR},#{ALARM_TYPE_LV2,jdbcType=VARCHAR},#{DISPOSAL_STATE,jdbcType=VARCHAR},
+            #{SEND_STATE,jdbcType=VARCHAR},#{CHANNEL,jdbcType=VARCHAR},sysdate,sysdate,#{ALARM_OBJECT,jdbcType=VARCHAR},#{F_OBJECT_ROW_ID,jdbcType=VARCHAR},
+            #{JD84,jdbcType=VARCHAR},#{WD84,jdbcType=VARCHAR},#{REGION_CODE,jdbcType=VARCHAR},#{STREET_CODE,jdbcType=VARCHAR},#{COMMUNITY_CODE,jdbcType=VARCHAR},
+            #{ADDRESS,jdbcType=VARCHAR},#{STREET_NAME,jdbcType=VARCHAR},#{COMMUNITY_NAME,jdbcType=VARCHAR},#{LDDM,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="findLatelyAlarmState" parameterType="com.cetccity.operationcenter.webframework.trigger.entity.AlarmInformation" resultType="com.cetccity.operationcenter.webframework.trigger.entity.AlarmInformation">
+        select OBJECT_ID,ALARM_OBJECT,F_ROW_ID,ORIGIN_TABLE_NAME,SYSTEM_ID,RELEASE_TIME,CANCEL_TIME,RELEASE_PERSON,
+        ALARM_STATE,CONTENTS,ALARM_LEVEL,ALARM_TYPE_LV1,ALARM_TYPE_LV2,DISPOSAL_STATE,SEND_STATE,CHANNEL,YJJC_CREATE_TIME,
+        YJJC_UPDATE_TIME,LDDM,JD84,WD84,REGION_CODE,STREET_CODE,COMMUNITY_CODE,ADDRESS,STREET_NAME,COMMUNITY_NAME
+        from ALARM_INFORMATION
+        <where>
+            <if test="ORIGIN_TABLE_NAME != null">
+                and ORIGIN_TABLE_NAME = #{ORIGIN_TABLE_NAME}
+            </if>
+        </where>
+        order by RELEASE_TIME desc
+    </select>
+
+    <select id="selectLastReleaseTime" parameterType="com.cetccity.operationcenter.webframework.trigger.entity.AlarmInformation" resultType="java.time.LocalDateTime">
+        SELECT
+            MAX(RELEASE_TIME)
+        FROM
+            ALARM_INFORMATION
+        <where>
+            <!-- 可在此随意添加查询条件 -->
+            <if test="alarmInformation.ORIGIN_TABLE_NAME != null">
+                AND ORIGIN_TABLE_NAME = #{alarmInformation.ORIGIN_TABLE_NAME}
+            </if>
+            <if test="alarmInformation.DISPOSAL_STATE != null">
+                AND DISPOSAL_STATE = #{alarmInformation.DISPOSAL_STATE}
+            </if>
+            <if test="alarmInformation.ALARM_STATE != null">
+                AND ALARM_STATE = #{alarmInformation.ALARM_STATE}
+            </if>
+            <if test="alarmInformation.ALARM_TYPE_LV1 != null">
+                AND ALARM_TYPE_LV1 = #{alarmInformation.ALARM_TYPE_LV1}
+            </if>
+            <if test="alarmInformation.ALARM_TYPE_LV2 != null">
+                AND ALARM_TYPE_LV2 = #{alarmInformation.ALARM_TYPE_LV2}
+            </if>
+            <if test="alarmInformation.F_ROW_ID != null">
+                AND F_ROW_ID = #{alarmInformation.F_ROW_ID}
+            </if>
+            <if test="alarmInformation.F_OBJECT_ROW_ID != null">
+                AND F_OBJECT_ROW_ID = #{alarmInformation.F_OBJECT_ROW_ID}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectLastFRowId" resultType="java.lang.String">
+        SELECT
+            MAX(F_ROW_ID)
+        FROM
+            ALARM_INFORMATION
+        WHERE
+            ORIGIN_TABLE_NAME = #{origin_table_name}
+        <if test="alarm_type_lv2s != null">
+            <foreach collection="alarm_type_lv2s" item="alarm_type_lv2" open="AND(" separator="OR" close=")">
+                ALARM_TYPE_LV2 = #{alarm_type_lv2}
+            </foreach>
+        </if>
+
+    </select>
+
+    <select id="findAlarmingByAlarmTypeLv2s" resultType="com.cetccity.operationcenter.webframework.trigger.entity.AlarmInformation" >
+        SELECT
+          *
+        FROM
+          ALARM_INFORMATION
+        <where>
+            ALARM_STATE = 1
+            <if test="send_state != null">
+                AND SEND_STATE = #{send_state}
+            </if>
+            <if test="alarm_type_lv2s != null">
+                <foreach collection="alarm_type_lv2s" item="alarm_type_lv2" separator="OR" open="AND (" close=")">
+                    alarm_type_lv2 = #{alarm_type_lv2}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="query" parameterType="com.cetccity.operationcenter.webframework.backstage.alarm.qo.AlarmQueryObject" resultType="com.cetccity.operationcenter.webframework.trigger.entity.AlarmInformation" >
+        SELECT
+            *
+        FROM
+            ALARM_INFORMATION
+        <if test="alarm_query_vo != null" >
+            <where>
+                <if test="alarm_query_vo.streetCode != null and alarm_query_vo.streetCode.length() > 0">
+                    AND STREET_CODE =  #{alarm_query_vo.streetCode}
+                </if>
+                <if test="alarm_query_vo.alarmTypeLv2 != null and alarm_query_vo.alarmTypeLv2.length() > 0">
+                    AND ALARM_TYPE_LV_2 =  #{alarm_query_vo.alarmTypeLv2}
+                </if>
+                <if test="alarm_query_vo.alarmState != null and alarm_query_vo.alarmState.length() > 0">
+                    AND ALARM_STATE =  #{alarm_query_vo.alarmState}
+                </if>
+                <if test="alarm_query_vo.sendState != null and alarm_query_vo.sendState.length() > 0">
+                    AND SEND_STATE =  #{alarm_query_vo.sendState}
+                </if>
+                <if test="alarm_query_vo.disposalState != null and alarm_query_vo.disposalState.length() > 0">
+                    AND DISPOSAL_STATE =  #{alarm_query_vo.disposalState}
+                </if>
+                <if test="alarm_query_vo.channel != null and alarm_query_vo.channel.length() > 0">
+                    AND CHANNEL =  #{alarm_query_vo.channel}
+                </if>
+                <if test="alarm_query_vo.releaseTimeRange != null">
+                    AND
+                      RELEASE_TIME
+                    BETWEEN
+                        <if test="alarm_query_vo.releaseTimeRange.begin != null">
+                            alarm_query_vo.releaseTimeRange.begin
+                        </if>
+                        <if test="alarm_query_vo.releaseTimeRange.begin == null">
+                            SYSDATE
+                        </if>
+                    AND
+                        <if test="alarm_query_vo.releaseTimeRange.end != null">
+                            alarm_query_vo.releaseTimeRange.begin
+                        </if>
+                        <if test="alarm_query_vo.releaseTimeRange.end == null">
+                            SYSDATE
+                        </if>
+                </if>
+            </where>
+        </if>
+    </select>
+
+    <select id="selectAlarmInformationIot" parameterType="com.cetccity.operationcenter.webframework.trigger.entity.AlarmInformation" resultType="com.cetccity.operationcenter.webframework.trigger.entity.AlarmInformation">
+        select OBJECT_ID,ALARM_OBJECT,F_ROW_ID,ORIGIN_TABLE_NAME,SYSTEM_ID,RELEASE_TIME,CANCEL_TIME,RELEASE_PERSON,
+        ALARM_STATE,CONTENTS,ALARM_LEVEL,ALARM_TYPE_LV1,ALARM_TYPE_LV2,DISPOSAL_STATE,SEND_STATE,CHANNEL,YJJC_CREATE_TIME,
+        YJJC_UPDATE_TIME,LDDM,JD84,WD84,REGION_CODE,STREET_CODE,COMMUNITY_CODE,ADDRESS,STREET_NAME,COMMUNITY_NAME
+        from ALARM_INFORMATION
+        <where>
+            <if test="ORIGIN_TABLE_NAME != null">
+                and ORIGIN_TABLE_NAME = #{ORIGIN_TABLE_NAME}
+            </if>
+            <if test="ALARM_STATE != null">
+                and ALARM_STATE = #{ALARM_STATE}
+            </if>
+            <if test="RELEASE_TIME != null">
+                and RELEASE_TIME &lt;= #{RELEASE_TIME}
+            </if>
+        </where>
+        ORDER BY RELEASE_TIME DESC
+    </select>
+
+</mapper>

@@ -1,0 +1,108 @@
+server:
+  port: 9207
+  context-path: /
+  connection-timeout: 60000
+  session:
+    timeout: 60000
+
+
+spring:
+  profiles:
+    active: dev
+  output:
+    ansi:
+      enabled: detect
+  http:
+    encoding:
+      charset: utf-8
+      enabled: true
+      force: true
+  messages:
+    basename: i18n/messages
+    cache-seconds: -1
+    encoding: utf-8
+  hikari:
+    connection-test-query: SELECT 1 FROM DUAL
+    minimum-idle: 3
+    maximum-pool-size: 24
+    pool-name: ${spring.application.name}-Primary-CP
+    idle-timeout: 20000
+    cachePrepStmts: true
+    prepStmtCacheSize: 250
+    prepStmtCacheSqlLimit: 2048
+    leakDetectionThreshold: 2000
+    validation-interval: 5000
+    validation-query-timeout: 5000
+    max-lifetime: 5
+    test-while-idle: true
+  datasource:
+    dynamic:
+      primary: master #设置默认的数据源或者数据源组,默认值即为master,如果你主从默认下主库的名称就是master可不定义此项。
+      datasource:
+        master:
+          username: ZHFTYJJCPT
+          password: 456789
+          driver-class-name: oracle.jdbc.driver.OracleDriver
+          url: jdbc:oracle:thin:@10.192.19.108:1521/ORCL
+#        master:
+#          username: ZHFTYJJCPT
+#          password: ToKreDi*nJ
+#          driver-class-name: oracle.jdbc.driver.OracleDriver
+#          url: jdbc:oracle:thin:@10.192.19.116:1521/ORCL
+#        master:
+#          username: ZHFTYJJCPT
+#          password: ToKreDi*nJ
+#          driver-class-name: oracle.jdbc.driver.OracleDriver
+#          url: jdbc:oracle:thin:@10.190.55.65:9205/ORCL
+        readonly:
+          username: ZHFTYJJCPT
+          password: ToKreDi*nJ
+          driver-class-name: oracle.jdbc.driver.OracleDriver
+          url: jdbc:oracle:thin:@10.192.19.116:1521/ORCL
+        third:
+          username: ZHFTYJJCPT
+          password: ToKreDi*nJ
+          driver-class-name: oracle.jdbc.driver.OracleDriver
+          url: jdbc:oracle:thin:@10.192.19.116:1521/ORCL
+
+#mybatis-plus:
+#  mapper-locations: classpath*:/mapper/*.xml
+
+  freemarker:
+    allow-request-override: false
+    allow-session-override: false
+    cache: false
+    charset: UTF-8
+    check-template-location: true
+    content-type: text/html
+    enabled: true
+    expose-request-attributes: false
+    expose-session-attributes: false
+    expose-spring-macro-helpers: true
+    prefer-file-system-access: true
+    suffix: .html
+    template-loader-path: classpath:/templates/
+    settings:
+     output_format: HTMLOutputFormat
+     template_update_delay: 0
+     default_encoding: UTF-8
+     url_escaping_charset: UTF-8
+     classic_compatible: true
+     number_format: ###
+  resources:
+    chain:
+      strategy:
+        content:
+          enabled: true
+          paths: /**
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    com.cetc.cloud.datasynch.provider.mapper: DEBUG
+#    com.cetc.cloud.datasynch.provider.service.impl.DbOperateService: DEBUG
+# path: D://output/Intellij/11-Gaojiaohui/logs
+#  file: logs/dataSyncher.log
+
+# IP白名单
+ip-white-list: 127.0.0.1;10.192.19.108;10.190.55.65;10.190.55.58;61.145.163.87

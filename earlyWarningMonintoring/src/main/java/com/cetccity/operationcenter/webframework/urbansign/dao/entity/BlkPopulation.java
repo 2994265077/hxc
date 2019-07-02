@@ -1,0 +1,86 @@
+package com.cetccity.operationcenter.webframework.urbansign.dao.entity;
+
+import lombok.Data;
+
+@Data
+public class BlkPopulation {
+
+    private String ID; 
+	private String RKID; 
+	private String HID; 
+	private String XM; 
+	private String SFZH; 
+	private String CYM; 
+	private String MZ; 
+	private String CSRQ;
+    private String XB;
+	private String JG; 
+	private String HYZK; 
+	private String ZZMM; 
+	private String XL; 
+	private String ZJXY; 
+	private String ZYLB; 
+	private String ZYMC; 
+	private String FWCS; 
+	private String LXFS; 
+	private String HJS; 
+	private String HJSHI; 
+	private String HJQ; 
+	private String HJDZ; 
+	private String RKXZ; 
+	private String HKLX; 
+	private String RHYZBS; 
+	private String SFSW; 
+	private String SWRQ;
+    private String SFZX; 
+	private String XZYY; 
+	private String XJZXZ; 
+	private String BZ; 
+	private String CJR; 
+	private String CJRQ;
+    private String XGR; 
+	private String XGRQ;
+    private String YSBGXSJ;
+    private String YSBSJLY; 
+	private String BZDZ;
+	private String SHENG; 
+	private String SHENGDM; 
+	private String SHI; 
+	private String SHIDM; 
+	private String QU; 
+	private String QUDM; 
+	private String JD; 
+	private String JDDM; 
+	private String SQ; 
+	private String SQDM; 
+	private String WG; 
+	private String WGDM; 
+	private String DL; 
+	private String DLDM; 
+	private String XQ; 
+	private String XQDM; 
+	private String LD; 
+	private String LDDM; 
+	private String FW; 
+	private String FWDM; 
+	private String CJSJ;
+    private String GXSJ;
+    private String SJLYFS;
+	private String SJLY; 
+	private String DYWGCODE; 
+	private String CODE; 
+	private String ADDRCODE; 
+	private String ADDRDESC; 
+	private String LON; 
+	private String LAT; 
+	private String TASK_ID; 
+	private String USER_ID; 
+	private String STATUS; 
+	private String LRR; 
+	private String LRRQ;
+    private String GXR;
+	private String IS_CITIZEN;
+	private String startTime;
+	private String endTime;
+
+}

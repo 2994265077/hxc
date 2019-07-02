@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cetccity.operationcenter.webframework.urbansign.dao.TableauSheetMapper">
+
+
+
+    <insert id="insert"
+            parameterType="com.cetccity.operationcenter.webframework.urbansign.dao.entity.TableauEntity">
+        <selectKey keyColumn="object_id" keyProperty="object_id" resultType="java.lang.Integer" order="BEFORE">
+            select nvl(max(object_id),0)+1 from tableau
+        </selectKey>
+        insert into tableau(object_id, view_name, view_url)
+        values (#{object_id},#{view_name}, #{view_url})
+    </insert>
+    <delete id="delete">
+        delete from tableau where object_id = #{object_id}
+    </delete>
+
+
+    <select id="queryAll"
+            resultType="com.cetccity.operationcenter.webframework.urbansign.dao.entity.TableauEntity">
+        select * from tableau
+    </select>
+</mapper>

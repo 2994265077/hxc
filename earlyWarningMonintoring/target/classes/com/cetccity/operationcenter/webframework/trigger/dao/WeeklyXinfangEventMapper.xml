@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.trigger.dao.WeeklyXinfangEventMapper">
+
+    <select id="querySourceData" parameterType="java.util.Map" resultType="com.cetccity.operationcenter.webframework.trigger.entity.WeeklyXinfangEvent">
+        SELECT VISITTIME,VISITNO,VISITPERSONNELNUM,CONTRADICTION,MATTERSNAME,VISITMATTERSREMARK,EVENTADDRESS,
+            PERFORMANCENAME,DEPARTMENTNAME,VISITPLACE,OUTATTITUDE,ISINCLUDEDSTATISTICS,VISITADDRESSNAME,SOURCE,
+            VISITTYPE,REGION_CODE,COMMUNITY_CODE,STREET_CODE,OBJECT_ID,JD84,WD84,STREET_NAME,
+            COMMUNITY_NAME,ADDRESS,YJJC_CREATE_TIME,YJJC_UPDATE_TIME
+        from WEEKLY_XINFANG_EVENT
+        <where>
+            <if test="begin != null">
+                and to_date(VISITTIME,'yyyy-MM-dd HH24:mi:ss') &gt; to_date(#{begin},'yyyy-MM-dd HH24:mi:ss')
+            </if>
+            <if test="end != null">
+                and to_date(VISITTIME,'yyyy-MM-dd HH24:mi:ss') &lt;= to_date(#{end},'yyyy-MM-dd HH24:mi:ss')
+            </if>
+            <if test="VISITPERSONNELNUM != null">
+                and VISITPERSONNELNUM &gt;= #{VISITPERSONNELNUM}
+            </if>
+        </where>
+        order by VISITTIME asc
+    </select>
+</mapper>

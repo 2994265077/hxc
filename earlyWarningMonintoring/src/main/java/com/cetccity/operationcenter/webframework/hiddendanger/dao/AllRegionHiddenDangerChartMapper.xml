@@ -1,0 +1,408 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cetccity.operationcenter.webframework.hiddendanger.dao.AllRegionHiddenDangerChartMapper">
+
+    <resultMap id="alarmTodayType" type="com.cetccity.operationcenter.webframework.web.model.incident.AlarmTodayType">
+        <id property="id" column="OBJECT_ID" />
+        <result property="code" column="ALARM_TYPE_LV2"/>
+        <result property="type" column="LV_2_NAME"/>
+        <result property="content" column="CONTENTS"/>
+        <result property="time" column="RELEASE_TIME"/>
+        <result property="company" column="ALARM_OBJECT"/>
+    </resultMap>
+
+    <resultMap id="nameValueTypeModel" type="com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueTypeModel">
+        <result property="name" column="NAME" javaType="java.lang.String" />
+        <result property="value" column="VALUE" javaType="java.lang.Integer" />
+    </resultMap>
+
+    <resultMap id="nameValuePlus" type="com.cetccity.operationcenter.webframework.hiddendanger.dao.entity.NameValuePlus">
+        <result property="name" column="NAME" javaType="java.lang.String" />
+        <result property="value" column="VALUE" javaType="java.lang.Integer" />
+        <result property="type" column="TYPE" javaType="java.lang.String"></result>
+    </resultMap>
+
+    <select id="countAll" resultType="java.util.HashMap">
+        SELECT
+            SANXIAO_PLACE_NUM, DANGER_SLOPE,ROAD_DISEASE_NUM,IOT_FIRE_NUM,RISK_POINT_NUM
+        FROM
+            (
+                SELECT
+                    count(*) SANXIAO_PLACE_NUM
+                FROM
+                    BLK_SANXIAO_PLACE
+                WHERE
+                    STATUS = '0'
+                <if test="streetCode != null and streetCode != ''">
+                    AND STREET_CODE = #{streetCode}
+                </if>
+            ),
+            (
+                SELECT
+                    count(ID_NUM) DANGER_SLOPE
+                FROM
+                    DANGER_SLOPE
+                <where>
+                    <if test="streetCode != null and streetCode != ''">
+                        AND STREET_CODE = #{streetCode}
+                    </if>
+                </where>
+            ),
+            (
+                SELECT
+                    count(*) ROAD_DISEASE_NUM
+                FROM
+                    TB_ROAD_DISEASE
+                <where>
+                    <if test="streetCode != null and streetCode != ''">
+                        AND STREET_CODE = #{streetCode}
+                    </if>
+                </where>
+            ),
+            (
+                SELECT
+                    COUNT(*) IOT_FIRE_NUM
+                FROM
+                    IOT_DEVICE
+                where
+                    1=1
+                and
+                    (
+                        device_type = '0022'
+                        or
+                        device_type ='0003'
+                        or
+                        device_type = '0024'
+                        or
+                        device_type ='0025'
+                    )
+                <if test="streetCode != null and streetCode != ''">
+                    AND STREET_CODE = #{streetCode}
+                </if>
+            ),
+            (
+                SELECT
+                    count(*) RISK_POINT_NUM
+                FROM
+                    RISK_POINT
+                <where>
+                    <if test="streetCode != null and streetCode != ''">
+                        AND STREET_CODE = #{streetCode}
+                    </if>
+                </where>
+            )
+    </select>
+    <select id="queryThreeSmallEvent" resultMap="nameValueTypeModel">
+        SELECT
+            STREET AS NAME, COUNT(OBJECT_ID) AS VALUE
+        FROM
+            BLK_SANXIAO_PLACE
+        WHERE
+            HAS_TROUBLE = 1
+        AND
+            STREET IS NOT NULL
+        <if test="streetCode != null and streetCode != ''">
+            AND STREET_CODE = #{streetCode}
+        </if>
+        GROUP BY
+            STREET
+    </select>
+    <select id="queryThreeSmallEventByStreetName" resultMap="nameValueTypeModel">
+        SELECT
+        NVL(t1.VALUE, 0) as VALUE, t2.COMMUNITY_NAME NAME
+        FROM
+            (
+                SELECT
+                    COMMUNITY_CODE, COUNT(OBJECT_ID) as VALUE
+                FROM
+                    BLK_SANXIAO_PLACE
+                WHERE
+                    HAS_TROUBLE = 1
+                AND
+                    STREET = #{street_name}
+                GROUP BY
+                    COMMUNITY_CODE
+            ) t1
+            RIGHT JOIN
+            (
+                SELECT
+                    COMMUNITY_CODE, COMMUNITY_NAME, STREET_NAME
+                FROM
+                    COMMUNITY_CODE
+
+            ) t2
+            ON
+            t1.COMMUNITY_CODE = t2.COMMUNITY_CODE
+            WHERE
+                t2.STREET_NAME = #{street_name}
+    </select>
+
+    <select id="queryGeologyNumByStreet" resultMap="nameValueTypeModel">
+        SELECT
+            STREET_NAME as NAME, count(STREET_NAME) as VALUE
+        FROM
+            (
+                SELECT
+                    c.STREET_NAME
+                FROM
+                    DANGER_SLOPE a,
+                    (
+                        SELECT
+                            b.STREET_CODE, b.STREET_NAME
+                        FROM
+                            COMMUNITY_CODE b
+                        GROUP BY
+                            b.STREET_NAME, b.STREET_CODE
+                    ) c
+                WHERE
+                    a.STREET_CODE = c.STREET_CODE
+                <if test="streetCode != null and streetCode != ''">
+                    AND a.STREET_CODE = #{streetCode}
+                    AND c.STREET_CODE = #{streetCode}
+                </if>
+            )
+        GROUP BY STREET_NAME
+    </select>
+
+    <select id="queryGeologyNumByStreetName" resultMap="nameValueTypeModel">
+        SELECT
+        NVL(t1.VALUE, 0) as VALUE, t2.COMMUNITY_NAME NAME
+        FROM
+            (
+                SELECT
+                    COMMUNITY_CODE, COUNT(OBJECT_ID) as VALUE
+                FROM
+                    DANGER_SLOPE
+                GROUP BY
+                    COMMUNITY_CODE
+            ) t1
+            RIGHT JOIN
+            (
+                SELECT
+                    COMMUNITY_CODE, COMMUNITY_NAME, STREET_NAME
+                FROM
+                    COMMUNITY_CODE
+            ) t2
+            ON
+                t1.COMMUNITY_CODE = t2.COMMUNITY_CODE
+            WHERE
+                t2.STREET_NAME = #{street_name}
+    </select>
+
+
+
+    <select id="queryThreeSmallHiddenDangerList" resultType="com.cetccity.operationcenter.webframework.hiddendanger.api.model.ThreeSmallHiddenDangerInfo">
+        SELECT t1.id,t1.place_type,t1.name,t1.eventContent,t1.eventTime,t1.state,t1.SYSTEMID,t2.place_name
+          FROM
+        (
+
+            SELECT
+                a.id,a.status, a.place_type, a.name, a.address, b.event_content eventContent, b.event_time eventTime, b.state, b.SYSTEMID
+            FROM
+                (
+                    SELECT
+                        id, status, place_type, name, address
+                    FROM
+                        BLK_SANXIAO_PLACE
+                    <where>
+                        <if test="streetCode != null and streetCode != ''">
+                            AND STREET_CODE = #{streetCode}
+                        </if>
+                        <if test="placeType != null and placeType != ''" >
+                            AND PLACE_TYPE = #{placeType}
+                        </if>
+                    </where>
+                ) a
+                JOIN
+                (
+                    SELECT
+                        event_content,event_time,state,SYSTEMID,address,event_name
+                    FROM
+                        BLK_CHENGGUAN_EVENT
+                    WHERE
+                        event_source = 6
+                    AND
+                        (state = 0 OR state = 1)
+                    AND
+                        isdelete = '0'
+                ) b
+                ON
+                    a.address = b.address
+                AND
+                    a.name = b.event_name
+
+            ORDER BY
+            eventTime DESC,NAME
+        ) t1,
+        (
+            SELECT
+                CODE_IN_CHINESE PLACE_NAME, CODE
+            FROM
+                DS_VALUE_DICT
+            WHERE
+                TABLE_NAME = 'BLK_SANXIAO_PLACE'
+            AND
+                COLUMN_NAME = 'PLACE_TYPE'
+        ) t2
+        <where >
+            t1.PLACE_TYPE = t2.CODE
+        </where>
+        <if test="placeType != null and placeType != ''">
+            and t1.PLACE_TYPE = #{placeType}
+        </if>
+    </select>
+
+    <select id="countThreeSmallDangerByType" resultMap="nameValuePlus">
+        SELECT
+            CODE AS type, t2.PLACE_NAME AS name, COUNT(ID) as value
+        FROM
+            (
+                SELECT
+                    t1.*, t2.filepath
+                FROM
+                    (
+                        SELECT
+                            a.id, a.place_type, a.name, b.event_content eventContent, b.event_time eventTime, b.state,  b.SYSTEMID
+                        FROM
+                            BLK_SANXIAO_PLACE a, BLK_CHENGGUAN_EVENT b
+                        WHERE
+                            a.name = b.event_name
+                        AND
+                            a.address = b.address
+                        AND
+                            b.event_source = 6
+                        AND (b.state = 0 OR b.state = 1)
+                        AND b.isdelete = '0'
+                        <if test="streetCode != null and streetCode != ''">
+                            AND a.STREET_CODE = #{streetCode}
+                        </if>
+                    ) t1
+				LEFT JOIN
+					(
+					    SELECT
+					        wm_concat(filepath) AS filepath, SYSTEM_ID
+					    FROM
+					        BLK_CG_EVT_ATTS
+					    GROUP BY
+					        SYSTEM_ID
+					) t2
+				ON
+                    t1.SYSTEMID = t2.SYSTEM_ID
+
+            ) t1
+            JOIN
+            (
+                SELECT
+                    CODE_IN_CHINESE place_name, code
+                FROM
+                    DS_VALUE_DICT
+                WHERE
+                    TABLE_NAME = 'BLK_SANXIAO_PLACE'
+                AND
+                    COLUMN_NAME = 'PLACE_TYPE'
+            ) t2
+            ON
+                t1.place_type = t2.code
+			GROUP BY
+			    t2.code, t2.PLACE_NAME
+    </select>
+
+    <select id="picsBySystemIds" resultMap="com.cetccity.operationcenter.webframework.urbansign.dao.UrbanComponentMapper.nameValueModel">
+        SELECT
+            wm_concat(filepath) as VALUE, SYSTEM_ID AS NAME
+        FROM
+            BLK_CG_EVT_ATTS
+        WHERE
+            SYSTEM_ID IN
+            <foreach collection="systemIds" open="(" close=")" item="systemId" separator=",">
+                #{systemId}
+            </foreach>
+        GROUP BY
+            SYSTEM_ID
+    </select>
+
+
+    <select id="countAlarmsByType" resultMap="nameValuePlus">
+        SELECT
+          t1.LV_2 as type, t1.LV_2_NAME as name, COUNT(t2.OBJECT_ID) as value
+        FROM
+            (
+                SELECT
+                    LV_2, LV_2_NAME
+                FROM
+                    ALARM_INFO_CODE
+                WHERE
+                    LV_1 = '002'
+                OR
+                    LV_1 = '003'
+                OR
+                    LV_1 = '004'
+                OR
+                    LV_1 = '011'
+            ) t1
+        JOIN
+            (
+                SELECT
+                    *
+                FROM
+                    ALARM_INFORMATION
+                WHERE
+                    SEND_STATE = '1'
+                AND
+                    ALARM_STATE = '1'
+                <if test="streetCode != null and streetCode != ''">
+                    AND STREET_CODE = #{streetCode}
+                </if>
+            ) t2
+        ON
+            t1.LV_2 = t2.ALARM_TYPE_LV2
+        GROUP BY
+            t1.LV_2, t1.LV_2_NAME
+        HAVING
+            COUNT(t2.OBJECT_ID) > 0
+    </select>
+
+    <select id="queryAlarmByType" resultMap="alarmTodayType">
+        SELECT
+             t2.OBJECT_ID as OBJECT_ID, t1.LV_2_NAME as LV_2_NAME, t2.ALARM_TYPE_LV2 as ALARM_TYPE_LV2, t2.ADDRESS as ADDRESS,
+             t2.CONTENTS as CONTENTS, t2.ALARM_OBJECT as ALARM_OBJECT, t2.RELEASE_TIME as RELEASE_TIME
+        FROM
+        (
+            SELECT
+                LV_2, LV_2_NAME
+            FROM
+                ALARM_INFO_CODE
+            <where>
+                <if test="type != null and type != ''">
+                    LV_2 = #{type}
+                </if>
+            </where>
+
+        ) t1
+        JOIN
+        (
+            SELECT
+                *
+            FROM
+                ALARM_INFORMATION
+            WHERE
+                SEND_STATE = '1'
+            AND
+                ALARM_STATE = '1'
+            <if test="type != null and type != ''">
+                AND ALARM_TYPE_LV2 = #{type}
+            </if>
+            <if test="streetCode != null and streetCode != ''">
+                AND STREET_CODE = #{streetCode}
+            </if>
+        ) t2
+        ON
+            t1.LV_2 = t2.ALARM_TYPE_LV2
+        WHERE
+            t2.OBJECT_ID is not null
+    </select>
+
+
+</mapper>

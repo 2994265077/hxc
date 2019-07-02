@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.hiddendanger.dao.QajjGridVMapper">
+
+    <select id="getQAJJ_GRID_V" parameterType="com.cetccity.operationcenter.webframework.hiddendanger.dao.entity.QAJJ_GRID_V" resultType="com.cetccity.operationcenter.webframework.hiddendanger.dao.entity.QAJJ_GRID_V">
+        select  AREACODE,COLOR,CREATEBY,CREATETIME,GAREACODE,GRIDDES,GRIDID,GRIDMANFLAG,GRIDPERSON,GRIDPERSONFLAG,
+        GRIDPHONE,ID,ISDANGERGRID,ISGRID,ISSHOW,MAPX,MAPY,MOBILE,NAME,REMARKS,UPDATEBY,UPDATETIME,YXY_UPDATEDTIME,
+        ADQ_UPDATE_TIME,COMMUNITY_NAME,COMMUNITY_CODE
+        from QAJJ_GRID_V where 1=1
+        <if test="COMMUNITY_CODE != null">
+            and COMMUNITY_CODE = #{COMMUNITY_CODE}
+        </if>
+    </select>
+
+</mapper>
