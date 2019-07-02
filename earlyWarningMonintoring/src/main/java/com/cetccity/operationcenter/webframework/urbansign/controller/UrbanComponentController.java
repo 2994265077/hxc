@@ -32,17 +32,17 @@ public class UrbanComponentController implements UrbanComponentApi {
         return nameValueModel_list;
     }
 
-    public NameDataModel rigthOne(String street){
+    public NameDataModel rightOne(String street){
         NameDataModel nameDataModel = urbanComponentService.rigthOne(street);
         return nameDataModel;
     }
 
-    public List<NameValueModel> rigthTwo(String street)throws IOException {
+    public List<NameValueModel> rightTwo(String street)throws IOException {
         List<NameValueModel> nameValueModel_list = urbanComponentService.rigthTwo(street);
         return nameValueModel_list;
     }
 
-    public Map rigthThree(String street){
+    public Map rightThree(String street){
         Map map = urbanComponentService.rigthThree(street);
         return map;
     }

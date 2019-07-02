@@ -39,18 +39,18 @@ public interface BiChartOfOutpatientApi {
     @ApiOperation(value = "公共安全--门诊信息BI--各医院门诊人次--近两年记录总和", notes = "YJJC_QWJJ_OUT_VISITS_DAY_V--OUTPATIENT_NO")
     @RequestMapping(value = "/outpatient/hospital",method = RequestMethod.GET,produces = "application/json;charset=utf-8")
     @ResponseBody
-    @Cacheable("'publicHealth_outpatient_hospital'")
+    @Cacheable("'outpatientHospital'")
     List<NameValueModel> outpatientHospital();
 
     @ApiOperation(value = "公共安全--门诊信息BI--近一个月各医院门诊人次", notes = "YJJC_QWJJ_OUT_VISITS_DAY_V--OUTPATIENT_NO")
     @RequestMapping(value = "/outpatient/near/month",method = RequestMethod.GET,produces = "application/json;charset=utf-8")
     @ResponseBody
-    @Cacheable("'publicHealth_outpatient_month'")
+    @Cacheable("'outpatientHospitalNearMonth'")
     List<NameValueModel> outpatientHospitalNearMonth();
 
     @ApiOperation(value = "公共安全--门诊信息BI--医院各科室门诊人次", notes = "YJJC_QWJJ_OUT_VISITS_DAY_V--OUTPATIENT_NO")
     @RequestMapping(value = "/outpatient/hospital/department",method = RequestMethod.GET,produces = "application/json;charset=utf-8")
     @ResponseBody
-    @Cacheable("'publicHealth_outpatient_department'")
+    @Cacheable("'outpatientHospitalDepartment'")
     NameDataModel outpatientHospitalDepartment();
 }

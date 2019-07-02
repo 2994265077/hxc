@@ -1,8 +1,0 @@
-com.mg.swagger.controller
-com.mg.swagger.controller.param
-com.mg.swagger.controller.vo
-com.mg.swagger.framework.configuration
-com.mg.swagger.framework.constant
-com.mg.swagger.framework.filter
-com.mg.swagger.framework.json
-com.mg.swagger.framework.service
