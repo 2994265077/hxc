@@ -91,7 +91,7 @@ public class XinfangAlarmTriggerServiceImpl extends AbstractEventAlarmTrigger<Ha
         alarm.setRELEASE_TIME( DateUtil.str2Date(model.getVISITTIME()) );  //发布时间
         alarm.setALARM_STATE(1);              //预警状态，1预警中，0取消预警
         alarm.setCONTENTS(model.getVISITMATTERSREMARK());         //预警内容
-        alarm.setALARM_LEVEL("人数较多");               //预警级别
+        alarm.setALARM_LEVEL("三级-黄");               //预警级别
         alarm.setALARM_TYPE_LV1("006");         //事件预警
         alarm.setALARM_TYPE_LV2("006002");     //应急突发事件预警
         alarm.setCHANNEL("福田区信访大厅");   //渠道

@@ -44,7 +44,7 @@ public class DangerAirConverter extends AbstractIotEventConverter {
 
     @Override
     protected String getAlarmLevel(IotEventUnion iotEventUnion) {
-        return "紧急";
+        return "一级-红";
     }
 
     @Override

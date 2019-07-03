@@ -20,6 +20,11 @@ package com.cetccity.operationcenter.webframework.trigger.converter;
  */
 public class FeverConverter extends WeijiAggregateConverter {
 
+    @Override
+    protected String getAlarmLevel() {
+        return "二级-橙";
+    }
+
     public FeverConverter() {
         this.thresholdCount = 56;
         thresholdString = "发热";

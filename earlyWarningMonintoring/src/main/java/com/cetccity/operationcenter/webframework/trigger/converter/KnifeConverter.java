@@ -36,10 +36,17 @@ import java.util.Optional;
  */
 public class KnifeConverter extends AbstractSingleConverter<YjjcQwjjSdmInfoV> {
 
+
     @Autowired
     private AlarmInformationV1Mapper alarmInformationMapper;
 
     private static final DateTimeFormatter DEFAUL_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+
+    @Override
+    protected String getAlarmLevel(YjjcQwjjSdmInfoV yjjcQwjjSdmInfoV) {
+        return "三级-黄";
+    }
 
     @Override
     protected Optional<AlarmInformation> recentAlarm(YjjcQwjjSdmInfoV yjjcQwjjSdmInfoV) {

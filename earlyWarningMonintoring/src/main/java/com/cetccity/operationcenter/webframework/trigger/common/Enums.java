@@ -115,10 +115,10 @@ public class Enums {
     @AllArgsConstructor
     public enum WatterLoggingLevel {
         CANCEL("取消预警", "cancel", 0, 0),
-        BLUE("蓝", "IV", 14, 1),
-        YELLOW("黄", "III", 29, 15),
-        ORANGE("橙", "II", 39, 30),
-        RED("红", "I", Integer.MAX_VALUE, 40);
+        BLUE("四级-蓝", "IV", 14, 1),
+        YELLOW("四级-蓝", "III", 29, 15),
+        ORANGE("四级-蓝", "II", 39, 30),
+        RED("三级-黄", "I", Integer.MAX_VALUE, 40);
 
         /**
          *  预警等级名称

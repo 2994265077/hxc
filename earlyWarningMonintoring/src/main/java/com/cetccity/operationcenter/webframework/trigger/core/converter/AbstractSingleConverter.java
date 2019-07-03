@@ -147,8 +147,11 @@ public abstract class AbstractSingleConverter<T> implements SingleAlarmConverter
     protected AlarmInformation newAlarmBean(T t) {
         String jsonString = JSONObject.toJSONString(t);
         AlarmInformation alarmInformation = JSONObject.parseObject(jsonString, AlarmInformation.class);
+        alarmInformation.setALARM_LEVEL(getAlarmLevel(t));
         return alarmInformation;
     }
+
+    protected abstract String getAlarmLevel(T t) ;
 
     /**
      * 功能描述: <br>

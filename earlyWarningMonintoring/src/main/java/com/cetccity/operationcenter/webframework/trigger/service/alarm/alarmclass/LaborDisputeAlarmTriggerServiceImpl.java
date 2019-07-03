@@ -85,7 +85,7 @@ public class LaborDisputeAlarmTriggerServiceImpl extends AbstractEventAlarmTrigg
         alarm.setRELEASE_TIME(model.getPUSH_TIME() );  //发布时间
         alarm.setALARM_STATE(1);              //预警状态，1预警中，0取消预警
         alarm.setCONTENTS(model.getCONTENT());         //预警内容
-        alarm.setALARM_LEVEL("有劳资纠纷风险");               //预警级别
+        alarm.setALARM_LEVEL("四级-蓝");               //预警级别
         alarm.setALARM_TYPE_LV1("004");         //事件预警
         alarm.setALARM_TYPE_LV2("004001");     //应急突发事件预警
         alarm.setCHANNEL("决策支撑平台");   //渠道
