@@ -41,7 +41,6 @@ import io.swagger.annotations.ApiOperation;
  **/
 @RestController
 public class UserManagementController implements UserManagementApi {
-
     private static final Logger logger = LoggerFactory.getLogger(UserManagementServiceImpl.class);
 
     @Autowired
