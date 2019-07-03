@@ -20,6 +20,7 @@ import com.cetccity.operationcenter.webframework.backstage.log.util.EnableLoggin
 @EnableConfigurationProperties
 @EnableAspectJAutoProxy(exposeProxy = true) //开启AOP，暴露动态代理
 
+
 public class ApplicationEarlyWarningMonitoring extends SpringBootServletInitializer implements WebMvcConfigurer {
    
     @Override
