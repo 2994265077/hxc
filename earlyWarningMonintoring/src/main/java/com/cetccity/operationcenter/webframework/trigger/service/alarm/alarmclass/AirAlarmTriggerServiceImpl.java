@@ -147,12 +147,12 @@ public class AirAlarmTriggerServiceImpl extends AbstractObjectAlarmTrigger<HashM
      * @return
      */
     public String getLevel(Double value){
-        if (value > 150)
-            return "中度污染";
-        else if (value > 200)
-            return "重度污染";
-        else if (value > 300)
-            return "严重污染";
-        return null;
+        if (value > 100 && value < 300) {
+            return "四级-蓝";
+        }
+        if (value >= 300) {
+            return "三级-黄";
+        }
+        return "正常";
     }
 }

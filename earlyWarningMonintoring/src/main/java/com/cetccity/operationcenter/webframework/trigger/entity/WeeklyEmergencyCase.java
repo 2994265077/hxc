@@ -3,6 +3,7 @@ package com.cetccity.operationcenter.webframework.trigger.entity;
 import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * <p>
@@ -172,5 +173,25 @@ public class WeeklyEmergencyCase implements Serializable {
 
     private String COMMUNITY_NAME;
 
+    public String getAlarmLevel() {
+        if (Objects.nonNull(LEVEL)) {
+            if (LEVEL.startsWith("一般")) {
+                return "四级-蓝";
+            }
+
+            if (LEVEL.startsWith("较大")) {
+                return "三级-黄";
+            }
+
+            if (LEVEL.startsWith("重大")) {
+                return "二级-橙";
+            }
+
+            if (LEVEL.startsWith("特别重大")) {
+                return "一级-红";
+            }
+        }
+        return "未知等级";
+    }
 
 }

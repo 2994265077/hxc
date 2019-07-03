@@ -3,36 +3,39 @@
 <mapper namespace="com.cetccity.operationcenter.webframework.trigger.dao.BuildScoreMonthAvgMapper">
 
     <insert id="avgMonthScore">
-        INSERT
-        INTO
-        BUILD_SCORE_MONTH_AVG(BUILD_ID, SCORE, CALCULATION_TIME, DANGER_LEVEL)
-
-        SELECT BUILD_ID, SCORE, #{_parameter} as CALCULATION_TIME, CASE
-        WHEN SCORE&lt;=20 THEN
-        '1'
-        WHEN SCORE&lt;=60 THEN
-        '2'
-        WHEN SCORE&lt;=70 THEN
-        '3'
-        WHEN SCORE&lt;=80 THEN
-        '4'
-        ELSE
-        '5'
-        END DANGER_LEVEL
-        FROM (
-
-        SELECT BUILD_ID, AVG(SCORE) AS SCORE
-        FROM "BUILD_SCORE_c1" WHERE SUBSTR(CALCULATION_TIME, 0, 7)=#{_parameter}  GROUP BY BUILD_ID )
+        INSERT INTO
+            BUILD_SCORE_MONTH_AVG(BUILD_ID, SCORE, CALCULATION_TIME, DANGER_LEVEL)
+        SELECT
+            BUILD_ID, SCORE, #{_parameter} as CALCULATION_TIME, CASE
+            WHEN SCORE&lt;=20 THEN
+            '1'
+            WHEN SCORE&lt;=60 THEN
+            '2'
+            WHEN SCORE&lt;=70 THEN
+            '3'
+            WHEN SCORE&lt;=80 THEN
+            '4'
+            ELSE
+            '5'
+            END DANGER_LEVEL
+        FROM
+            (
+                SELECT
+                    BUILD_ID, AVG(SCORE) AS SCORE
+                FROM
+                    "BUILD_SCORE"
+                WHERE
+                    SUBSTR(CALCULATION_TIME, 0, 7)=#{_parameter}
+                GROUP BY
+                    BUILD_ID
+            )
     </insert>
 
     <delete id="deleteByYearMonth">
-        DELETE
-        FROM
-        "BUILD_SCORE_c1"
+        DELETE FROM
+            "BUILD_SCORE"
         WHERE
-        SUBSTR(CALCULATION_TIME, 0, 7)=#{_parameter}
-
-
+            SUBSTR(CALCULATION_TIME, 0, 7)=#{_parameter}
     </delete>
 
 </mapper>

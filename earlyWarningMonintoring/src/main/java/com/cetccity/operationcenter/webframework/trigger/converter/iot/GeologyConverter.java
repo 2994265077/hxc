@@ -67,7 +67,7 @@ public class GeologyConverter extends AbstractIotEventConverter {
 
     @Override
     protected String getAlarmLevel(IotEventUnion iotEventUnion) {
-        return "重要";
+        return "三级-黄";
     }
 
     @Override

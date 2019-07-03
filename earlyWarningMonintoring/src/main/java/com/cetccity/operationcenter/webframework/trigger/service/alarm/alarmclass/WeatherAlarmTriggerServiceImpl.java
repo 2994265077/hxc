@@ -83,7 +83,7 @@ public class WeatherAlarmTriggerServiceImpl extends AbstractEventAlarmTrigger<Ha
         alarm.setRELEASE_TIME(DateUtil.str2Date(model.getRELEASETIME()) );  //发布时间
         alarm.setALARM_STATE(1);              //预警状态，1预警中，0取消预警
         alarm.setCONTENTS(model.getWARNINGCONTENT());         //预警内容
-        alarm.setALARM_LEVEL(model.getWARNINGLEVEL());               //预警级别
+        alarm.setALARM_LEVEL(getAlarmLevel(model.getWARNINGLEVEL()));               //预警级别
         alarm.setALARM_TYPE_LV1("001");         //事件预警
         alarm.setALARM_TYPE_LV2("001001");     //应急突发事件预警
         alarm.setCHANNEL("市气象局");   //渠道
@@ -102,5 +102,23 @@ public class WeatherAlarmTriggerServiceImpl extends AbstractEventAlarmTrigger<Ha
         baseInfo.setLDDM(null);
         alarm.initBaseInfo(baseInfo);
         return alarm;
+    }
+
+    public String getAlarmLevel(String sourceLevel) {
+        if (Objects.nonNull(sourceLevel)) {
+            if (sourceLevel.contains("红色")) {
+                return "一级-红";
+            }
+            if (sourceLevel.contains("橙色")) {
+                return "二级-橙";
+            }
+            if (sourceLevel.contains("黄色")) {
+                return "三级-黄";
+            }
+            if (sourceLevel.contains("蓝色") || sourceLevel.contains("白色")) {
+                return "四级-蓝";
+            }
+        }
+        return "sourceLevel";
     }
 }

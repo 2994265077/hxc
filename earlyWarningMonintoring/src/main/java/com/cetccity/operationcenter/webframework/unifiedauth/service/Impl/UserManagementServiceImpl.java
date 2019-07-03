@@ -13,6 +13,7 @@ import com.cetccity.operationcenter.webframework.unifiedauth.dao.UserRolesMapper
 import com.cetccity.operationcenter.webframework.unifiedauth.entity.UserEntity;
 import com.cetccity.operationcenter.webframework.unifiedauth.utils.RequestUtil;
 import com.cetccity.operationcenter.webframework.unifiedauth.utils.UuidUtil;
+import com.cetccity.operationcenter.webframework.web.util.Constant;
 import com.cetccity.operationcenter.webframework.web.util.MD5Encoder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -165,6 +166,26 @@ public class UserManagementServiceImpl {
         }
         return new HttpResponseModel<Boolean>(SysCode.SYS_SUCCESS_CODE, true);
     }
+    
+    /**
+     * 修改密码
+     * @param userUpdateModel
+     * @param role_ids
+     * @return
+     * @throws Exception
+     */
+    public HttpResponseModel<String> updatePwd(UserUpdateModel userUpdateModel) throws Exception{
+	    // 前台传过来的密码为base64转码后的，所以需要解码
+		String realPwd = Base64.decodeStr(userUpdateModel.getPassword());
+		// 校验密码格式是否正确
+		String checkMsg = checkPwd(realPwd);
+		if (StringUtils.isNotBlank(checkMsg)) {
+			return new HttpResponseModel<String>(AuthCode.OPERATE_FAILED, checkMsg);
+		}
+		userUpdateModel.setPassword(MD5Encoder.encode(realPwd));
+        userMapper.update(userUpdateModel);
+        return new HttpResponseModel<String>(SysCode.SYS_SUCCESS_CODE, " 修改成功");
+    }
 
     public HttpResponseModel<SimplePageInfoModel> queryUser(UserQueryModel userQueryModel) {
         int pageNum = userQueryModel.getPageNum();
@@ -199,6 +220,5 @@ public class UserManagementServiceImpl {
         target.setUpdate_time(null);
         return target;
     }
-
 
 }

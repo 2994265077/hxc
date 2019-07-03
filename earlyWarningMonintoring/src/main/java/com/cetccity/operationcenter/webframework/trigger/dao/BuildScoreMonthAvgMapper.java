@@ -35,4 +35,5 @@ public interface BuildScoreMonthAvgMapper {
      * @Date: 2019/4/3 14:36
      */
     void deleteByYearMonth(String yearMonth);
+
 }

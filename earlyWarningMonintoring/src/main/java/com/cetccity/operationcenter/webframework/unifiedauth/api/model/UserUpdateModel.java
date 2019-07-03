@@ -18,6 +18,12 @@ public class UserUpdateModel extends UserEntity {
     String user_id;
     @ApiModelProperty(hidden = true)
     String account;
+    
+    public UserUpdateModel(String userId, String account, String pwd){
+    	this.user_id = userId;
+    	this.account = account;
+    	setPassword(pwd);
+    }
 
     @Override
     public String getUser_id() {

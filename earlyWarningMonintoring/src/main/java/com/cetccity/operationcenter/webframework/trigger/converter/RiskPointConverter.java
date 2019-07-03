@@ -17,6 +17,7 @@ import com.cetccity.operationcenter.webframework.trigger.entity.RiskPointDangerL
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -32,6 +33,21 @@ public class RiskPointConverter extends AbstractSingleConverter<RiskPoint> {
     protected Optional<AlarmInformation> recentAlarm(RiskPoint riskPoint) {
         // 不管上次是否预警，都新增
         return Optional.empty();
+    }
+
+    @Override
+    protected String getAlarmLevel(RiskPoint riskPoint) {
+        String dangerLevel = riskPoint.getDANGER_LEVEL();
+        if (Objects.nonNull(dangerLevel)) {
+            switch (dangerLevel) {
+                case "红" : return "一级-红";
+                case "橙" : return "二级-橙";
+                case "黄" : return "三级-黄";
+                case "蓝" : return "四级-蓝";
+                default: return dangerLevel;
+            }
+        }
+        return "未知等级";
     }
 
     @Override

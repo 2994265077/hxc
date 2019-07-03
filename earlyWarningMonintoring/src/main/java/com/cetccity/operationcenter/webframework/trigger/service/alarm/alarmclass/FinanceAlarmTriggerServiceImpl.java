@@ -117,7 +117,7 @@ public class FinanceAlarmTriggerServiceImpl{
         alarm.setRELEASE_TIME(model.getPUSH_TIME());  //发布时间
         alarm.setALARM_STATE(1);              //预警状态，1预警中，0取消预警
         alarm.setCONTENTS(model.getNAME()+"冒烟指数"+model.getMASS_SOCRE());         //预警内容
-        alarm.setALARM_LEVEL("有金融预警风险");               //预警级别
+        alarm.setALARM_LEVEL(getAlarmLevel(model.getMASS_SOCRE()));               //预警级别
         alarm.setALARM_TYPE_LV1("004");         //事件预警
         alarm.setALARM_TYPE_LV2("004003");     //应急突发事件预警
         alarm.setCHANNEL("金融办");   //渠道
@@ -165,5 +165,18 @@ public class FinanceAlarmTriggerServiceImpl{
         alarmInformation.setORIGIN_TABLE_NAME(getOriginTableName());
         alarmInformation.setOBJECT_ID(object_id);
         alarmInformationMapper.cancelFFLAlarm(alarmInformation);
+    }
+
+    public String getAlarmLevel(String score) {
+        int scoreIntValue = 0;
+        try {
+            scoreIntValue = Integer.parseInt(score);
+        } catch (Exception e) {
+            log.error("冒烟指数转成int失败", e);
+        }
+        if (scoreIntValue >= 90) {
+            return "三级-黄";
+        }
+        return "四级-蓝";
     }
 }

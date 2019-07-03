@@ -19,6 +19,11 @@ package com.cetccity.operationcenter.webframework.trigger.converter;
  */
 public class InfluenzaConverter extends WeijiAggregateConverter  {
 
+    @Override
+    protected String getAlarmLevel() {
+        return "二级-橙";
+    }
+
     public InfluenzaConverter() {
         this.thresholdCount = 28;
         thresholdString = "腹泻";

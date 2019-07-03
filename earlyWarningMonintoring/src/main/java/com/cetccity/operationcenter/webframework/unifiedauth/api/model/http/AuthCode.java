@@ -49,6 +49,10 @@ public class AuthCode extends SysCode {
     
     public final static int PWD_ERROR = 10010;
     public final static String PWD_ERROR_MSG = "密码必须为八位以上，且含大、小写字母、数字及特殊字符任意三种及以上";
+    
+    public final static int OPERATE_FAILED = 10011;
+    public final static String OPERATE_FAILED_MSG = "操作失败";
+
 
     AuthCode() {
         map.put(CREATE_USER_ERROR_CODE, CREATE_USER_ERROR_MESSAGE);
@@ -62,5 +66,6 @@ public class AuthCode extends SysCode {
         map.put(PERMISSION_DENIED_ERROR, PERMISSION_DENIED_ERROR_MESSAGE);
         map.put(ACCOUNT_DISABLED_ERROR, ACCOUNT_DISABLED_ERROR_MESSAGE);
         map.put(PWD_ERROR, PWD_ERROR_MSG);
+        map.put(OPERATE_FAILED, OPERATE_FAILED_MSG);
     }
 }
