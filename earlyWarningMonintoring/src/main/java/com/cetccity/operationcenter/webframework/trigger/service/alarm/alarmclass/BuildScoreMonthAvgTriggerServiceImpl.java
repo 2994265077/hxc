@@ -37,8 +37,8 @@ public class BuildScoreMonthAvgTriggerServiceImpl{
     private BuildScoreMonthAvgMapper mapper;
 
     public void triggerAlarm() {
-        YearMonth now = YearMonth.now();
-        String yearMonth = now.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        YearMonth lastMonth = YearMonth.now().minusMonths(1L);
+        String yearMonth = lastMonth.format(DateTimeFormatter.ofPattern("yyyy-MM"));
         mapper.avgMonthScore(yearMonth);
         mapper.deleteByYearMonth(yearMonth);
     }
