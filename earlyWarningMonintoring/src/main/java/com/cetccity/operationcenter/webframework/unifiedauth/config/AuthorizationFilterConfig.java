@@ -40,6 +40,7 @@ public interface AuthorizationFilterConfig {
         add("/document.html");
         add("/static/**");
         add("/xml/**");
+        add("/authClient/**");
     }};
 
 

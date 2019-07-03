@@ -136,7 +136,7 @@ public class AuthenticationController implements AuthenticationApi{
     /**
      * 用于第三方系统单点登录平台认证
      * @param account
-     * @param password
+     * @param password 
      * @param response
      * @return
      */
