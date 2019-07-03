@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.hiddendanger.dao.ZHUJIAN_BIANPOMapper">
+
+    <select id="getObject" parameterType="java.lang.String" resultType="com.cetccity.operationcenter.webframework.hiddendanger.dao.entity.ZHUJIAN_BIANPO">
+        select  ROWID,YJJC_UPDATE_TIME,YJJC_CREATE_TIME,REGION_CODE,COMMUNITY_CODE,STREET_CODE,OBJECT_ID,
+        STREET_NAME,COMMUNITY_NAME,JD84,WD84,NAME,ADDRESS,RADIUS,IMAGE_URL
+        from ZHUJIAN_BIANPO
+        where 1=1
+        <if test="id != null">
+            and ROWID = #{id}
+        </if>
+    </select>
+</mapper>
