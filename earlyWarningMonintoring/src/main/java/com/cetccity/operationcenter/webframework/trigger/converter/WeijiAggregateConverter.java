@@ -54,7 +54,7 @@ public abstract class WeijiAggregateConverter extends AbstractAggregatesConverte
     @Autowired
     private AlarmInformationV1Mapper alarmInformationMapper;
 
-
+    protected abstract String getAlarmLevel() ;
 
 
     @Override
@@ -88,6 +88,7 @@ public abstract class WeijiAggregateConverter extends AbstractAggregatesConverte
         alarmInformation.setCONTENTS( thresholdString + "预警");
         alarmInformation.setALARM_LEVEL("特殊病情");
         alarmInformation.setCHANNEL("卫计局");
+        alarmInformation.setALARM_LEVEL(getAlarmLevel());
 
         return Arrays.asList(alarmInformation);
     }

@@ -102,7 +102,7 @@ public class EmergencyCaseAlarmTriggerServiceImpl extends AbstractEventAlarmTrig
         alarm.setRELEASE_TIME(model.getSTART_TIME());  //发布时间
         alarm.setALARM_STATE(1);              //预警状态，1预警中，0取消预警
         alarm.setCONTENTS(model.getDESCRIPTION());         //预警内容
-        alarm.setALARM_LEVEL(model.getLEVEL());               //预警级别
+        alarm.setALARM_LEVEL(model.getAlarmLevel());               //预警级别
         alarm.setALARM_TYPE_LV1("006");         //事件预警
         alarm.setALARM_TYPE_LV2("006001");     //应急突发事件预警
         alarm.setCHANNEL("应急办");   //渠道
@@ -122,5 +122,7 @@ public class EmergencyCaseAlarmTriggerServiceImpl extends AbstractEventAlarmTrig
         alarm.initBaseInfo(baseInfo);
         return alarm;
     }
+
+
 
 }

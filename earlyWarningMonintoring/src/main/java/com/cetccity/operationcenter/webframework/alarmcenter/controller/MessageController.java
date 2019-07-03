@@ -11,6 +11,7 @@ package com.cetccity.operationcenter.webframework.alarmcenter.controller;
 
 import com.cetccity.operationcenter.webframework.alarmcenter.service.impl.MessageService;
 import com.cetccity.operationcenter.webframework.alarmcenter.vo.MessageSend;
+import com.cetccity.operationcenter.webframework.backstage.log.util.LogAnnotation;
 import com.cetccity.operationcenter.webframework.common.exception.CetcCommonException;
 import com.cetccity.operationcenter.webframework.core.frame.model.HttpResponseModel;
 import com.cetccity.operationcenter.webframework.oa.model.Dept;
@@ -86,6 +87,7 @@ public class MessageController {
 
     @PostMapping("/message")
     @ApiOperation("发短信")
+    @LogAnnotation(module = "发送短信")
     public HttpResponseModel<Boolean> sendMessage(@RequestBody MessageSend messageSend) {
         List<String> userIds = messageSend.getUserIds().stream().filter(Objects::nonNull).distinct().collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(userIds)) {

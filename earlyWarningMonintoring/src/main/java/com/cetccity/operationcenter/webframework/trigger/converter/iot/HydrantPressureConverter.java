@@ -53,7 +53,7 @@ public class HydrantPressureConverter extends AbstractIotEventConverter {
 
     @Override
     protected String getAlarmLevel(IotEventUnion iotEventUnion) {
-        return "重要";
+        return "四级-蓝";
     }
 
     @Override

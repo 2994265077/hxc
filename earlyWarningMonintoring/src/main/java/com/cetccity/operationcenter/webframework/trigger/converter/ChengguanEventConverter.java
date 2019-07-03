@@ -41,6 +41,11 @@ public class ChengguanEventConverter extends AbstractSingleConverter<BlkChenggua
     private AlarmInformationV1Mapper alarmInformationMapper;
 
     @Override
+    protected String getAlarmLevel(BlkChengguanEvent blkChengguanEvent) {
+        return "四级-蓝";
+    }
+
+    @Override
     protected Optional<AlarmInformation> recentAlarm(BlkChengguanEvent blkChengguanEvent) {
         AlarmInformation condition = new AlarmInformation();
         condition.setSYSTEM_ID(blkChengguanEvent.getSystemId());

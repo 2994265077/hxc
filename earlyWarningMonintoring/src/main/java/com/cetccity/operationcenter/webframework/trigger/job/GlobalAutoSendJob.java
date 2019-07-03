@@ -12,6 +12,7 @@ package com.cetccity.operationcenter.webframework.trigger.job;
 import com.cetccity.operationcenter.webframework.trigger.core.processor.Processor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,6 +30,7 @@ public class GlobalAutoSendJob {
     @Qualifier("alarmAutoSendProcessor")
     private Processor processor;
 
+    @Scheduled(cron = "0 0/10 * * * ?")
     public void autoSend() {
         processor.process();
     }

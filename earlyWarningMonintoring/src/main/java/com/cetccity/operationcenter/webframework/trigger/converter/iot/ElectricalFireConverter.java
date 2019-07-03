@@ -44,7 +44,7 @@ public class ElectricalFireConverter extends AbstractIotEventConverter {
 
     @Override
     protected String getAlarmLevel(IotEventUnion iotEventUnion) {
-        return "紧急";
+        return "二级-橙";
     }
 
     @Override

@@ -35,6 +35,11 @@ public class RiskPointConverter extends AbstractSingleConverter<RiskPoint> {
     }
 
     @Override
+    protected String getAlarmLevel(RiskPoint riskPoint) {
+        return riskPoint.getDANGER_LEVEL();
+    }
+
+    @Override
     protected AlarmInformation updateAlarmBean(AlarmInformation lastAlarm, RiskPoint riskPoint) {
         AlarmInformation update = new AlarmInformation();
         update.setOBJECT_ID(lastAlarm.getOBJECT_ID());

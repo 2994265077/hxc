@@ -104,7 +104,7 @@ public class WaterAlarmTriggerServiceImpl extends AbstractObjectAlarmTrigger<Has
         alarm.setRELEASE_TIME(model.getMONITOR_TIME());  //发布时间
         alarm.setALARM_STATE(Integer.valueOf(nameValueUnitModel.getValue()));              //预警状态，1预警中，0取消预警
         alarm.setCONTENTS("发现" + objectName + "["+nameValueUnitModel.getName()+"("+model.getMONITOR_FACTOR_CODE()+")-->"+model.getMONITOR_VALUE()+" "+nameValueUnitModel.getUnit()+"]"+"指标超标");         //预警内容
-        alarm.setALARM_LEVEL("超标");               //预警级别
+        alarm.setALARM_LEVEL("四级-蓝");               //预警级别
         alarm.setALARM_TYPE_LV1("005");         //生态环境预警
         alarm.setALARM_TYPE_LV2("005001");     //水环境预警
         alarm.setCHANNEL("环水局");   //渠道
