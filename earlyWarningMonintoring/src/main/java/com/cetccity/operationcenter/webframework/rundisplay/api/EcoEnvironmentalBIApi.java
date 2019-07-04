@@ -38,7 +38,7 @@ public interface EcoEnvironmentalBIApi {
     @ResponseBody
     NameDataModel airStationAverageLineDay();
 
-    @ApiOperation(value = "生态环境--最近三十天各个空气质量监测站按天检测的平均值（AQI）--柱状图", notes = "生态环境--最近三十天各个空气质量监测站按天检测的AQI平均值--QHSJ_AQI_INFO")
+    @ApiOperation(value = "生态环境--最近十天各个空气质量监测站按天检测的平均值（AQI）--柱状图", notes = "生态环境--最近十天各个空气质量监测站按天检测的AQI平均值--QHSJ_AQI_INFO")
     @RequestMapping(value = "/avg/air/aqi/line/day",method = RequestMethod.GET,produces = "application/json;charset=utf-8")
     @ResponseBody
     NameDataModel airStationAverageAQILineDay();

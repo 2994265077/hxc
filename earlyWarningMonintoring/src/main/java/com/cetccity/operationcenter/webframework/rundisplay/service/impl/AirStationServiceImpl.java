@@ -213,25 +213,22 @@ public class AirStationServiceImpl implements AirStationService {
     //SO2 NO2 PM10 CO O3 PM2.5
     @Cacheable(key="'AirStationServiceImpl.airStationAverageLineDay'")
     public NameDataModel airStationAverageLineDay(){
-        LocalDateTime startOfMonth = YearMonth
-                .now()
-                .atDay(1)
-                .atStartOfDay();
+        LocalDateTime tenDaysAge = LocalDateTime.now().minusDays(10);
         String tag[] = {"a21026","a21004","a34002","a21005","a21029","a34004"};
         String tagName[] = {"二氧化硫","二氧化氮","PM10","一氧化碳","O3","PM2.5"};
         // 从数据库统计各指标当月每天平均数据
-        List<NameValueTypeModel<List<NameValueModel>>> nameValueTypeModels = qhsjAirMonitorDayDataMapper.countAirAvgValue(startOfMonth);
+        List<NameValueTypeModel<List<NameValueModel>>> nameValueTypeModels = qhsjAirMonitorDayDataMapper.countAirAvgValue(tenDaysAge);
         // 数据库查询到的数据转化为方便查询的数据结构
         Map<String, Map<String, String>> codeCountMap = nameValueTypeModels.stream()
                 .collect(Collectors.toMap(NameValueTypeModel::getName, nameValueTypeModel -> nameValueTypeModel.getValue().stream()
                         .collect(Collectors.toMap(NameValueModel::getName, NameValueModel::getValue))));
-        // 获取当月每天日期的格式化（yyyy-MM-dd）字符串
-        List<String> dates = Stream.iterate(startOfMonth.toLocalDate(), localDate -> localDate.plusDays(1L))
-                .limit(Duration.between(startOfMonth, LocalDateTime.now()).toDays() + 1)
+        // 获取近十天每天日期的格式化（yyyy-MM-dd）字符串
+        List<String> dates = Stream.iterate(tenDaysAge.toLocalDate(), localDate -> localDate.plusDays(1L))
+                .limit(Duration.between(tenDaysAge, LocalDateTime.now()).toDays() + 1)
                 .sorted()
                 .map(LocalDate::toString)
                 .collect(Collectors.toList());
-        // 创建所有指标的当月每天数据项
+        // 创建所有指标的近十天每天数据项
         List<NameDataModel> dataModels = IntStream.range(0, tag.length)
                 .mapToObj(index -> {
                     Map<String, String> valueMap = codeCountMap.get(tag[index]);
