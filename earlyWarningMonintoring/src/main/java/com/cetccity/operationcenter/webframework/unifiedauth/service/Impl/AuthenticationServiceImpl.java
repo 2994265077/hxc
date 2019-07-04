@@ -85,7 +85,7 @@ public class AuthenticationServiceImpl {
     /**
      * 第三方系统单点登录平台认证
      * @param account
-     * @param password
+     * @param clientId
      * @param response
      * @return
      */

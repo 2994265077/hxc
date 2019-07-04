@@ -105,8 +105,11 @@
             <if test="streetCode != null">
                 and A.STREET_CODE = #{streetCode}
             </if>
+            <if test="lastDay != null">
+                and to_char(A.CHECK_TIME,'yyyy-MM-dd') &gt; #{lastDay}
+            </if>
             <if test="currentMonth != null">
-                and to_char(A.CHECK_TIME,'yyyy-MM') like concat(#{currentMonth},'%')
+                and to_char(A.CHECK_TIME,'yyyy-MM-dd') &lt;= #{currentMonth}
             </if>
             <if test="SEWERAGE_ID != null">
                 and A.SEWERAGE_ID = #{SEWERAGE_ID}
