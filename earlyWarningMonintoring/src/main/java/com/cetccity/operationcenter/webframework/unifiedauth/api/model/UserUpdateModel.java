@@ -2,6 +2,8 @@ package com.cetccity.operationcenter.webframework.unifiedauth.api.model;
 
 import com.cetccity.operationcenter.webframework.unifiedauth.entity.UserEntity;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 /**
  * @Package: com.cetccity.operationcenter.webframework.unifiedauth.api.model
@@ -13,6 +15,8 @@ import io.swagger.annotations.ApiModelProperty;
  * @Update_Date: 2018/11/8 17:08
  * @Update_Description: huangzezhou 补充
  **/
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserUpdateModel extends UserEntity {
     @ApiModelProperty(value = "用户唯一编号", required = true)
     String user_id;

@@ -13,6 +13,7 @@ import com.cetccity.operationcenter.webframework.trigger.core.producer.IdProduce
 import com.cetccity.operationcenter.webframework.trigger.dao.AlarmInformationV1Mapper;
 import com.cetccity.operationcenter.webframework.trigger.dao.YjjcQwjjSdmInfoVMapper;
 import com.cetccity.operationcenter.webframework.trigger.entity.YjjcQwjjSdmInfoV;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
@@ -36,7 +37,8 @@ public class WeijiAggraProducer implements IdProducer<YjjcQwjjSdmInfoV> {
 
     @Override
     public String previousId() {
-        return alarmInformationMapper.selectLastFRowId(getOriginTableName(), getAlarmTypeLv2());
+        String lastFRowId = alarmInformationMapper.selectLastFRowId(getOriginTableName(), getAlarmTypeLv2());
+        return StringUtils.isNotBlank(lastFRowId) ? lastFRowId : DEFAULT_ID_VALUE;
     }
 
     @Override
