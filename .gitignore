@@ -10,6 +10,6 @@ gen
 **/.idea/
 **/info/
 **/error/
-**/log/
+*.log
 **/debug/
 **/target/
