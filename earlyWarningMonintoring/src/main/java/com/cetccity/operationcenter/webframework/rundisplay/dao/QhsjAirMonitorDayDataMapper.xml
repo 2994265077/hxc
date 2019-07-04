@@ -4,7 +4,7 @@
 
     <resultMap id="nameValueTypeModel" type="com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueTypeModel" >
         <result property="name" column="CODE" javaType="java.lang.String" />
-        <collection property="value" ofType="com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel" >
+        <collection property="value" ofType="com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel"  javaType="java.util.LinkedList">
             <result property="name" column="NAME" javaType="java.lang.String" />
             <result property="value" column="VALUE" javaType="java.lang.String" />
         </collection>
