@@ -173,7 +173,7 @@ public interface UrbanPopulationBasicApi {
     List<Tbl_pojo_futianApi> labourPool();
 
 
-    @ApiOperation(value = "人口基本面--详细人口关爱-人群", notes = "人口基本面--详细人口关爱-人群-表名(BLK_POPULATION)")
+    @ApiOperation(value = "人口基本面--详细人口", notes = "人口基本面--详细人口")
     @ApiImplicitParams({
             @ApiImplicitParam(value = "街道--南园街道(可不填)", name = "street", dataType = "string", paramType = "query"),
             @ApiImplicitParam(value = "类型1-关爱人群、2-优抚人群、3-优待人群、4-关注人群、5-管控人群", name = "type", dataType = "string", paramType = "query")
@@ -183,7 +183,14 @@ public interface UrbanPopulationBasicApi {
     @Cacheable(key = "'rightThirteen'+#street+#type")
     HttpResponseModel<ChartDetailModel> rightThirteen(String street, String type);
 
-
+    @ApiOperation(value = "人口基本面--详细人口-按街道按社区显示", notes = "人口基本面--详细人口-按街道按社区显示")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "街道--南园街道(可不填)", name = "street", dataType = "string", paramType = "query"),
+            @ApiImplicitParam(value = "入参", name = "name", dataType = "string", paramType = "query")
+    })
+    @RequestMapping(value = "/population/basic/rightThirteen/drill",method = RequestMethod.GET,produces = "application/json;charset=utf-8")
+    @ResponseBody
+    HttpResponseModel<ChartDetailModel> rightThirteenDrillDown(String street, String name);
 
 
 

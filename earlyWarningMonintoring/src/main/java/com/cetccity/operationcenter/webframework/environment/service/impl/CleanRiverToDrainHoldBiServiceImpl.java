@@ -125,7 +125,7 @@ public class CleanRiverToDrainHoldBiServiceImpl implements CleanRiverToDrainHold
         List<HashMap> data = qJHH_SEWERAGE_INFOMapper.rightThree(map);
         Map<String,String> map2 = new HashMap();
         map2.put("type","pie");
-        return CetcFactoryProducer.init(data,"X_NAME",map2);
+        return CetcFactoryProducer.init(data,"X_NAME",map2,false);
     }
 
     public HttpResponseModel<ChartDetailModel> rightFour(String street) {
@@ -140,52 +140,6 @@ public class CleanRiverToDrainHoldBiServiceImpl implements CleanRiverToDrainHold
         }
         Map<String, String> map2 = new HashMap();
         map2.put("type", "bar");
-        return CetcFactoryProducer.init(data, "X_NAME", map2);
+        return CetcFactoryProducer.init(data, "X_NAME", map2,false);
     }
-        /*ChartFactory chartFactory = new ChartFactory() {
-            @Override
-            public List<HashMap> queryData() {
-                Map map = new HashMap();
-                map.put("streetCode",StringUtils.isNotEmpty(street) ? LoadMyUtil.getPropertiesVauleOfKey("street.properties", street).split(",")[0] : null);
-                //map.put("month",LoadMyUtil.getMyTime("MONTH",0));
-                if(StringUtils.isEmpty(street)){
-                    return qJHH_SEWERAGE_INFOMapper.rightFourNoStreet(map);
-                }else {
-                    return qJHH_SEWERAGE_INFOMapper.rightFourHasStreet(map);
-                }
-            }
-
-            @Override
-            public List<String> initX() {
-                List<String> x= new ArrayList<>();
-                queryData().stream().forEach(u->x.add((String) u.get("X_NAME")));
-                return x;
-            }
-
-            @Override
-            public List<String> initY() {
-                List<String> y = new ArrayList<String>();
-                for (Object key: input.get(0).keySet()){
-                    if ("X_NAME".equals(String.valueOf(key))) continue;
-                    y.add(String.valueOf(key));
-                }
-                return y;
-            }
-
-            @Override
-            public void match(HashMap row) {
-                String month = (String) row.get("X_NAME");
-                for(Object key: row.keySet()){
-                    if ("X_NAME".equals(String.valueOf(key))) continue;
-                    BigDecimal decimal = (BigDecimal) row.get(key);
-                    dataMap.get(month).put(String.valueOf(key), decimal.intValue());
-                }
-            }
-        };
-        Map<String,String> map = new HashMap();
-        map.put("type","bar");
-        ChartDetailModel model = new ChartDetailModel();
-        model.setChart(chartFactory.build(map));
-        return new HttpResponseModel<ChartDetailModel>(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, model);
-    }*/
 }

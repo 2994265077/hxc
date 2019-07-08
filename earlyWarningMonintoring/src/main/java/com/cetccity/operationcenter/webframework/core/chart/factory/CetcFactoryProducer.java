@@ -24,7 +24,7 @@ import java.util.*;
 @UtilityClass
 public class CetcFactoryProducer {
 
-    public HttpResponseModel<ChartDetailModel> init(List<HashMap> data,String xaxis,Map<String, String> map) {
+    public HttpResponseModel<ChartDetailModel> init(List<HashMap> data,String xaxis,Map<String, String> map, boolean hasConvert) {
         ChartFactory chartFactory = new ChartFactory() {
             @Override
             public List<HashMap> queryData() {
@@ -53,8 +53,12 @@ public class CetcFactoryProducer {
                 String x = (String) row.get(xaxis);
                 for (Object key : row.keySet()) {
                     if (xaxis.equals(String.valueOf(key))) continue;
-                    BigDecimal decimal = (BigDecimal) row.get(key);
-                    dataMap.get(x).put(String.valueOf(key), decimal.intValue());
+                    if(hasConvert){
+                        dataMap.get(x).put(String.valueOf(key), Integer.valueOf((String)row.get(key)));
+                    }else {
+                        BigDecimal decimal = (BigDecimal) row.get(key);
+                        dataMap.get(x).put(String.valueOf(key), decimal.intValue());
+                    }
                 }
             }
         };

@@ -107,4 +107,8 @@ public class UrbanPopulationBasicController implements UrbanPopulationBasicApi {
         return urbanPopulationBasicService.rightThirteen(street, type);
     }
 
+    public HttpResponseModel<ChartDetailModel> rightThirteenDrillDown(String street, String name){
+        return urbanPopulationBasicService.rightThirteenDrillDown(street, name);
+    }
+
 }
