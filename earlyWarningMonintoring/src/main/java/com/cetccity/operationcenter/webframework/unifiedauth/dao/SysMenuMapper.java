@@ -18,8 +18,8 @@ import com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu;
 @Mapper
 public interface SysMenuMapper {
 
-	@Insert("insert into SYS_MENU(ID, parentId, name, url, path, css, sort) "
-			+ "values (SEQ_SYS_MENU_ID.nextval,#{parentId, jdbcType=VARCHAR}, #{name, jdbcType=VARCHAR}, #{url, jdbcType=VARCHAR} , #{path, jdbcType=VARCHAR} , #{css, jdbcType=VARCHAR}, #{sort, jdbcType=INTEGER})")
+	@Insert("insert into SYS_MENU(ID, parentId, name, url, path, css, sort, type) "
+			+ "values (SEQ_SYS_MENU_ID.nextval,#{parentId, jdbcType=VARCHAR}, #{name, jdbcType=VARCHAR}, #{url, jdbcType=VARCHAR} , #{path, jdbcType=VARCHAR} , #{css, jdbcType=VARCHAR}, #{sort, jdbcType=INTEGER}, #{type, jdbcType=INTEGER})")
 	int save(SysMenu menu);
 
 	int updateByOps(SysMenu menu);

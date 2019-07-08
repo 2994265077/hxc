@@ -30,7 +30,10 @@ public class SysMenu implements Serializable {
 	private Date createDate;
 	private Date updateDate;
 	private List<SysMenu> subMenus;
-
+	/**
+	 * 菜单类型：1：后台菜单， 2：前台菜单
+	 */
+	private Short type;
 	private String roleId;
 	private Set<Long> menuIds;
 
