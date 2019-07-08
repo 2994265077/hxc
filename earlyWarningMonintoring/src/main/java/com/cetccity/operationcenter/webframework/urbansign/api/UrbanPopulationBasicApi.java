@@ -171,4 +171,23 @@ public interface UrbanPopulationBasicApi {
     @ResponseBody
     @Cacheable(key = "'labourPool'")
     List<Tbl_pojo_futianApi> labourPool();
+
+
+    @ApiOperation(value = "人口基本面--详细人口关爱-人群", notes = "人口基本面--详细人口关爱-人群-表名(BLK_POPULATION)")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "街道--南园街道(可不填)", name = "street", dataType = "string", paramType = "query"),
+            @ApiImplicitParam(value = "类型1-关爱人群、2-优抚人群、3-优待人群、4-关注人群、5-管控人群", name = "type", dataType = "string", paramType = "query")
+    })
+    @RequestMapping(value = "/population/basic/rightThirteen",method = RequestMethod.GET,produces = "application/json;charset=utf-8")
+    @ResponseBody
+    @Cacheable(key = "'rightThirteen'+#street+#type")
+    HttpResponseModel<ChartDetailModel> rightThirteen(String street, String type);
+
+
+
+
+
+
+
+
 }

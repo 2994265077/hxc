@@ -3,6 +3,7 @@ package com.cetccity.operationcenter.webframework.urbansign.service.impl;
 import com.cetccity.operationcenter.webframework.backstage.community.service.CommunityInfoService;
 import com.cetccity.operationcenter.webframework.core.chart.engine.model.ChartDetailModel;
 import com.cetccity.operationcenter.webframework.core.chart.engine.model.ChartFactory;
+import com.cetccity.operationcenter.webframework.core.chart.factory.CetcFactoryProducer;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.*;
 import com.cetccity.operationcenter.webframework.core.frame.model.HttpResponseModel;
 import com.cetccity.operationcenter.webframework.core.frame.model.SysCode;
@@ -15,6 +16,7 @@ import com.cetccity.operationcenter.webframework.urbansign.api.model.MapDensity;
 import com.cetccity.operationcenter.webframework.urbansign.api.model.NameValueDataModel;
 import com.cetccity.operationcenter.webframework.urbansign.api.model.Tbl_pojo_futianApi;
 import com.cetccity.operationcenter.webframework.urbansign.dao.BlkPopulationMapper;
+import com.cetccity.operationcenter.webframework.urbansign.dao.RightThirteenMapper;
 import com.cetccity.operationcenter.webframework.urbansign.dao.TblMxsysFutianMapper;
 import com.cetccity.operationcenter.webframework.urbansign.dao.XXZX_POPULATION_SUMMARYMapper;
 import com.cetccity.operationcenter.webframework.urbansign.dao.entity.BlkPopulation;
@@ -62,6 +64,9 @@ public class UrbanPopulationBasicServiceImpl implements UrbanPopulationBasicServ
 
     @Autowired
     LabourPool labourPool;
+
+    @Autowired
+    RightThirteenMapper rightThirteenMapper;
 
     public static final String[] ageName = {"0-3岁","3-6岁","6-14岁","14-28岁","28-35岁","35-45岁","45-60岁","60-70岁","70岁以上"};
 
@@ -526,5 +531,21 @@ public class UrbanPopulationBasicServiceImpl implements UrbanPopulationBasicServ
         }
         List<Tbl_pojo_futianApi> tbl_pojo_futian_list = labourPool.list;
         return tbl_pojo_futian_list;
+    }
+
+    public HttpResponseModel<ChartDetailModel> rightThirteen(String street, String type){
+        List<HashMap> data = null;
+        Map map = new HashMap();
+        map.put("streetCode",StringUtils.isNotEmpty(street) ? LoadMyUtil.getPropertiesVauleOfKey("street.properties", street).split(",")[0] : null);
+        switch (type){
+            case "1" : data = rightThirteenMapper.getRightThirteenOfOne(map); break;
+            case "2" : data = rightThirteenMapper.getRightThirteenOfTwo(map); break;
+            case "3" : data = rightThirteenMapper.getRightThirteenOfThree(map); break;
+            case "4" : data = rightThirteenMapper.getRightThirteenOfFour(map); break;
+            case "5" : data = rightThirteenMapper.getRightThirteenOfFive(map); break;
+        }
+        Map<String,String> map2 = new HashMap();
+        map2.put("type","bar");
+        return CetcFactoryProducer.init(data,"NAME_X",map2);
     }
 }

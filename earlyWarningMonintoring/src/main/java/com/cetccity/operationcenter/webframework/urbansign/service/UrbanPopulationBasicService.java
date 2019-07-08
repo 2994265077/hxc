@@ -41,4 +41,6 @@ public interface UrbanPopulationBasicService {
 
     List<Tbl_pojo_futianApi> labourPool();
 
+    HttpResponseModel<ChartDetailModel> rightThirteen(String street, String type);
+
 }
