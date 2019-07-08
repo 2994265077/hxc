@@ -149,17 +149,17 @@ public class SysMenuController {
 	 */
 	@ApiOperation(value = "新增菜单")
 	@PostMapping("saveOrUpdate")
-	public Result saveOrUpdate(@RequestBody SysMenu menu) {
+	public HttpResponseModel<String> saveOrUpdate(@RequestBody SysMenu menu) {
 		try {
 			if (menu.getId() != null) {
 				menuService.update(menu);
 			} else {
 				menuService.save(menu);
 			}
-			return Result.succeed("操作成功");
+			return new HttpResponseModel<String>(SysCode.SYS_SUCCESS_CODE, "操作成功");
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return Result.failed("操作失败");
+			return new HttpResponseModel<String>(SysCode.OPERATE_FAILED, "操作失败");
 		}
 
 	}
