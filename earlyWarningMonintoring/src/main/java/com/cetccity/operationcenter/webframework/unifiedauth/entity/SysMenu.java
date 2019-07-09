@@ -20,7 +20,7 @@ public class SysMenu implements Serializable {
 
 	private static final long serialVersionUID = 749360940290141180L;
 	@JsonSerialize(using=ToStringSerializer.class)
-	private Long objectId;
+	private Long OBJECT_ID;
 	private Long parentId;
 	private String name;
 	private String css;

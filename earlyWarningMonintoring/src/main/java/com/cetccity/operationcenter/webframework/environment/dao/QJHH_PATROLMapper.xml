@@ -39,13 +39,16 @@
     </select>
 
     <select id="rightThreeNoStreet" parameterType="java.util.Map" resultType="java.util.HashMap">
-        SELECT B.STREET_NAME X_NAME,NVL(COUNT(B.STREET_NAME),0) 巡查隐患次数 FROM QJHH_PATROL_INFO A,QJHH_FACILITY_INFO B
+        SELECT B.STREET_NAME X_NAME,NVL(COUNT(B.STREET_NAME),0) 近一个月巡查隐患次数 FROM QJHH_PATROL_INFO A,QJHH_FACILITY_INFO B
           <where>
               <if test="STATUS != null">
                   and A.STATUS = #{STATUS}
               </if>
-              <if test="currentMonth != null">
-                  and to_char(A.CHECK_TIME,'yyyy-MM') like concat(#{currentMonth},'%')
+              <if test="startTime != null">
+                  and A.CHECK_TIME &gt; to_date(#{startTime},'yyyy-MM-dd')
+              </if>
+              <if test="endTime != null">
+                  and A.CHECK_TIME &lt;= to_date(#{endTime},'yyyy-MM-dd')
               </if>
               <if test="SEWERATE_ID != null">
                   and A.SEWERATE_ID = #{SEWERATE_ID}

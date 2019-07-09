@@ -30,13 +30,26 @@
 		ORDER BY sort ASC
 	</select>
 
-	<select id="recursionfindMenu" parameterType ="com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu" resultType="com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu">
+	<resultMap id="BaseResultMap" type="com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu">
+		<id column="OBJECT_ID" jdbcType="BIGINT" property="OBJECT_ID" />
+		<result column="PARENTID" jdbcType="BIGINT" property="parentId" />
+		<result column="NAME" jdbcType="VARCHAR" property="name" />
+		<result column="CSS" jdbcType="VARCHAR" property="css" />
+		<result column="URL" jdbcType="VARCHAR" property="url" />
+		<result column="PATH" jdbcType="VARCHAR" property="path" />
+		<result column="SORT" jdbcType="INTEGER" property="sort" />
+		<result column="CREATE_DATE" jdbcType="DATE" property="createDate" />
+		<result column="UPDATE_DATE" jdbcType="DATE" property="updateDate" />
+		<result column="TYPE" jdbcType="TINYINT" property="type" />
+	</resultMap>
+
+	<select id="recursionfindMenu" resultType="com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu">
      select distinct m.*
        from sys_menu m
      start with m.OBJECT_ID in
      <foreach collection="sysMenus" index="index" item="m"
 			open="(" separator="," close=")">
-			#{m.objectId,jdbcType=INTEGER}
+			#{m.OBJECT_ID}
 	 </foreach>
       connect by m.OBJECT_ID = prior m.parentid
 	</select>

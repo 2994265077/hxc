@@ -56,9 +56,6 @@ public class SysMenuController implements SysMenuApi {
 	@Autowired
 	private UserInfoUtils userInfoUtils;
 
-	@Autowired
-	private SysMenuMapper sysMenuMapper;
-
 	/**
 	 * 删除菜单
 	 * @param id
@@ -83,15 +80,15 @@ public class SysMenuController implements SysMenuApi {
 		List<SysMenu> allMenus = menuService.findAll(); // 全部的菜单列表
 		List<Map<String, Object>> authTrees = new ArrayList<>();
 		Map<Long, SysMenu> roleMenusMap = roleMenus.stream()
-				.collect(Collectors.toMap(SysMenu::getObjectId, SysMenu -> SysMenu));
+				.collect(Collectors.toMap(SysMenu::getOBJECT_ID, SysMenu -> SysMenu));
 		for (SysMenu sysMenu : allMenus) {
 			Map<String, Object> authTree = new HashMap<>();
-			authTree.put("id", sysMenu.getObjectId());
+			authTree.put("id", sysMenu.getOBJECT_ID());
 			authTree.put("name", sysMenu.getName());
 			authTree.put("pId", sysMenu.getParentId());
 			authTree.put("open", true);
 			authTree.put("checked", false);
-			if (roleMenusMap.get(sysMenu.getObjectId()) != null) {
+			if (roleMenusMap.get(sysMenu.getOBJECT_ID()) != null) {
 				authTree.put("checked", true);
 			}
 			authTrees.add(authTree);
@@ -132,10 +129,9 @@ public class SysMenuController implements SysMenuApi {
 	 */
 	public HttpResponseModel<String> saveOrUpdate(@RequestBody SysMenu menu) {
 		try {
-			if (menu.getObjectId() != null) {
+			if (menu.getOBJECT_ID() != null) {
 				menuService.update(menu);
 			} else {
-				menu.setObjectId(sysMenuMapper.objectIdIncrement());
 				menuService.save(menu);
 			}
 			return new HttpResponseModel<String>(SysCode.SYS_SUCCESS_CODE, "操作成功");
@@ -175,7 +171,7 @@ public class SysMenuController implements SysMenuApi {
 				menus.add(sysMenu);
 			}
 			for (SysMenu menu : sysMenus) {
-				if (menu.getParentId().equals(sysMenu.getObjectId())) {
+				if (menu.getParentId().equals(sysMenu.getOBJECT_ID())) {
 					if (sysMenu.getSubMenus() == null) {
 						sysMenu.setSubMenus(new ArrayList<>());
 					}

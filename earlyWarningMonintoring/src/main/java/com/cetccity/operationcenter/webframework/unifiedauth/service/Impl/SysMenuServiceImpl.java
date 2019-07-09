@@ -24,12 +24,16 @@ public class SysMenuServiceImpl implements SysMenuService {
 	@Autowired
 	private SysMenuMapper menuDao;
  	@Autowired
-	private SysRoleMenuMapper roleMenuDao; 
+	private SysRoleMenuMapper roleMenuDao;
+
+	@Autowired
+	private SysMenuMapper sysMenuMapper;
 
 	@Transactional
 	@Override
 	public void save(SysMenu menu) {
 		menu.setCreateDate(new Date());
+		menu.setOBJECT_ID(sysMenuMapper.objectIdIncrement());
 		menuDao.save(menu);
 		log.info("新增菜单：{}", menu);
 	}
@@ -47,7 +51,7 @@ public class SysMenuServiceImpl implements SysMenuService {
 	public void delete(Long id) {
 		SysMenu menu = menuDao.findById(id);
 
-		menuDao.deleteByParentId(menu.getObjectId());
+		menuDao.deleteByParentId(menu.getOBJECT_ID());
 		menuDao.delete(id);
 
 		log.info("删除菜单：{}", menu);

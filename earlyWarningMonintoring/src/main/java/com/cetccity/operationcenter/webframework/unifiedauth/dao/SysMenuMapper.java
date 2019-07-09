@@ -19,7 +19,7 @@ public interface SysMenuMapper {
 	Long objectIdIncrement();
 	/*@Insert("insert into SYS_MENU(OBJECT_ID, parentId, name, url, path, css, sort, type) "
 			+ "values (SELECT SEQ_SYS_MENU.nextval FROM DUAL,#{parentId, jdbcType=VARCHAR}, #{name, jdbcType=VARCHAR}, #{url, jdbcType=VARCHAR} , #{path, jdbcType=VARCHAR} , #{css, jdbcType=VARCHAR}, #{sort, jdbcType=INTEGER}, #{type, jdbcType=INTEGER})")*/
-	int save(@Param("menu") SysMenu menu);
+	int save(SysMenu menu);
 
 	int updateByOps(SysMenu menu);
 

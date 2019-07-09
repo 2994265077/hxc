@@ -7,9 +7,9 @@
 		SELECT SEQ_SYS_MENU.nextval FROM DUAL
 	</select>
 
-	<insert id="save">
+	<insert id="save" parameterType="com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu">
         insert into SYS_MENU(OBJECT_ID, parentId, name, url, path, css, sort, type)
-		values (#{objectId,jdbcType=INTEGER},#{parentId, jdbcType=VARCHAR}, #{name, jdbcType=VARCHAR}, #{url, jdbcType=VARCHAR} , #{path, jdbcType=VARCHAR} , #{css, jdbcType=VARCHAR}, #{sort, jdbcType=INTEGER}, #{type, jdbcType=INTEGER})
+		values (#{OBJECT_ID,jdbcType=BIGINT},#{parentId, jdbcType=VARCHAR}, #{name, jdbcType=VARCHAR}, #{url, jdbcType=VARCHAR} , #{path, jdbcType=VARCHAR} , #{css, jdbcType=VARCHAR}, #{sort, jdbcType=INTEGER}, #{type, jdbcType=INTEGER})
 	</insert>
 
 
