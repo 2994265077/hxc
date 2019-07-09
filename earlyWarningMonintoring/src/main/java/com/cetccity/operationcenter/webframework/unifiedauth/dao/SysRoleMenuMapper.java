@@ -2,12 +2,10 @@ package com.cetccity.operationcenter.webframework.unifiedauth.dao;
 
 import java.util.List;
 import java.util.Set;
-
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-
 import com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu;
 
 
@@ -30,5 +28,5 @@ public interface SysRoleMenuMapper {
 
 	List<SysMenu> findMenusByRoleIds(@Param("roleIds") Set<String> roleIds, @Param("type") Integer type);
 	
-	List<SysMenu> recursionfindMenu(List<SysMenu> sysMenus);
+	List<SysMenu> recursionfindMenu(@Param("sysMenus") List<SysMenu> sysMenus);
 }

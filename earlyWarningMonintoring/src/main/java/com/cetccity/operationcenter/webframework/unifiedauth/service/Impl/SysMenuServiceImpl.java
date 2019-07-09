@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +23,10 @@ public class SysMenuServiceImpl implements SysMenuService {
 	@Autowired
 	private SysMenuMapper menuDao;
  	@Autowired
-	private SysRoleMenuMapper roleMenuDao; 
+	private SysRoleMenuMapper roleMenuDao;
+
+	@Autowired
+	private SysMenuMapper sysMenuMapper;
 
 	@Transactional
 	@Override
@@ -47,7 +49,7 @@ public class SysMenuServiceImpl implements SysMenuService {
 	public void delete(Long id) {
 		SysMenu menu = menuDao.findById(id);
 
-		menuDao.deleteByParentId(menu.getObjectId());
+		menuDao.deleteByParentId(menu.getId());
 		menuDao.delete(id);
 
 		log.info("删除菜单：{}", menu);
@@ -67,12 +69,16 @@ public class SysMenuServiceImpl implements SysMenuService {
 
 	@Override
 	public List<SysMenu> findByRoles(Set<String> roleIds, Integer type) {
-		List<SysMenu> sysMenuList = roleMenuDao.findMenusByRoleIds(roleIds, type);
-		if(!CollectionUtils.isEmpty(sysMenuList)){
-			//递归查询所有菜单
-			sysMenuList = roleMenuDao.recursionfindMenu(sysMenuList);
-		}
-		return sysMenuList;
+		return roleMenuDao.findMenusByRoleIds(roleIds, type);
+	}
+	
+	/**
+	 * 递归查询所有父菜单
+	 * @param sysMenuList
+	 * @return
+	 */
+	public List<SysMenu> recursionfindMenu(List<SysMenu> sysMenuList){
+		return roleMenuDao.recursionfindMenu(sysMenuList);
 	}
 
 	@Override

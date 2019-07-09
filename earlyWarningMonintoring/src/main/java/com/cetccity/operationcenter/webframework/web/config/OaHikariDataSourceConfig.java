@@ -55,6 +55,8 @@ public class OaHikariDataSourceConfig {
     @Bean(name="oasqlSessionFactory")
     @Qualifier("oa")
     public SqlSessionFactory oasqlSessionFactory() throws Exception {
+        org.apache.ibatis.session.Configuration configuration=new org.apache.ibatis.session.Configuration();
+        configuration.setMapUnderscoreToCamelCase(true);//-自动使用驼峰命名属性映射字段   userId    user_id
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(oaDataDource());
         return factoryBean.getObject();

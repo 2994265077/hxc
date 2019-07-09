@@ -59,7 +59,7 @@ public class PrimaryHikariDataSourceConfig {
     @Primary
     public SqlSessionFactory sqlSessionFactoryPrimary() throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-        factoryBean.setTypeAliasesPackage("com.cetccity.operationcenter.webframework.**.dao");
+        factoryBean.setTypeAliasesPackage("com.cetccity.operationcenter.webframework.*.entity.*");
         factoryBean.setDataSource(primaryDataSource());
         return factoryBean.getObject();
     }

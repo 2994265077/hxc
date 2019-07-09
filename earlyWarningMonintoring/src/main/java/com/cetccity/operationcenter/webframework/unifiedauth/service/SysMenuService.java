@@ -44,6 +44,13 @@ public interface SysMenuService {
 	 * @return
 	 */
 	List<SysMenu> findByRoles(Set<String> roleIds, Integer type);
+	
+	/**
+	 * 递归查询所有父菜单
+	 * @param sysMenuList
+	 * @return
+	 */
+    List<SysMenu> recursionfindMenu(List<SysMenu> sysMenuList);
 
 	/**
 	 * 菜单列表

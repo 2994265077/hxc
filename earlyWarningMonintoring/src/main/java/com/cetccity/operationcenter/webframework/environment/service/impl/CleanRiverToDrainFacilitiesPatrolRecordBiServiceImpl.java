@@ -103,15 +103,19 @@ public class CleanRiverToDrainFacilitiesPatrolRecordBiServiceImpl implements Cle
     }
 
     public HttpResponseModel<ChartDetailModel> rightThree(String street, String SEWERATE_ID, String hiddenDanger){
-        String currentMonth = LoadMyUtil.getMyTime("MONTH",0);  //本月
+        String startTime = LoadMyUtil.getMyTime("DATE",-30);  //开始时间
+        String endTime = LoadMyUtil.getMyTime("DATE",0);  //结束时间
         ChartFactory chartFactory = new ChartFactory() {
             @Override
             public List<HashMap> queryData() {
                 Map map = new HashMap();
-                map.put("currentMonth",currentMonth);
+                map.put("startTime",startTime);
+                map.put("endTime",endTime);
                 map.put("SEWERAGE_ID",SEWERATE_ID);
-                if(StringUtils.isNotEmpty(hiddenDanger)) {
+                if(StringUtils.isEmpty(hiddenDanger)) {
                     map.put("STATUS", "正常");
+                }else {
+                    map.put("STATUS", "不正常");
                 }
                 map.put("streetCode",StringUtils.isNotEmpty(street) ? LoadMyUtil.getPropertiesVauleOfKey("street.properties", street).split(",")[0] : null);
                 if(StringUtils.isEmpty(street)){
