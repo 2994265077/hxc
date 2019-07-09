@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.urbansign.dao.RightThirteenMapper">
+
+    <select id="getRightThirteenOfOne" parameterType="java.util.Map" resultType="java.util.HashMap">
+        select replace(REGION_CODE,'440304','困难群众人员') NAME_X,count(REGION_CODE) 关爱人群 from BLK_DIFFICULT_PO
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where>
+        GROUP BY REGION_CODE UNION
+        <!--select replace(REGION_CODE,'440304','孕产妇健康管理登记') NAME_X,count(REGION_CODE) 关爱人群 from BLK_PREGNANT <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION-->
+        select replace(REGION_CODE,'440304','残疾人员') NAME_X,count(REGION_CODE) 关爱人群 from BLK_DISABLED_PEOPLE
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where>
+        GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','困难家庭') NAME_X,count(REGION_CODE) 关爱人群 from BLK_DIFFICULT_FA
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where>
+        GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','失独家庭') NAME_X,count(REGION_CODE) 关爱人群 from BLK_LOST_FAMILY
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where>
+        GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','无军籍职工') NAME_X,count(REGION_CODE) 关爱人群 from BLK_MILITARY_FREE_WORKERS
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','失业人员') NAME_X,count(REGION_CODE) 关爱人群 from BLK_UNEMPLOYED_PERSONS
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','困难党员') NAME_X,count(REGION_CODE) 关爱人群 from BLK_DIFFICULT_PARTY_MEM
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','困难职工') NAME_X,count(REGION_CODE) 关爱人群 from BLK_DIFFICULT_STAFF
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','五老人员') NAME_X,count(REGION_CODE) 关爱人群 from BLK_5_OLD
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','关爱女孩') NAME_X,count(REGION_CODE) 关爱人群 from BLK_GIRL_CARE
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','三属人员') NAME_X,count(REGION_CODE) 关爱人群 from BLK_3_SURVIVORS
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','伤残家庭') NAME_X,count(REGION_CODE) 关爱人群 from BLK_DISABLED_FAMILY
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','低保边缘家庭') NAME_X,count(REGION_CODE) 关爱人群 from BLK_MINI_ASSURANCE
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','带病回乡人员') NAME_X,count(REGION_CODE) 关爱人群 from BLK_ILL_RETURN_PERSON
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','低保人员') NAME_X,count(REGION_CODE) 关爱人群 from BLK_MINI_ASSURANCE_PEOPLE
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','单亲家庭') NAME_X,count(REGION_CODE) 关爱人群 from BLK_SINGLE_PARENT
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE
+    </select>
+
+    <select id="getRightThirteenOfTwo" parameterType="java.util.Map" resultType="java.util.HashMap">
+        select replace(REGION_CODE,'440304','残疾军人') NAME_X,count(REGION_CODE) 优抚人群 from BLK_DISABLED_MILITARY
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','因公牺牲军人遗属') NAME_X,count(REGION_CODE) 优抚人群 from BLK_SOILDER_SURVIVORS
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','伤残国家机关工作人员') NAME_X,count(REGION_CODE) 优抚人群 from BLK_STATE_ORGANS_DISABLED <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','60岁以上农村籍退役士兵') NAME_X,count(REGION_CODE) 优抚人群 from BLK_RETIRED_SOLDIER_NC_OVER60 <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','伤残人民警察') NAME_X,count(REGION_CODE) 优抚人群 from BLK_DISABLED_POLICE
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','病故军人遗属') NAME_X,count(REGION_CODE) 优抚人群 from BLK_SICK_SOLDIER
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','烈士遗属') NAME_X,count(REGION_CODE) 优抚人群 from BLK_MARTYR_DEPENDANTS
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE
+    </select>
+
+    <select id="getRightThirteenOfThree" parameterType="java.util.Map" resultType="java.util.HashMap">
+        select replace(REGION_CODE,'440304','现役军人') NAME_X,count(REGION_CODE) 优待人群 from BLK_MILITARY
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','70_80高龄老人数据') NAME_X,count(REGION_CODE) 优待人群 from BLK_OLD_ALLOWANCE_70
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','复员军人') NAME_X,count(REGION_CODE) 优待人群 from BLK_DEMOBILIZED_SOLDIERS
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','100以上高龄老人数据') NAME_X,count(REGION_CODE) 优待人群 from BLK_OLD_ALLOWANCE_100
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','敬老优待证(黄/蓝证)') NAME_X,count(REGION_CODE) 优待人群 from BLK_ELDER_CRETIFICATE
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','90_100高龄老人数据') NAME_X,count(REGION_CODE) 优待人群 from BLK_OLD_ALLOWANCE_90 <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','80_90高龄老人数据') NAME_X,count(REGION_CODE) 优待人群 from BLK_OLD_ALLOWANCE_80
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','参战涉核人员') NAME_X,count(REGION_CODE) 优待人群 from BLK_NUCLEAR_WAR_PERSONNEL
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE
+    </select>
+
+    <select id="getRightThirteenOfFour" parameterType="java.util.Map" resultType="java.util.HashMap">
+        select replace(REGION_CODE,'440304','精神病人') NAME_X,count(REGION_CODE) 关注人群 from BLK_MENTAL_PATIENT
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','关注人员总表') NAME_X,count(REGION_CODE) 关注人群 from BLK_CONCERN_PERSON
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','社区矫正') NAME_X,count(REGION_CODE) 关注人群 from BLK_CMNTY_CORRECTION
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','稳控对象人员') NAME_X,count(REGION_CODE) 关注人群 from BLK_STABLE_CONTROL_PERSON
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','安置帮教人员') NAME_X,count(REGION_CODE) 关注人群 from BLK_HELP_EDUCATE_PEOPLE
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE
+    </select>
+
+    <select id="getRightThirteenOfFive" parameterType="java.util.Map" resultType="java.util.HashMap">
+        select replace(REGION_CODE,'440304','重点上访人员') NAME_X,count(REGION_CODE) 管控人员 from BLK_KEY_APPEALS
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','严重精神障碍患者') NAME_X,count(REGION_CODE) 管控人员 from BLK_BRAIN_DISABLED
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','基建工程兵') NAME_X,count(REGION_CODE) 管控人员 from BLK_JIJIAN_CORPS
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','刑满释放人员') NAME_X,count(REGION_CODE) 管控人员 from BLK_RELEASED_PERSON
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE UNION
+        select replace(REGION_CODE,'440304','吸毒人员') NAME_X,count(REGION_CODE) 管控人员 from BLK_DRUG_ADDICTS
+        <where>
+            AND REGION_CODE = '440304'
+            <if test="streetCode != null">
+                and STREET_CODE = #{streetCode}
+            </if>
+        </where> GROUP BY REGION_CODE
+    </select>
+
+</mapper>

@@ -29,4 +29,6 @@ public interface SysRoleMenuMapper {
 	Set<Long> findMenuIdsByRoleId(Long roleId);
 
 	List<SysMenu> findMenusByRoleIds(@Param("roleIds") Set<String> roleIds, @Param("type") Integer type);
+	
+	List<SysMenu> recursionfindMenu(@Param("ids") List<SysMenu> sysMenus);
 }

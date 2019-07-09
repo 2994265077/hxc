@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,7 +67,12 @@ public class SysMenuServiceImpl implements SysMenuService {
 
 	@Override
 	public List<SysMenu> findByRoles(Set<String> roleIds, Integer type) {
-		return roleMenuDao.findMenusByRoleIds(roleIds, type);
+		List<SysMenu> sysMenuList = roleMenuDao.findMenusByRoleIds(roleIds, type);
+		if(!CollectionUtils.isEmpty(sysMenuList)){
+			//递归查询所有菜单
+			sysMenuList = roleMenuDao.recursionfindMenu(sysMenuList);
+		}
+		return sysMenuList;
 	}
 
 	@Override

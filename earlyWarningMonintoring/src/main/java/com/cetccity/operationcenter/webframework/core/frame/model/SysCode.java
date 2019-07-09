@@ -26,10 +26,14 @@ public class SysCode {
 
     public static final int UNKNOWN_ERROR_CODE = -1;
     public static final String UNKNOWN_ERROR_MESSAGE = "系统发生未知错误";
+    
+    public final static int OPERATE_FAILED = 1;
+    public final static String OPERATE_FAILED_MSG = "操作失败";
 
     public SysCode(){
         map.put(SYS_SUCCESS_CODE, SYS_SUCCESS_MESSAGE);
         map.put(UNKNOWN_ERROR_CODE,UNKNOWN_ERROR_MESSAGE);
+        map.put(OPERATE_FAILED,OPERATE_FAILED_MSG);
     }
 
     public String message(int code){

@@ -29,4 +29,16 @@
 		</if>
 		ORDER BY sort ASC
 	</select>
+	
+	
+	<select id="recursionfindMenu" resultType="com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu">
+     select distinct m.*
+       from sys_menu m
+     start with m.id in 
+     <foreach collection="sysMenus" index="index" item="m"
+			open="(" separator="," close=")">
+			#{m.id}
+	 </foreach>
+      connect by m.id = prior m.parentid
+	</select>
 </mapper>

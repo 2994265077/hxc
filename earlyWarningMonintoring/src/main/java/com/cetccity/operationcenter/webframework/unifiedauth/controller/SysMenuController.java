@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.cetccity.operationcenter.webframework.unifiedauth.api.SysMenuApi;
 import org.apache.commons.lang.ObjectUtils;
 import org.intellij.lang.annotations.JdkConstants.AdjustableOrientation;
 import org.slf4j.Logger;
@@ -46,24 +47,19 @@ import io.swagger.annotations.ApiOperation;
  * @author ZHUTONGYU Description:SysMenuController.java 2019年3月26日
  */
 @RestController
-@Api(tags = "菜单模块api")
-@RequestMapping("/menus")
-public class SysMenuController {
+public class SysMenuController implements SysMenuApi {
 
 	@Autowired
 	private SysMenuService menuService;
+
 	@Autowired
 	private UserInfoUtils userInfoUtils;
-	private static Logger log = LoggerFactory.getLogger(SysMenuController.class);
 
 	/**
 	 * 删除菜单
-	 * 
 	 * @param id
 	 */
-	@ApiOperation(value = "删除菜单")
-	@DeleteMapping("/{id}")
-	public Result<String>  delete(@PathVariable Long id) {
+	public Result<String> delete(@PathVariable Long id) {
 		try {
 			menuService.delete(id);
 			return Result.succeed("操作成功");
@@ -71,11 +67,8 @@ public class SysMenuController {
 			ex.printStackTrace();
 			return Result.failed("操作失败");
 		}
-
 	}
 
-	@ApiOperation(value = "根据roleId获取对应的菜单")
-	@GetMapping("/{roleId}/menus")
 	public List<Map<String, Object>> findMenusByRoleId(@PathVariable String roleId) {
 		Set<String> roleIds = new HashSet<String>() {
 			{
@@ -85,10 +78,8 @@ public class SysMenuController {
 		List<SysMenu> roleMenus = menuService.findByRoles(roleIds, null); // 获取该角色对应的菜单
 		List<SysMenu> allMenus = menuService.findAll(); // 全部的菜单列表
 		List<Map<String, Object>> authTrees = new ArrayList<>();
-
 		Map<Long, SysMenu> roleMenusMap = roleMenus.stream()
 				.collect(Collectors.toMap(SysMenu::getId, SysMenu -> SysMenu));
-
 		for (SysMenu sysMenu : allMenus) {
 			Map<String, Object> authTree = new HashMap<>();
 			authTree.put("id", sysMenu.getId());
@@ -103,9 +94,7 @@ public class SysMenuController {
 		}
 		return authTrees;
 	}
-	
-	@ApiOperation(value = "根据roleId获取对应的菜单列表")
-	@GetMapping("/{roleId}/listMenus")
+
 	public HttpResponseModel<List<SysMenu>> findMenuListByRoleId(@PathVariable String roleId){
 		Set<String> roleIds = new HashSet<String>() {
 			{
@@ -118,25 +107,15 @@ public class SysMenuController {
 	/**
 	 * 给角色分配菜单
 	 */
-	@ApiOperation(value = "角色分配菜单")
-	@ApiImplicitParams({
-         @ApiImplicitParam(value = "1", name = "roleId", dataType = "string", paramType = "query", required = true),
-         @ApiImplicitParam(value = "[1,2]", name = "menuIds", dataType = "long", paramType = "query", required = true, defaultValue="1")
-    })
-	@PostMapping("/granted")
 	public Result<String> setMenuToRole(@RequestBody SysMenu sysMenu) {
 		menuService.setMenuToRole(sysMenu.getRoleId(), sysMenu.getMenuIds());
 		return Result.succeed("操作成功");
 	}
 
-	@ApiOperation(value = "查询所有菜单")
-	@GetMapping("/findAlls")
 	public HttpResponseModel<List<SysMenu>> findAlls() {
 		return new HttpResponseModel<List<SysMenu>>(SysCode.SYS_SUCCESS_CODE, TreeBuilder(menuService.findAll()));
 	}
 
-	@ApiOperation(value = "获取菜单以及顶级菜单")
-	@GetMapping("/findOnes")
 	public HttpResponseModel<List<SysMenu>> findOnes() {
 		return new HttpResponseModel<List<SysMenu>>(SysCode.SYS_SUCCESS_CODE, TreeBuilder(menuService.findOnes()));
 	}
@@ -147,21 +126,18 @@ public class SysMenuController {
 	 * @param menu
 	 * @return
 	 */
-	@ApiOperation(value = "新增菜单")
-	@PostMapping("saveOrUpdate")
-	public Result saveOrUpdate(@RequestBody SysMenu menu) {
+	public HttpResponseModel<String> saveOrUpdate(@RequestBody SysMenu menu) {
 		try {
 			if (menu.getId() != null) {
 				menuService.update(menu);
 			} else {
 				menuService.save(menu);
 			}
-			return Result.succeed("操作成功");
+			return new HttpResponseModel<String>(SysCode.SYS_SUCCESS_CODE, "操作成功");
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return Result.failed("操作失败");
+			return new HttpResponseModel<String>(SysCode.OPERATE_FAILED, "操作失败");
 		}
-
 	}
 
 	/**
@@ -170,18 +146,14 @@ public class SysMenuController {
 	 * @return
 	 * @throws Exception 
 	 */
-	@GetMapping("/current")
-	@ApiOperation(value = "查询当前用户菜单")
 	public HttpResponseModel<List<SysMenu>> findMyMenu(HttpServletRequest request, Integer type) throws Exception {
 		UserRolePermissionEntity userRoleEntity = userInfoUtils.getUserInfo(request);
 		Set<RoleEntity> roles = userRoleEntity.getRoleEntities();
 		if (CollectionUtils.isEmpty(roles)) {
 			return new HttpResponseModel<List<SysMenu>>(SysCode.SYS_SUCCESS_CODE, Collections.emptyList());
 		}
-
 		List<SysMenu> menus = menuService
 				.findByRoles(roles.parallelStream().map(RoleEntity::getRole_id).collect(Collectors.toSet()), type == null ? Constant.BACK_MENU_TYPE: type);
-
 		return new HttpResponseModel<List<SysMenu>>(SysCode.SYS_SUCCESS_CODE, TreeBuilder(menus));
 	}
 
@@ -192,7 +164,6 @@ public class SysMenuController {
 	 * @return
 	 */
 	public static List<SysMenu> TreeBuilder(List<SysMenu> sysMenus) {
-
 		List<SysMenu> menus = new ArrayList<SysMenu>();
 		for (SysMenu sysMenu : sysMenus) {
 			if (ObjectUtils.equals(-1L, sysMenu.getParentId())) {

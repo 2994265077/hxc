@@ -3,6 +3,7 @@ package com.cetccity.operationcenter.webframework.urbansign.service.impl;
 import com.cetccity.operationcenter.webframework.backstage.community.service.CommunityInfoService;
 import com.cetccity.operationcenter.webframework.core.chart.engine.model.ChartDetailModel;
 import com.cetccity.operationcenter.webframework.core.chart.engine.model.ChartFactory;
+import com.cetccity.operationcenter.webframework.core.chart.factory.CetcFactoryProducer;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.*;
 import com.cetccity.operationcenter.webframework.core.frame.model.HttpResponseModel;
 import com.cetccity.operationcenter.webframework.core.frame.model.SysCode;
@@ -14,16 +15,16 @@ import com.cetccity.operationcenter.webframework.urbansign.api.model.LevelColor;
 import com.cetccity.operationcenter.webframework.urbansign.api.model.MapDensity;
 import com.cetccity.operationcenter.webframework.urbansign.api.model.NameValueDataModel;
 import com.cetccity.operationcenter.webframework.urbansign.api.model.Tbl_pojo_futianApi;
-import com.cetccity.operationcenter.webframework.urbansign.dao.BlkPopulationMapper;
-import com.cetccity.operationcenter.webframework.urbansign.dao.TblMxsysFutianMapper;
-import com.cetccity.operationcenter.webframework.urbansign.dao.XXZX_POPULATION_SUMMARYMapper;
+import com.cetccity.operationcenter.webframework.urbansign.dao.*;
 import com.cetccity.operationcenter.webframework.urbansign.dao.entity.BlkPopulation;
 import com.cetccity.operationcenter.webframework.urbansign.dao.entity.COMMUNITY_CODE;
 import com.cetccity.operationcenter.webframework.urbansign.dao.entity.TBL_MXSYS_FUTIAN;
 import com.cetccity.operationcenter.webframework.urbansign.service.UrbanPopulationBasicService;
 import com.cetccity.operationcenter.webframework.core.tools.LoadMyUtil;
+import com.cetccity.operationcenter.webframework.urbansign.tools.RightThirteenDrillDownUtil;
 import com.cetccity.operationcenter.webframework.urbansign.tools.StreetTool;
 import com.cetccity.operationcenter.webframework.urbansign.tools.UrbanMapReturnUtil;
+import com.cetccity.operationcenter.webframework.web.service.db.OracleOperateService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,12 @@ public class UrbanPopulationBasicServiceImpl implements UrbanPopulationBasicServ
 
     @Autowired
     LabourPool labourPool;
+
+    @Autowired
+    RightThirteenMapper rightThirteenMapper;
+
+    @Autowired
+    RightThirteenDrillDownUtil rightThirteenDrillDownUtil;
 
     public static final String[] ageName = {"0-3岁","3-6岁","6-14岁","14-28岁","28-35岁","35-45岁","45-60岁","60-70岁","70岁以上"};
 
@@ -526,5 +533,42 @@ public class UrbanPopulationBasicServiceImpl implements UrbanPopulationBasicServ
         }
         List<Tbl_pojo_futianApi> tbl_pojo_futian_list = labourPool.list;
         return tbl_pojo_futian_list;
+    }
+
+    public HttpResponseModel<ChartDetailModel> rightThirteen(String street, String type){
+        List<HashMap> data = null;
+        Map map = new HashMap();
+        map.put("streetCode",StringUtils.isNotEmpty(street) ? LoadMyUtil.getPropertiesVauleOfKey("street.properties", street).split(",")[0] : null);
+        switch (type){
+            case "1" : data = rightThirteenMapper.getRightThirteenOfOne(map); break;
+            case "2" : data = rightThirteenMapper.getRightThirteenOfTwo(map); break;
+            case "3" : data = rightThirteenMapper.getRightThirteenOfThree(map); break;
+            case "4" : data = rightThirteenMapper.getRightThirteenOfFour(map); break;
+            case "5" : data = rightThirteenMapper.getRightThirteenOfFive(map); break;
+        }
+        Map<String,String> map2 = new HashMap();
+        map2.put("type","bar");
+        return CetcFactoryProducer.init(data,"NAME_X",map2,false);
+    }
+
+    public HttpResponseModel<ChartDetailModel> rightThirteenDrillDown(String street, String name){
+        List<HashMap> data = null;
+        String streetCode = StringUtils.isNotEmpty(street) ? LoadMyUtil.getPropertiesVauleOfKey("street.properties", street).split(",")[0] : null;
+        switch (name){
+            case "困难群众人员" : if(StringUtils.isEmpty(street)){
+                data = rightThirteenDrillDownUtil.getBarNoStreet("BLK_DIFFICULT_PO");
+                break;
+            }else {
+                data = rightThirteenDrillDownUtil.getBarHasStreet("BLK_DIFFICULT_PO",streetCode);
+                break;
+            }
+            //case "2" : data = rightThirteenDrillDownMapper.getRightThirteenDrillDown(map); break;
+            //case "3" : data = rightThirteenDrillDownMapper.getRightThirteenDrillDown(map); break;
+            //case "4" : data = rightThirteenDrillDownMapper.getRightThirteenDrillDown(map); break;
+            //case "5" : data = rightThirteenDrillDownMapper.getRightThirteenDrillDown(map); break;
+        }
+        Map<String,String> map2 = new HashMap();
+        map2.put("type","bar");
+        return CetcFactoryProducer.init(data,"NAME_X",map2,true);
     }
 }
