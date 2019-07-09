@@ -80,7 +80,6 @@ public class KnifeConverter extends AbstractSingleConverter<YjjcQwjjSdmInfoV> {
     protected AlarmInformation fillAlarmInformation(AlarmInformation alarmInformation) {
         alarmInformation = super.fillAlarmInformation(alarmInformation);
         alarmInformation.setSEND_STATE(1);
-        alarmInformation.setCONTENTS("刀、枪伤预警");
         alarmInformation.setALARM_LEVEL("特殊病情");
         alarmInformation.setALARM_TYPE_LV1("007");
         alarmInformation.setALARM_TYPE_LV2("007003");
@@ -94,6 +93,8 @@ public class KnifeConverter extends AbstractSingleConverter<YjjcQwjjSdmInfoV> {
         alarmInformation.setALARM_OBJECT(source.getORG_NAME()+"");    //主体名
         alarmInformation.setF_OBJECT_ROW_ID(source.getOBJECT_ID());     //主体主键,事件没有主体，默认为-1
         alarmInformation.setF_ROW_ID(source.getOBJECT_ID());
+        alarmInformation.setADDRESS(source.getORG_NAME()+"");
+        alarmInformation.setCONTENTS(source.getORG_NAME() + "发现刀、枪伤患者， 患者" + source.getDIAG_NAME_INHOS());
         return alarmInformation;
     }
 

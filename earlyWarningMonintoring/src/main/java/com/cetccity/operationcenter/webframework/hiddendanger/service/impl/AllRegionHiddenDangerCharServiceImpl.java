@@ -218,11 +218,9 @@ public class AllRegionHiddenDangerCharServiceImpl {
     }
 
     public MyPageInfoModel<List<ThreeSmallHiddenDangerInfo>> list(String startTime, String endTime, int pageNum, int pageSize,String placeType, String street) {
-        long t1 = System.currentTimeMillis();
         String streetCode = communityInfoService.streetCodeByName(street);
         PageHelper.startPage(pageNum, pageSize);
         List<ThreeSmallHiddenDangerInfo> threeSmallHiddenDangerInfoList = allRegionHiddenDangerChartMapper.queryThreeSmallHiddenDangerList(startTime, endTime, placeType, streetCode);
-        long t2 = System.currentTimeMillis();
         if (CollectionUtils.isNotEmpty(threeSmallHiddenDangerInfoList)) {
             List<String> systemIds = threeSmallHiddenDangerInfoList.stream()
                     .map(ThreeSmallHiddenDangerInfo::getSystemId)
@@ -230,7 +228,6 @@ public class AllRegionHiddenDangerCharServiceImpl {
             List<NameValueModel> nameValueModels = allRegionHiddenDangerChartMapper.picsBySystemIds(systemIds);
             Map<String, String> systemIdPicMap = nameValueModels.stream()
                     .collect(Collectors.toMap(NameValueModel::getName, NameValueModel::getValue, (o1, o2) -> o1));
-            long t3 = System.currentTimeMillis();
             for (ThreeSmallHiddenDangerInfo info: threeSmallHiddenDangerInfoList) {
                 String pics = systemIdPicMap.get(info.getSystemId());
                 pics = Objects.nonNull(pics) ? pics : "";
@@ -239,10 +236,6 @@ public class AllRegionHiddenDangerCharServiceImpl {
                 info.setState(ThreeSmallHiddenDangerInfo.stateDic(info.getState()));
                 info.setLayerid(LoadMyUtil.getPropertiesVauleOfKey("loadmap.properties", ESOperate.dbName+".BLK_SANXIAO_PLACE@"+info.getPlace_type()).split("#")[0]);
             }
-            long t4 = System.currentTimeMillis();
-            log.info("一 = {}", t2 - t1);
-            log.info("二 = {}", t3 - t2);
-            log.info("三 = {}", t4 - t3);
         }
 
         PageInfo<ThreeSmallHiddenDangerInfo> pageInfo = new PageInfo(threeSmallHiddenDangerInfoList);
@@ -257,8 +250,6 @@ public class AllRegionHiddenDangerCharServiceImpl {
         map.put("小作坊","60022");
         map.put("小娱乐场所","60023");
         myPageInfoModel.setType(map);
-        long t5 = System.currentTimeMillis();
-        log.info("total = {}", t5 - t1);
         return myPageInfoModel;
     }
 
