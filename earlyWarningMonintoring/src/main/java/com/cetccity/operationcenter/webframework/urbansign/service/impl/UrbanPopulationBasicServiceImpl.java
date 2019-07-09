@@ -556,11 +556,9 @@ public class UrbanPopulationBasicServiceImpl implements UrbanPopulationBasicServ
         String streetCode = StringUtils.isNotEmpty(street) ? LoadMyUtil.getPropertiesVauleOfKey("street.properties", street).split(",")[0] : null;
         switch (name){
             case "困难群众人员" : if(StringUtils.isEmpty(street)){
-                data = rightThirteenDrillDownUtil.getBarNoStreet("BLK_DIFFICULT_PO");
-                break;
+                data = rightThirteenDrillDownUtil.getBarNoStreet("BLK_DIFFICULT_PO",name);break;
             }else {
-                data = rightThirteenDrillDownUtil.getBarHasStreet("BLK_DIFFICULT_PO",streetCode);
-                break;
+                data = rightThirteenDrillDownUtil.getBarHasStreet("BLK_DIFFICULT_PO",streetCode,name);break;
             }
             //case "2" : data = rightThirteenDrillDownMapper.getRightThirteenDrillDown(map); break;
             //case "3" : data = rightThirteenDrillDownMapper.getRightThirteenDrillDown(map); break;

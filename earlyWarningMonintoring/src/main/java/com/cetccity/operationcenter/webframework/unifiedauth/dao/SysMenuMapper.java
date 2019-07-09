@@ -2,10 +2,7 @@ package com.cetccity.operationcenter.webframework.unifiedauth.dao;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu;
 
@@ -18,16 +15,18 @@ import com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu;
 @Mapper
 public interface SysMenuMapper {
 
-	@Insert("insert into SYS_MENU(ID, parentId, name, url, path, css, sort, type) "
-			+ "values (SEQ_SYS_MENU_ID.nextval,#{parentId, jdbcType=VARCHAR}, #{name, jdbcType=VARCHAR}, #{url, jdbcType=VARCHAR} , #{path, jdbcType=VARCHAR} , #{css, jdbcType=VARCHAR}, #{sort, jdbcType=INTEGER}, #{type, jdbcType=INTEGER})")
-	int save(SysMenu menu);
+
+	Long objectIdIncrement();
+	/*@Insert("insert into SYS_MENU(OBJECT_ID, parentId, name, url, path, css, sort, type) "
+			+ "values (SELECT SEQ_SYS_MENU.nextval FROM DUAL,#{parentId, jdbcType=VARCHAR}, #{name, jdbcType=VARCHAR}, #{url, jdbcType=VARCHAR} , #{path, jdbcType=VARCHAR} , #{css, jdbcType=VARCHAR}, #{sort, jdbcType=INTEGER}, #{type, jdbcType=INTEGER})")*/
+	int save(@Param("menu") SysMenu menu);
 
 	int updateByOps(SysMenu menu);
 
-	@Select("select * from SYS_MENU t where t.ID = #{id}")
+	@Select("select * from SYS_MENU t where t.OBJECT_ID = #{id}")
 	SysMenu findById(Long id);
 
-	@Delete("delete from SYS_MENU where ID = #{id}")
+	@Delete("delete from SYS_MENU where OBJECT_ID = #{id}")
 	int delete(Long id);
 
 	@Delete("delete from SYS_MENU where parentId = #{id}")

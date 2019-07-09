@@ -17,7 +17,7 @@
 
 	<select id="findMenusByRoleIds" resultType="com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu">
 		select distinct t.* from SYS_MENU t
-		inner join SYS_ROLE_MENU r on r.menuId = t.id
+		inner join SYS_ROLE_MENU r on r.menuId = t.OBJECT_ID
 		where
 		r.roleId in
 		<foreach collection="roleIds" index="index" item="roleId"
@@ -29,16 +29,15 @@
 		</if>
 		ORDER BY sort ASC
 	</select>
-	
-	
-	<select id="recursionfindMenu" resultType="com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu">
+
+	<select id="recursionfindMenu" parameterType ="com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu" resultType="com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu">
      select distinct m.*
        from sys_menu m
-     start with m.id in 
+     start with m.OBJECT_ID in
      <foreach collection="sysMenus" index="index" item="m"
 			open="(" separator="," close=")">
-			#{m.id}
+			#{m.objectId,jdbcType=INTEGER}
 	 </foreach>
-      connect by m.id = prior m.parentid
+      connect by m.OBJECT_ID = prior m.parentid
 	</select>
 </mapper>

@@ -47,7 +47,7 @@ public class SysMenuServiceImpl implements SysMenuService {
 	public void delete(Long id) {
 		SysMenu menu = menuDao.findById(id);
 
-		menuDao.deleteByParentId(menu.getId());
+		menuDao.deleteByParentId(menu.getObjectId());
 		menuDao.delete(id);
 
 		log.info("删除菜单：{}", menu);
