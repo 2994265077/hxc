@@ -22,17 +22,17 @@ public class RightThirteenDrillDownUtil {
     @Autowired
     OracleOperateService oracleOperateService;
 
-    public List<HashMap> getBarNoStreet(String TableName){
+    public List<HashMap> getBarNoStreet(String TableName, String name){
         List<HashMap> data = new ArrayList<>();
-        String sql = "SELECT STREET_NAME NAME_X,count(*) 详细人口信息 from "+TableName+" where REGION_CODE = '440304' GROUP BY STREET_NAME";
+        String sql = "SELECT STREET_NAME NAME_X,count(*) "+name+" from "+TableName+" where REGION_CODE = '440304' GROUP BY STREET_NAME";
         List<LinkedHashMap> list = oracleOperateService.querySql(sql);
         list.stream().forEach(u-> data.add(u));
         return data;
     }
 
-    public List<HashMap> getBarHasStreet(String TableName, String streetCode){
+    public List<HashMap> getBarHasStreet(String TableName, String streetCode, String name){
         List<HashMap> data = new ArrayList<>();
-        String sql = "SELECT COMMUNITY_NAME NAME_X,count(*) 详细人口信息 from "+TableName+" where STREET_CODE = '"+streetCode+"' GROUP BY COMMUNITY_NAME";
+        String sql = "SELECT COMMUNITY_NAME NAME_X,count(*) "+name+" from "+TableName+" where STREET_CODE = '"+streetCode+"' GROUP BY COMMUNITY_NAME";
         List<LinkedHashMap> list = oracleOperateService.querySql(sql);
         list.stream().forEach(u->data.add(u));
         return data;
