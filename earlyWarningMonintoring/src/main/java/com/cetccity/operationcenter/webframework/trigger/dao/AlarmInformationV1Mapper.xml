@@ -213,6 +213,12 @@
             <if test="ORIGIN_TABLE_NAME != null">
                 and ORIGIN_TABLE_NAME = #{ORIGIN_TABLE_NAME}
             </if>
+            <if test="F_ROW_ID != null">
+                and F_ROW_ID = #{F_ROW_ID}
+            </if>
+            <if test="ALARM_TYPE_LV2 != null">
+                and ALARM_TYPE_LV2 = #{ALARM_TYPE_LV2}
+            </if>
         </where>
         order by RELEASE_TIME desc
     </select>
