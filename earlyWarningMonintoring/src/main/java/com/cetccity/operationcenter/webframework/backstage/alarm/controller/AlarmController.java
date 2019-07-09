@@ -50,10 +50,10 @@ public class AlarmController {
     public HttpResponseModel<PageInfo<AlarmVo>> query(AlarmQueryObject queryVo) {
         DateTimeRange dateTimeRange = new DateTimeRange();
         if (StringUtils.isNotBlank(queryVo.getBegin())) {
-            dateTimeRange.setBegin(LocalDateTime.parse(queryVo.getBegin(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            dateTimeRange.setBegin(LocalDateTime.parse(queryVo.getBegin(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         }
         if (StringUtils.isNotBlank(queryVo.getEnd())) {
-            dateTimeRange.setEnd(LocalDateTime.parse(queryVo.getEnd(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            dateTimeRange.setEnd(LocalDateTime.parse(queryVo.getEnd(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         }
         queryVo.setReleaseTimeRange(dateTimeRange);
         return HttpResponseModel.defaultSuccess(alarmService.query(queryVo));
