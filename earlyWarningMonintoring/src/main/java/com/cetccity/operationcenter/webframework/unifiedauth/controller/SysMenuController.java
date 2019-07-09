@@ -11,37 +11,24 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.cetccity.operationcenter.webframework.unifiedauth.api.SysMenuApi;
-import com.cetccity.operationcenter.webframework.unifiedauth.dao.SysMenuMapper;
 import org.apache.commons.lang.ObjectUtils;
-import org.intellij.lang.annotations.JdkConstants.AdjustableOrientation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cetccity.operationcenter.webframework.core.frame.model.HttpResponseModel;
 import com.cetccity.operationcenter.webframework.core.frame.model.SysCode;
+import com.cetccity.operationcenter.webframework.unifiedauth.api.SysMenuApi;
 import com.cetccity.operationcenter.webframework.unifiedauth.entity.RoleEntity;
 import com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu;
 import com.cetccity.operationcenter.webframework.unifiedauth.service.SysMenuService;
 import com.cetccity.operationcenter.webframework.unifiedauth.service.model.UserRolePermissionEntity;
 import com.cetccity.operationcenter.webframework.unifiedauth.utils.UserInfoUtils;
 import com.cetccity.operationcenter.webframework.web.util.Constant;
-import com.cetccity.operationcenter.webframework.web.util.PageResult;
 import com.cetccity.operationcenter.webframework.web.util.Result;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 
 /**
  * 
@@ -80,15 +67,15 @@ public class SysMenuController implements SysMenuApi {
 		List<SysMenu> allMenus = menuService.findAll(); // 全部的菜单列表
 		List<Map<String, Object>> authTrees = new ArrayList<>();
 		Map<Long, SysMenu> roleMenusMap = roleMenus.stream()
-				.collect(Collectors.toMap(SysMenu::getOBJECT_ID, SysMenu -> SysMenu));
+				.collect(Collectors.toMap(SysMenu::getId, SysMenu -> SysMenu));
 		for (SysMenu sysMenu : allMenus) {
 			Map<String, Object> authTree = new HashMap<>();
-			authTree.put("id", sysMenu.getOBJECT_ID());
+			authTree.put("id", sysMenu.getId());
 			authTree.put("name", sysMenu.getName());
 			authTree.put("pId", sysMenu.getParentId());
 			authTree.put("open", true);
 			authTree.put("checked", false);
-			if (roleMenusMap.get(sysMenu.getOBJECT_ID()) != null) {
+			if (roleMenusMap.get(sysMenu.getId()) != null) {
 				authTree.put("checked", true);
 			}
 			authTrees.add(authTree);
@@ -129,7 +116,7 @@ public class SysMenuController implements SysMenuApi {
 	 */
 	public HttpResponseModel<String> saveOrUpdate(@RequestBody SysMenu menu) {
 		try {
-			if (menu.getOBJECT_ID() != null) {
+			if (menu.getId() != null) {
 				menuService.update(menu);
 			} else {
 				menuService.save(menu);
@@ -155,6 +142,11 @@ public class SysMenuController implements SysMenuApi {
 		}
 		List<SysMenu> menus = menuService
 				.findByRoles(roles.parallelStream().map(RoleEntity::getRole_id).collect(Collectors.toSet()), type == null ? Constant.BACK_MENU_TYPE: type);
+		
+		if(!CollectionUtils.isEmpty(menus)){
+			//递归查询所有菜单
+			menus = menuService.recursionfindMenu(menus);
+		}
 		return new HttpResponseModel<List<SysMenu>>(SysCode.SYS_SUCCESS_CODE, TreeBuilder(menus));
 	}
 
@@ -171,7 +163,7 @@ public class SysMenuController implements SysMenuApi {
 				menus.add(sysMenu);
 			}
 			for (SysMenu menu : sysMenus) {
-				if (menu.getParentId().equals(sysMenu.getOBJECT_ID())) {
+				if (menu.getParentId().equals(sysMenu.getId())) {
 					if (sysMenu.getSubMenus() == null) {
 						sysMenu.setSubMenus(new ArrayList<>());
 					}
