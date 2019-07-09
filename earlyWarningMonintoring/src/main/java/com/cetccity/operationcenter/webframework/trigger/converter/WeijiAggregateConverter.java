@@ -109,6 +109,7 @@ public abstract class WeijiAggregateConverter extends AbstractAggregatesConverte
         alarmInformation.setRELEASE_TIME(max.get());
         alarmInformation.setALARM_OBJECT(mutiDetail+"");
         alarmInformation.setALARM_TYPE_LV1("007");
+        alarmInformation.setALARM_TYPE_LV2(getAlarmTypeLv2());
     }
 
     public abstract String getAlarmTypeLv2();
