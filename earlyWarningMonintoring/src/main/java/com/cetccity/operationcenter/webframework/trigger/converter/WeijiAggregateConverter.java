@@ -85,7 +85,6 @@ public abstract class WeijiAggregateConverter extends AbstractAggregatesConverte
 
         AlarmInformation alarmInformation = defaultAlarmInformation();
         fillAlarmCommon(sources, alarmInformation);
-        alarmInformation.setCONTENTS( thresholdString + "预警");
         alarmInformation.setALARM_LEVEL("特殊病情");
         alarmInformation.setCHANNEL("卫计局");
         alarmInformation.setALARM_LEVEL(getAlarmLevel());
@@ -107,7 +106,8 @@ public abstract class WeijiAggregateConverter extends AbstractAggregatesConverte
         String mutiAddress = mutiAddress(sources);
         String mutiDetail = generateMutiDetail(localDateTime, mutiAddress, sources.size(), thresholdString);
         alarmInformation.setRELEASE_TIME(max.get());
-        alarmInformation.setALARM_OBJECT(mutiDetail+"");
+        alarmInformation.setCONTENTS( mutiDetail+"");
+        alarmInformation.setALARM_OBJECT(thresholdString + "预警");
         alarmInformation.setALARM_TYPE_LV1("007");
         alarmInformation.setALARM_TYPE_LV2(getAlarmTypeLv2());
     }
