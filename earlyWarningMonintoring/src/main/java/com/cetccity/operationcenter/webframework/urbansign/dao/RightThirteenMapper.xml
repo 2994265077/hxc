@@ -185,7 +185,7 @@
                 and STREET_CODE = #{streetCode}
             </if>
         </where> GROUP BY REGION_CODE UNION
-        select replace(REGION_CODE,'440304','70_80高龄老人数据') NAME_X,count(REGION_CODE) 优待人群 from BLK_OLD_ALLOWANCE_70
+        select replace(REGION_CODE,'440304','高龄老人70至80岁') NAME_X,count(REGION_CODE) 优待人群 from BLK_OLD_ALLOWANCE_70
         <where>
             AND REGION_CODE = '440304'
             <if test="streetCode != null">
@@ -199,27 +199,27 @@
                 and STREET_CODE = #{streetCode}
             </if>
         </where> GROUP BY REGION_CODE UNION
-        select replace(REGION_CODE,'440304','100以上高龄老人数据') NAME_X,count(REGION_CODE) 优待人群 from BLK_OLD_ALLOWANCE_100
+        select replace(REGION_CODE,'440304','高龄老人100岁以上') NAME_X,count(REGION_CODE) 优待人群 from BLK_OLD_ALLOWANCE_100
         <where>
             AND REGION_CODE = '440304'
             <if test="streetCode != null">
                 and STREET_CODE = #{streetCode}
             </if>
         </where> GROUP BY REGION_CODE UNION
-        select replace(REGION_CODE,'440304','敬老优待证(黄/蓝证)') NAME_X,count(REGION_CODE) 优待人群 from BLK_ELDER_CRETIFICATE
+        select replace(REGION_CODE,'440304','敬老优待证黄蓝证') NAME_X,count(REGION_CODE) 优待人群 from BLK_ELDER_CRETIFICATE
         <where>
             AND REGION_CODE = '440304'
             <if test="streetCode != null">
                 and STREET_CODE = #{streetCode}
             </if>
         </where> GROUP BY REGION_CODE UNION
-        select replace(REGION_CODE,'440304','90_100高龄老人数据') NAME_X,count(REGION_CODE) 优待人群 from BLK_OLD_ALLOWANCE_90 <where>
+        select replace(REGION_CODE,'440304','高龄老人90至100岁') NAME_X,count(REGION_CODE) 优待人群 from BLK_OLD_ALLOWANCE_90 <where>
             AND REGION_CODE = '440304'
             <if test="streetCode != null">
                 and STREET_CODE = #{streetCode}
             </if>
         </where> GROUP BY REGION_CODE UNION
-        select replace(REGION_CODE,'440304','80_90高龄老人数据') NAME_X,count(REGION_CODE) 优待人群 from BLK_OLD_ALLOWANCE_80
+        select replace(REGION_CODE,'440304','高龄老人80至90岁') NAME_X,count(REGION_CODE) 优待人群 from BLK_OLD_ALLOWANCE_80
         <where>
             AND REGION_CODE = '440304'
             <if test="streetCode != null">
@@ -243,7 +243,7 @@
                 and STREET_CODE = #{streetCode}
             </if>
         </where> GROUP BY REGION_CODE UNION
-        select replace(REGION_CODE,'440304','关注人员总表') NAME_X,count(REGION_CODE) 关注人群 from BLK_CONCERN_PERSON
+        select replace(REGION_CODE,'440304','关注人员') NAME_X,count(REGION_CODE) 关注人群 from BLK_CONCERN_PERSON
         <where>
             AND REGION_CODE = '440304'
             <if test="streetCode != null">

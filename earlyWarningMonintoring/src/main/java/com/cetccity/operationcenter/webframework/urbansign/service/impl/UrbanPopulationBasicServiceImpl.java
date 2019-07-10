@@ -554,17 +554,11 @@ public class UrbanPopulationBasicServiceImpl implements UrbanPopulationBasicServ
     public HttpResponseModel<ChartDetailModel> rightThirteenDrillDown(String street, String name){
         List<HashMap> data = null;
         String streetCode = StringUtils.isNotEmpty(street) ? LoadMyUtil.getPropertiesVauleOfKey("street.properties", street).split(",")[0] : null;
-        switch (name){
-            case "困难群众人员" : if(StringUtils.isEmpty(street)){
-                data = rightThirteenDrillDownUtil.getBarNoStreet("BLK_DIFFICULT_PO",name);break;
-            }else {
-                data = rightThirteenDrillDownUtil.getBarHasStreet("BLK_DIFFICULT_PO",streetCode,name);break;
-            }
-            //case "2" : data = rightThirteenDrillDownMapper.getRightThirteenDrillDown(map); break;
-            //case "3" : data = rightThirteenDrillDownMapper.getRightThirteenDrillDown(map); break;
-            //case "4" : data = rightThirteenDrillDownMapper.getRightThirteenDrillDown(map); break;
-            //case "5" : data = rightThirteenDrillDownMapper.getRightThirteenDrillDown(map); break;
-        }
+       if(StringUtils.isEmpty(street)){
+           data = rightThirteenDrillDownUtil.getBarNoStreet(name);
+       }else {
+           data = rightThirteenDrillDownUtil.getBarHasStreet(streetCode,name);
+       }
         Map<String,String> map2 = new HashMap();
         map2.put("type","bar");
         return CetcFactoryProducer.init(data,"NAME_X",map2,true);
