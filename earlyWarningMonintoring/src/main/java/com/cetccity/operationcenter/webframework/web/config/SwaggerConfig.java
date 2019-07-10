@@ -3,6 +3,8 @@ package com.cetccity.operationcenter.webframework.web.config;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.MessageSource;
 /**********************************************************************
  *
@@ -52,7 +54,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableWebMvc
 @EnableSwagger2
 @Configuration
+@ConfigurationProperties(prefix = "swagger")
+@Data
 public class SwaggerConfig implements WebMvcConfigurer {
+
+    private String basePath;
 
 	@Bean
 	public Docket createRestApi() {
@@ -71,7 +77,8 @@ public class SwaggerConfig implements WebMvcConfigurer {
 	                .select()
 	                .apis(RequestHandlerSelectors.basePackage("com.cetccity.operationcenter.webframework"))
 	                .paths(PathSelectors.any())
-	                .build();
+	                .build()
+				  	.pathMapping(basePath);
 
 	}
 
