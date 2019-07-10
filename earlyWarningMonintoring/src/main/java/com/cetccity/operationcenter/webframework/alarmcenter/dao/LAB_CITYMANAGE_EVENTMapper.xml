@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.alarmcenter.dao.LAB_CITYMANAGE_EVENTMapper">
+
+    <resultMap id="BaseResultMap" type="com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.LAB_CITYMANAGE_EVENT">
+        <id column="OBJECT_ID" jdbcType="BIGINT" property="objectId"/>
+        <result column="CAMERA_ID" jdbcType="VARCHAR" property="cameraId"/>
+        <result column="EVENT_TYPE" jdbcType="VARCHAR" property="eventType"/>
+        <result column="IMAGE_URL" jdbcType="VARCHAR" property="imageUrl"/>
+        <result column="VIDEO_URL" jdbcType="VARCHAR" property="videoUrl"/>
+        <result column="LOG_TIME" jdbcType="DATE" property="logTime"/>
+        <result column="YJJC_CREATE_TIME" jdbcType="DATE" property="yjjcCreateTime"/>
+        <result column="YJJC_UPDATE_TIME" jdbcType="DATE" property="yjjcUpdateTime"/>
+    </resultMap>
+
+   <!-- <insert id="receiveLabCityManageEvent" parameterType="com.cetccity.operationcenter.webframework.alarmcenter.api.model.ColumnMappingModel">
+        INSERT INTO(objectId,cameraId,eventType,imageUrl,videoUrl,logTime,yjjcCreateTime,yjjcUpdateTime)
+        VALUES(select SEQ_LAB_CITYMANAGE_EVENT.nextval,#{cameraId},#{eventType},#{imageUrl},#{videoUrl},#{logTime},sysdate,sysdate)
+    </insert>-->
+
+
+</mapper>

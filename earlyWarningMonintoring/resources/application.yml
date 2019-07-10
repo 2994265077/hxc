@@ -3,8 +3,8 @@ app:
   id: futian.earlyWarningMonintoring
 apollo:
   # 指定apollo-configservice
-  meta: http://10.190.55.65:9206
-  #meta: http://10.192.19.116:9206
+  #meta: http://10.190.55.65:9206
+  meta: http://10.192.19.116:9206
   bootstrap:
     enabled: true
     #对应apollo里配置的namespaces

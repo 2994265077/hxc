@@ -4,6 +4,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.cetccity.operationcenter.webframework.web.util.MD5Encoder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,8 +137,9 @@ public class AuthenticationController implements AuthenticationApi{
     /**
      * 用于第三方系统单点登录平台认证
      * @param account
-     * @param password 
+     * @param clientSecret
      * @param response
+     * @param request
      * @return
      */
     @PostMapping(value = "/authClient/{account}/{clientId}/{clientSecret}")
@@ -151,6 +153,10 @@ public class AuthenticationController implements AuthenticationApi{
         if (StringUtils.isBlank(clientSecret)) {
             throw CetcCommonException.defaultException("请输入clientSecret");
         }
+       /**客户端需要实现的逻辑
+        account = Base64.encode(account);
+        clientId = Base64.encode(clientId);
+        clientSecret = Base64.encode(MD5Encoder.encode(clientSecret));*/
         return authenticationService.authClient(Base64.decodeStr(account), Base64.decodeStr(clientId),  Base64.decodeStr(clientSecret), response);
     }
 
