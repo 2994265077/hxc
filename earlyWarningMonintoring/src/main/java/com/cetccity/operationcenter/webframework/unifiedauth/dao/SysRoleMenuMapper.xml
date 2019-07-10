@@ -15,7 +15,7 @@
 		</where>
 	</update>
 
-	<select id="findMenusByRoleIds" resultType="com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu">
+	<select id="findMenusByRoleIds" resultMap="BaseResultMap" resultType="com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu">
 		select distinct t.* from SYS_MENU t
 		inner join SYS_ROLE_MENU r on r.menuId = t.OBJECT_ID
 		where
@@ -31,7 +31,7 @@
 	</select>
 
 	<resultMap id="BaseResultMap" type="com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu">
-		<id column="OBJECT_ID" jdbcType="BIGINT" property="OBJECT_ID" />
+		<id column="OBJECT_ID" jdbcType="BIGINT" property="id" />
 		<result column="PARENTID" jdbcType="BIGINT" property="parentId" />
 		<result column="NAME" jdbcType="VARCHAR" property="name" />
 		<result column="CSS" jdbcType="VARCHAR" property="css" />
@@ -43,13 +43,13 @@
 		<result column="TYPE" jdbcType="TINYINT" property="type" />
 	</resultMap>
 
-	<select id="recursionfindMenu" resultType="com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu">
+	<select id="recursionfindMenu" resultMap="BaseResultMap" resultType="com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu">
      select distinct m.*
        from sys_menu m
      start with m.OBJECT_ID in
      <foreach collection="sysMenus" index="index" item="m"
 			open="(" separator="," close=")">
-			#{m.OBJECT_ID}
+			#{m.id}
 	 </foreach>
       connect by m.OBJECT_ID = prior m.parentid
 	</select>
