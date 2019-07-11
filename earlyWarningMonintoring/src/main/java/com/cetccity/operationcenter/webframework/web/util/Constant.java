@@ -69,4 +69,6 @@ public final class Constant {
     
     public static final Integer BACK_MENU_TYPE=1;
 
+    public static final Integer TABLEAU_MENU_TYPE=3;
+
 }

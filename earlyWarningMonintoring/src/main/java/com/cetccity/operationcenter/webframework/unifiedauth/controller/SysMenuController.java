@@ -140,8 +140,7 @@ public class SysMenuController implements SysMenuApi {
 			return new HttpResponseModel<List<SysMenu>>(SysCode.SYS_SUCCESS_CODE, Collections.emptyList());
 		}
 		List<SysMenu> menus = menuService
-				.findByRoles(roles.parallelStream().map(RoleEntity::getRole_id).collect(Collectors.toSet()), type == null ? Constant.BACK_MENU_TYPE: type);
-		
+					.findByRoles(roles.parallelStream().map(RoleEntity::getRole_id).collect(Collectors.toSet()), type);
 		if(!CollectionUtils.isEmpty(menus)){
 			//递归查询所有菜单
 			menus = menuService.recursionfindMenu(menus);

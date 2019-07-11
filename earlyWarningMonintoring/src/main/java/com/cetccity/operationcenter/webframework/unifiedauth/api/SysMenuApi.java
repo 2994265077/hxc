@@ -1,23 +1,16 @@
 package com.cetccity.operationcenter.webframework.unifiedauth.api;
 
 import com.cetccity.operationcenter.webframework.core.frame.model.HttpResponseModel;
-import com.cetccity.operationcenter.webframework.core.frame.model.SysCode;
-import com.cetccity.operationcenter.webframework.unifiedauth.entity.RoleEntity;
 import com.cetccity.operationcenter.webframework.unifiedauth.entity.SysMenu;
-import com.cetccity.operationcenter.webframework.unifiedauth.service.model.UserRolePermissionEntity;
-import com.cetccity.operationcenter.webframework.web.util.Constant;
 import com.cetccity.operationcenter.webframework.web.util.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang.ObjectUtils;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 工程包名:   com.cetccity.operationcenter.webframework.unifiedauth.api
@@ -88,4 +81,5 @@ public interface SysMenuApi {
     @GetMapping("/current")
     @ApiOperation(value = "查询当前用户菜单")
     HttpResponseModel<List<SysMenu>> findMyMenu(HttpServletRequest request, Integer type) throws Exception;
+
 }
