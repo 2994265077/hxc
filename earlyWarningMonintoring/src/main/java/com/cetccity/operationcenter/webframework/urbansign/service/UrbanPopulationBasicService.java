@@ -13,7 +13,7 @@ import java.util.Map;
 
 public interface UrbanPopulationBasicService {
 
-    List<NameValueUnitModel> getLeftOne(String street, String community);
+    List<NameValueUnitModel> getLeftOne(String street);
 
     XYAxisData getLeftTwo(String street);
 

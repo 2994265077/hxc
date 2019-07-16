@@ -1,6 +1,7 @@
 package com.cetccity.operationcenter.webframework.environment.api;
 
 import com.cetccity.operationcenter.webframework.core.chart.engine.model.ChartDetailModel;
+import com.cetccity.operationcenter.webframework.core.frame.basicmodel.LoadMap;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.MyPageInfoModel;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel;
 import com.cetccity.operationcenter.webframework.core.frame.model.HttpResponseModel;
@@ -30,7 +31,7 @@ import java.util.List;
 @RequestMapping("/environment")
 public interface CleanRiverToDrainFacilitiesPatrolRecordBiApi {
 
-    @ApiOperation(value = "区域巡查--巡查&隐患次数", notes = "区域巡查--巡查&隐患次数--QJHH_PATROL")
+    @ApiOperation(value = "区域巡查--最近一个月巡查&隐患次数", notes = "区域巡查--最近一个月巡查&隐患次数--QJHH_PATROL")
     @ApiImplicitParams({
             @ApiImplicitParam(value = "排水户uid--SEWERATE_ID", name = "SEWERATE_ID", dataType = "string", paramType = "query")
     })
@@ -56,7 +57,7 @@ public interface CleanRiverToDrainFacilitiesPatrolRecordBiApi {
     @ResponseBody
     HttpResponseModel<ChartDetailModel> rightThree(String street, String SEWERATE_ID, String hiddenDanger);
 
-    @ApiOperation(value = "区域巡查--近三十天的巡查隐患列表", notes = "区域巡查--近三十天的巡查隐患列表--from QJHH_PATROL where STATUS = '正常'")
+    @ApiOperation(value = "区域巡查--近三十天的巡查隐患列表", notes = "区域巡查--近三十天的巡查隐患列表--from QJHH_PATROL where STATUS = '不正常'")
     @ApiImplicitParams({
             @ApiImplicitParam(value = "街道--street", name = "street", dataType = "string", paramType = "query"),
             @ApiImplicitParam(value = "排水户uid--SEWERATE_ID", name = "SEWERATE_ID", dataType = "string", paramType = "query"),
@@ -66,5 +67,13 @@ public interface CleanRiverToDrainFacilitiesPatrolRecordBiApi {
     @RequestMapping(value = "/patrol/record/right/four",method = RequestMethod.GET,produces = "application/json;charset=utf-8")
     @ResponseBody
     MyPageInfoModel rightFour(String street, String SEWERATE_ID, Integer pageNum, Integer pageSize);
+
+    @ApiOperation(value = "区域巡查--近三十天的巡查隐患柱状图", notes = "区域巡查--近三十天的巡查隐患柱状图--from QJHH_PATROL where STATUS = '不正常'")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "街道--street", name = "street", dataType = "string", paramType = "query")
+    })
+    @RequestMapping(value = "/patrol/record/right/five",method = RequestMethod.GET,produces = "application/json;charset=utf-8")
+    @ResponseBody
+    HttpResponseModel<ChartDetailModel> rightFive(String street);
 
 }

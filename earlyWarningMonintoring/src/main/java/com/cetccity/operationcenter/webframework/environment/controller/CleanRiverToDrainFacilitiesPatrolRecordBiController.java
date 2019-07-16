@@ -1,6 +1,7 @@
 package com.cetccity.operationcenter.webframework.environment.controller;
 
 import com.cetccity.operationcenter.webframework.core.chart.engine.model.ChartDetailModel;
+import com.cetccity.operationcenter.webframework.core.frame.basicmodel.LoadMap;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.MyPageInfoModel;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel;
 import com.cetccity.operationcenter.webframework.core.frame.model.HttpResponseModel;
@@ -43,5 +44,10 @@ public class CleanRiverToDrainFacilitiesPatrolRecordBiController implements Clea
     public MyPageInfoModel rightFour(String street, String SEWERATE_ID, Integer pageNum, Integer pageSize){
         return cleanRiverToDrainFacilitiesPatrolRecordBiService.rightFour(street, SEWERATE_ID, pageNum, pageSize);
     }
+
+    public HttpResponseModel<ChartDetailModel> rightFive(String street){
+        return cleanRiverToDrainFacilitiesPatrolRecordBiService.rightFive(street);
+    }
+
 
 }

@@ -72,24 +72,21 @@ public class UrbanPopulationBasicServiceImpl implements UrbanPopulationBasicServ
 
     public static final String[] ageName = {"0-3岁","3-6岁","6-14岁","14-28岁","28-35岁","35-45岁","45-60岁","60-70岁","70岁以上"};
 
-    public List<NameValueUnitModel> getLeftOne(String street, String community){
+    public List<NameValueUnitModel> getLeftOne(String street){
         String street_code = null;
         String community_code =null;
-        if(StringUtils.isNotEmpty(street))
+        if(StringUtils.isNotEmpty(street)) {
             street_code = LoadMyUtil.getPropertiesVauleOfKey("street.properties", street).split(",")[0];
-        if(StringUtils.isNotEmpty(community))
-            community_code = LoadMyUtil.getPropertiesVauleOfKey("street.properties", community);
+        }
         long registerPopulationCount;    //户籍人口
             BlkPopulation bLK_POPULATION_register = new BlkPopulation();
             bLK_POPULATION_register.setJDDM(street_code);
-            bLK_POPULATION_register.setSQDM(community_code);
             bLK_POPULATION_register.setIS_CITIZEN("1");//深圳福田户籍人口
             registerPopulationCount = blkPopulationMapper.getPopulationCount(bLK_POPULATION_register);
 
         long floatingPopulationCount; //流动人口
             BlkPopulation bLK_POPULATION_floating = new BlkPopulation();
             bLK_POPULATION_floating.setJDDM(street_code);
-            bLK_POPULATION_floating.setSQDM(community_code);
             bLK_POPULATION_floating.setIS_CITIZEN("0");//深圳福田户籍人口
             floatingPopulationCount = blkPopulationMapper.getPopulationCount(bLK_POPULATION_floating);
         List<NameValueUnitModel> nameValueUnitModel_list = new ArrayList<NameValueUnitModel>();

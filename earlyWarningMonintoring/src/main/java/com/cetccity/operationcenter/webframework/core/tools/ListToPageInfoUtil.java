@@ -1,13 +1,8 @@
 package com.cetccity.operationcenter.webframework.core.tools;
 
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.MyPageInfoModel;
-import com.cetccity.operationcenter.webframework.web.model.SearchObjList;
 import lombok.experimental.UtilityClass;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
 import static java.util.stream.Collectors.toList;
 
 /**

@@ -105,8 +105,6 @@ public class UrbanComponentServiceImpl implements UrbanComponentService {
     }
     //各部门部件数量
     public NameDataModel rigthOne(String street){
-
-        NameDataModel nameDataModel = new NameDataModel();
         Map<String ,List<String>> map_type = getComponentTable();
         List<String> collect = map_type.entrySet()
                 .stream()

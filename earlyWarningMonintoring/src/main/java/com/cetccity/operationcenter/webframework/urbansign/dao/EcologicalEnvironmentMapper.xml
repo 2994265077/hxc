@@ -34,7 +34,7 @@
     <select id="queryAirValueAndDay" resultType="java.util.HashMap">
         select * from (SELECT to_char(MONITOR_TIME,'yyyy-mm-dd') time, round(avg(AQI_VALUE),0) 空气质量指数
         FROM QHSJ_AQI_INFO GROUP BY to_char(MONITOR_TIME,'yyyy-mm-dd') ORDER BY to_char(MONITOR_TIME,'yyyy-mm-dd') DESC)
-        where rownum &lt;= 15
+        where time is NOT NULL AND rownum &lt;= 15
     </select>
 
     <select id="airExcessByStationDay" parameterType="java.util.Map" resultType="java.util.HashMap">

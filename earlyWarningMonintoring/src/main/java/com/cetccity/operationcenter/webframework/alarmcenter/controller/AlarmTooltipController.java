@@ -1,6 +1,8 @@
 package com.cetccity.operationcenter.webframework.alarmcenter.controller;
 
 import com.cetccity.operationcenter.webframework.alarmcenter.api.AlarmTooltipApi;
+import com.cetccity.operationcenter.webframework.alarmcenter.dao.LAB_CITYMANAGE_EVENTMapper;
+import com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.LAB_CITYMANAGE_EVENT;
 import com.cetccity.operationcenter.webframework.core.tools.ESOperate;
 import com.cetccity.operationcenter.webframework.core.tools.Tooltip;
 import com.cetccity.operationcenter.webframework.hiddendanger.controller.map.TooltipController;
@@ -24,6 +26,9 @@ public class AlarmTooltipController implements AlarmTooltipApi {
     @Autowired
     TipUtil tipUtil;
 
+    @Autowired
+    LAB_CITYMANAGE_EVENTMapper lAB_CITYMANAGE_EVENTMapper;
+
     public Map summaryInfo(@PathVariable("LV_2") String LV_2, String id) {
         String tableName = "ALARM_INFORMATION";
         Map return_map;
@@ -41,6 +46,12 @@ public class AlarmTooltipController implements AlarmTooltipApi {
             LinkedHashMap<String,String> map = tipUtil.loadMapTipToOracle(tableName,id);  //请求oracle
             map.put("RELEASE_TIME",map.get("RELEASE_TIME").substring(0,19));
             List result = TipContentUtil.tipContent(tableName,key,value,map);
+            if(LV_2.equals("006003")){
+                String objId = (String) result.get(result.size()-1);
+                LAB_CITYMANAGE_EVENT labCitymanageEvent = lAB_CITYMANAGE_EVENTMapper.getList(objId).get(0);
+                result.add("<a target=\"_blank\" href=\""+labCitymanageEvent.getImageUrl()+"\" style=\"color:#5fb6ff\">查看图片</a>");
+                result.add("<a target=\"_blank\" href=\""+labCitymanageEvent.getVideoUrl()+"\" style=\"color:#a2d0ec\">视频回放</a>");
+            }
             return_map = Tooltip.toolTipListToMap(result, hasDetailInfo);
             return_map.put("info_alert","0");
             return_map.put("jump",jumpState(LV_2));

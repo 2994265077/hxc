@@ -19,12 +19,28 @@
             <if test="SEWERAGE_ID != null">
                 and SEWERAGE_ID = #{SEWERAGE_ID}
             </if>
+            <if test="lastDay != null">
+                and to_char(CHECK_TIME,'yyyy-MM-dd') &gt; #{lastDay}
+            </if>
+            <if test="currentMonth != null">
+                and to_char(CHECK_TIME,'yyyy-MM-dd') &lt;= #{currentMonth}
+            </if>
             <if test="currentMonth != null">
                 and to_char(CHECK_TIME,'yyyy-MM') like concat(#{currentMonth},'%')
             </if>
         </where>
         group by STATUS
     </select>
+
+
+    <select id="loadMap" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT A.FACILITY_ID,B.JD84,WD84 from QJHH_PATROL_INFO A,QJHH_FACILITY_INFO B
+        <where>
+            AND A.FACILITY_ID = B."UID"
+            AND to_char(A.CHECK_TIME,'yyyy-MM') LIKE concat(#{currentMonth},'%')
+        </where>
+    </select>
+
 
     <select id="rightTwo" parameterType="java.util.Map" resultType="java.util.HashMap">
         SELECT * FROM(
@@ -78,7 +94,8 @@
 
     <select id="rightFour" parameterType="java.util.Map" resultType="com.cetccity.operationcenter.webframework.environment.api.model.PatrolRecordRightFour">
         SELECT * FROM (SELECT rowres.*, ROWNUM RN FROM (
-          SELECT A.CHECK_TIME CHECK_TIME,D."NAME" SEWERATE_NAME, D."ADDRESS" SEWERATE_ADDRESS, A."STATUS" "ContentDescription",A."TYPE" FACILITY_NAME,C.ADDRESS FACILITY_ADDRESS
+          SELECT A.CHECK_TIME CHECK_TIME,D."NAME" SEWERATE_NAME, D."ADDRESS" SEWERATE_ADDRESS, A."STATUS" "ContentDescription",
+          A."TYPE" FACILITY_NAME,C.ADDRESS FACILITY_ADDRESS,A.FACILITY_ID,C.JD84,C.WD84
             from QJHH_PATROL_INFO A,QJHH_FACILITY_INFO C,QJHH_SEWERAGE_INFO D
             <where>
                 <if test="streetCode != null">
@@ -99,6 +116,30 @@
             </where>
           order by A.CHECK_TIME desc
         ) rowres  WHERE ROWNUM &lt;=#{end}) WHERE RN &gt;#{start}
+    </select>
+
+
+    <select id="rightFive" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT A."TYPE" X_NAME,count(A."TYPE") 近一个月巡查隐患数量
+        from QJHH_PATROL_INFO A,QJHH_FACILITY_INFO C,QJHH_SEWERAGE_INFO D
+        <where>
+            <if test="streetCode != null">
+                and A.STREET_CODE = #{streetCode}
+            </if>
+            <if test="lastDay != null">
+                and to_char(A.CHECK_TIME,'yyyy-MM-dd') &gt; #{lastDay}
+            </if>
+            <if test="currentMonth != null">
+                and to_char(A.CHECK_TIME,'yyyy-MM-dd') &lt;= #{currentMonth}
+            </if>
+            <if test="SEWERAGE_ID != null">
+                and A.SEWERAGE_ID = #{SEWERAGE_ID}
+            </if>
+            AND A.STATUS = '不正常'
+            AND A.FACILITY_ID = C."UID"
+            AND A.SEWERAGE_ID = D."UID"
+        </where>
+        GROUP BY A."TYPE"
     </select>
 
     <select id="rightFourCount" parameterType="java.util.Map" resultType="java.lang.Integer">

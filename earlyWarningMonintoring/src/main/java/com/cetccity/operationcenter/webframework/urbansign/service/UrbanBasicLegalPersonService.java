@@ -1,6 +1,5 @@
 package com.cetccity.operationcenter.webframework.urbansign.service;
 
-import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameDataModel;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel;
 import com.cetccity.operationcenter.webframework.urbansign.api.model.HeatMap;
 import com.cetccity.operationcenter.webframework.urbansign.dao.entity.P2P_BUSINESS_GLOBAL;

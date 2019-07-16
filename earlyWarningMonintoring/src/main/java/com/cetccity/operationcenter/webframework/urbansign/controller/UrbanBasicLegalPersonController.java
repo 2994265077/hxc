@@ -9,6 +9,7 @@ import com.cetccity.operationcenter.webframework.web.model.citySign.UrbanBasicLe
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel;
 import com.cetccity.operationcenter.webframework.urbansign.service.UrbanBasicLegalPersonService;
 import com.cetccity.operationcenter.webframework.web.service.db.OracleOperateService;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class UrbanBasicLegalPersonController implements UrbanBasicLegalPersonApi
         InputStream inputStream =ESOperate.class.getResourceAsStream("/street.properties");
         Properties properties = new Properties();
         properties.load(new InputStreamReader(inputStream,"UTF-8"));
-        if(street==null && community==null){
+        if(StringUtils.isEmpty(street)){
             urbanBasicLegalPersonLeftOne_list = urbanBasicLegalPersonService.getLeftOne(tableName);
         }else if(community == null){
             String street_code = properties.getProperty(street);
@@ -66,10 +67,6 @@ public class UrbanBasicLegalPersonController implements UrbanBasicLegalPersonApi
             String column = "STREET_CODE";
             String columnEntity = street_code;
             String num = urbanBasicLegalPersonService.getLeftTwo(tableName,column, columnEntity);
-            /*NameValueModel nameValueModel = new NameValueModel();
-            nameValueModel.setName(street_name);
-            nameValueModel.setValue(num);
-            nameValueModel_list.add(nameValueModel);*/
             nameValueModel_list.add(NameValueModel.builder().name(street_name).value(num).build());
         }
         return nameValueModel_list;

@@ -36,6 +36,12 @@
             and a.check_time = qpi2.check_time
             ) b on s."UID" = b.facility_id
         <where>
+            <if test="facilitiesStatus != null">
+                and s.status = #{facilitiesStatus}
+            </if>
+            <if test="patrolStatus != null">
+                and b.status = #{patrolStatus}
+            </if>
             <if test="SEWERAGE_ID != null">
                 and s."SEWERAGE_ID" = #{SEWERAGE_ID}
             </if>
@@ -274,6 +280,10 @@
             (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '华强北' GROUP BY "TYPE") j1 ON m."TYPE" = j1."TYPE" LEFT JOIN
             (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '华强北' AND STATUS = 1 GROUP BY "TYPE") j2 on m."TYPE" = j2."TYPE" LEFT JOIN
             (SELECT count(*) value,"TYPE" from QJHH_FACILITY_INFO WHERE STREET_NAME = '华强北' AND STATUS = 2 GROUP BY "TYPE") j3 on m."TYPE" = j3."TYPE"
+    </select>
+
+    <select id="hasStatusErrorCount" parameterType="java.lang.String" resultType="java.util.HashMap">
+      SELECT SEWERAGE_ID,count(*) from QJHH_FACILITY_INFO WHERE STATUS = '0' GROUP BY SEWERAGE_ID
     </select>
 
 </mapper>

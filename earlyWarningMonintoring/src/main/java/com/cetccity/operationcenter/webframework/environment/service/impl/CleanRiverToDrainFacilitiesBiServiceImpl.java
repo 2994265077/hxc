@@ -2,6 +2,7 @@ package com.cetccity.operationcenter.webframework.environment.service.impl;
 
 import com.cetccity.operationcenter.webframework.core.chart.engine.model.ChartDetailModel;
 import com.cetccity.operationcenter.webframework.core.chart.engine.model.ChartFactory;
+import com.cetccity.operationcenter.webframework.core.chart.factory.CetcFactoryProducer;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameDataModel;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel;
 import com.cetccity.operationcenter.webframework.core.frame.model.HttpResponseModel;
@@ -94,7 +95,6 @@ public class CleanRiverToDrainFacilitiesBiServiceImpl implements CleanRiverToDra
         map_status_2.put("lastMonthCount",null);
         int currentCount_status_2 = qJHH_FACILITY_INFOMapper.count(map_status_2);
         increaseRate_status_2 = (lastCount_status_2 ==0 ? "-" : LoadMyUtil.myPercent(currentCount_status_2,lastCount_status_2));
-
         if(currentCount_status_2 > 0){
             trend_status_2 = "↑";
         }else if(currentCount_status_2 < 0){
@@ -119,7 +119,6 @@ public class CleanRiverToDrainFacilitiesBiServiceImpl implements CleanRiverToDra
                 Map map = new HashMap();
                 map.put("SEWERAGE_ID",SEWERATE_ID);
                 map.put("streetCode",StringUtils.isNotEmpty(street) ? LoadMyUtil.getPropertiesVauleOfKey("street.properties", street).split(",")[0] : null);
-                //return qJHH_FACILITY_INFOMapper.rightTwo(map);
                 for(int i = 11;i>= 0;i--){
                     String currentTime = LoadMyUtil.getMyTime("MONTH",-i);
                     String month = LoadMyUtil.getMyTime("MONTH",-i+1);
@@ -168,132 +167,29 @@ public class CleanRiverToDrainFacilitiesBiServiceImpl implements CleanRiverToDra
     }
 
     public HttpResponseModel<ChartDetailModel> rightThree(String street, String SEWERATE_ID){
-        ChartFactory chartFactory = new ChartFactory() {
-            @Override
-            public List<HashMap> queryData() {
-                Map map = new HashMap();
-                map.put("SEWERAGE_ID",SEWERATE_ID);
-                map.put("streetCode",StringUtils.isNotEmpty(street) ? LoadMyUtil.getPropertiesVauleOfKey("street.properties", street).split(",")[0] : null);
-                //map.put("month",LoadMyUtil.getMyTime("MONTH",0));
-                return qJHH_FACILITY_INFOMapper.rightThree(map);
-            }
-
-            @Override
-            public List<String> initX() {
-                List<String> x= new ArrayList<>();
-                queryData().stream().forEach(u->x.add((String) u.get("X_NAME")));
-                return x;
-            }
-
-            @Override
-            public List<String> initY() {
-                List<String> y = new ArrayList<String>();
-                for (Object key: input.get(0).keySet()){
-                    if ("X_NAME".equals(String.valueOf(key))) continue;
-                    y.add(String.valueOf(key));
-                }
-                return y;
-            }
-
-            @Override
-            public void match(HashMap row) {
-                String month = (String) row.get("X_NAME");
-                for(Object key: row.keySet()){
-                    if ("X_NAME".equals(String.valueOf(key))) continue;
-                    BigDecimal decimal = (BigDecimal) row.get(key);
-                    dataMap.get(month).put(String.valueOf(key), decimal.intValue());
-                }
-            }
-        };
-        Map<String,String> map = new HashMap();
-        map.put("type","pie");
-        ChartDetailModel model = new ChartDetailModel();
-        model.setChart(chartFactory.build(map));
-        return new HttpResponseModel<ChartDetailModel>(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, model);
+        Map map = new HashMap();
+        map.put("SEWERAGE_ID",SEWERATE_ID);
+        map.put("streetCode",StringUtils.isNotEmpty(street) ? LoadMyUtil.getPropertiesVauleOfKey("street.properties", street).split(",")[0] : null);
+        List<HashMap> date = qJHH_FACILITY_INFOMapper.rightThree(map);
+        Map<String,String> map2 = new HashMap();
+        map2.put("type","pie");
+        return CetcFactoryProducer.init(date,"X_NAME",map2,false);
     }
 
     public HttpResponseModel<ChartDetailModel> rightFour(String SEWERATE_ID){
-        ChartFactory chartFactory = new ChartFactory() {
-            @Override
-            public List<HashMap> queryData() {
-                Map map = new HashMap();
-                map.put("SEWERATE_ID",SEWERATE_ID);
-                return qJHH_FACILITY_INFOMapper.rightFour(map);
-            }
-
-            @Override
-            public List<String> initX() {
-                List<String> x= new ArrayList<>();
-                queryData().stream().forEach(u->x.add((String) u.get("X")));
-                return x;
-            }
-
-            @Override
-            public List<String> initY() {
-                List<String> y = new ArrayList<String>();
-                for (Object key: input.get(0).keySet()){
-                    if ("X".equals(String.valueOf(key))) continue;
-                    y.add(String.valueOf(key));
-                }
-                return y;
-            }
-
-            @Override
-            public void match(HashMap row) {
-                String month = (String) row.get("X");
-                for(Object key: row.keySet()){
-                    if ("X".equals(String.valueOf(key))) continue;
-                    BigDecimal decimal = (BigDecimal) row.get(key);
-                    dataMap.get(month).put(String.valueOf(key), decimal.intValue());
-                }
-            }
-        };
-        Map<String,String> map = new HashMap();
-        map.put("type","pie");
-        map.put("stack","排水设施");
-        ChartDetailModel model = new ChartDetailModel();
-        model.setChart(chartFactory.build(map));
-        return new HttpResponseModel<ChartDetailModel>(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, model);
+        Map map = new HashMap();
+        map.put("SEWERATE_ID",SEWERATE_ID);
+        List<HashMap> date = qJHH_FACILITY_INFOMapper.rightThree(map);
+        Map<String,String> map2 = new HashMap();
+        map2.put("type","pie");
+        map2.put("stack","排水设施");
+        return CetcFactoryProducer.init(date,"X",map2,false);
     }
 
     public HttpResponseModel<ChartDetailModel> rightFive(){
-        ChartFactory chartFactory = new ChartFactory() {
-            @Override
-            public List<HashMap> queryData() {
-                return qJHH_FACILITY_INFOMapper.rightFive();
-            }
-
-            @Override
-            public List<String> initX() {
-                List<String> x= new ArrayList<>();
-                queryData().stream().forEach(u->x.add((String) u.get("X")));
-                return x;
-            }
-
-            @Override
-            public List<String> initY() {
-                List<String> y = new ArrayList<String>();
-                for (Object key: input.get(0).keySet()){
-                    if ("X".equals(String.valueOf(key))) continue;
-                    y.add(String.valueOf(key));
-                }
-                return y;
-            }
-
-            @Override
-            public void match(HashMap row) {
-                String x = (String) row.get("X");
-                for(Object key: row.keySet()){
-                    if ("X".equals(String.valueOf(key))) continue;
-                    BigDecimal decimal = (BigDecimal) row.get(key);
-                    dataMap.get(x).put(String.valueOf(key), decimal.intValue());
-                }
-            }
-        };
+        List<HashMap> date = qJHH_FACILITY_INFOMapper.rightFive();
         Map<String,String> map = new HashMap();
         map.put("type","pie");
-        ChartDetailModel model = new ChartDetailModel();
-        model.setChart(chartFactory.build(map));
-        return new HttpResponseModel<ChartDetailModel>(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, model);
+        return CetcFactoryProducer.init(date,"X",map,false);
     }
 }

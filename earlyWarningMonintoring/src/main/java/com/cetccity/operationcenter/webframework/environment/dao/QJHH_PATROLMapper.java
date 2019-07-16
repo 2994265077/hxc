@@ -4,6 +4,7 @@ import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValue
 import com.cetccity.operationcenter.webframework.environment.api.model.PatrolRecordRightFour;
 import com.cetccity.operationcenter.webframework.environment.dao.entity.QJHH_PATROL;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,8 @@ public interface QJHH_PATROLMapper {
 
     List<NameValueModel> rightOne(Map map);
 
+    List<HashMap> loadMap(@Param("currentMonth") String currentMonth);
+
     List<HashMap> rightTwo(Map map);
 
     List<HashMap> rightThreeNoStreet(Map map);
@@ -33,6 +36,8 @@ public interface QJHH_PATROLMapper {
     List<HashMap> rightThreeHasStreet(Map map);
 
     List<PatrolRecordRightFour> rightFour(Map map);
+
+    List<HashMap> rightFive(Map map);
 
     int rightFourCount(Map map);
 

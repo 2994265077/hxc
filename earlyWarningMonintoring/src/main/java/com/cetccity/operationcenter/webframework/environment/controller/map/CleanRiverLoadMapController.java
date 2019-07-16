@@ -35,7 +35,12 @@ public class CleanRiverLoadMapController implements CleanRiverLoadMapApi {
         return environmentLoadMapUtil.LoadMapToDrainHold(tableNameUrl, street,id);
     }
 
-    public List<IconTypeLoadMap> LoadMapDrainFacilities(@PathVariable("tableNameUrl") String tableNameUrl, String street, String id) throws IOException {
-        return environmentLoadMapUtil.LoadMapDrainFacilities(tableNameUrl, street, id);
+    public List<IconTypeLoadMap> LoadMapDrainFacilities(@PathVariable("tableNameUrl") String tableNameUrl, String street, String id, String patrolType) throws IOException {
+        return environmentLoadMapUtil.LoadMapDrainFacilities(tableNameUrl, street, id, patrolType);
     }
+
+    public List<IconTypeLoadMap> LoadMapDrainFacilitiesAll(@PathVariable("tableNameUrl") String tableNameUrl, String street, String facilitiesType) throws IOException {
+        return environmentLoadMapUtil.LoadMapDrainFacilitiesAll(tableNameUrl, street, facilitiesType);
+    }
+
 }

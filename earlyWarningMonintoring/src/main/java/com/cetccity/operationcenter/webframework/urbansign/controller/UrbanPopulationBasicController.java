@@ -26,8 +26,8 @@ public class UrbanPopulationBasicController implements UrbanPopulationBasicApi {
     @Autowired
     BLK_DISABLED_PEOPLEService bLK_DISABLED_PEOPLEService;
 
-    public List<NameValueUnitModel> leftOne(String street, String community) throws IOException {
-        List<NameValueUnitModel> nameValueUnitModel_list = urbanPopulationBasicService.getLeftOne(street,community);
+    public List<NameValueUnitModel> leftOne(String street) throws IOException {
+        List<NameValueUnitModel> nameValueUnitModel_list = urbanPopulationBasicService.getLeftOne(street);
         return nameValueUnitModel_list;
     }
 

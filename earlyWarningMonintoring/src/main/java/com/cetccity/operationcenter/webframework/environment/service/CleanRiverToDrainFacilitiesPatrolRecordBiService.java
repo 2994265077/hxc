@@ -1,6 +1,7 @@
 package com.cetccity.operationcenter.webframework.environment.service;
 
 import com.cetccity.operationcenter.webframework.core.chart.engine.model.ChartDetailModel;
+import com.cetccity.operationcenter.webframework.core.frame.basicmodel.LoadMap;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.MyPageInfoModel;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel;
 import com.cetccity.operationcenter.webframework.core.frame.model.HttpResponseModel;
@@ -28,4 +29,6 @@ public interface CleanRiverToDrainFacilitiesPatrolRecordBiService {
     HttpResponseModel<ChartDetailModel> rightThree(String street, String SEWERATE_ID, String hiddenDanger);
 
     MyPageInfoModel rightFour(String street, String SEWERATE_ID, Integer pageNum, Integer pageSize);
+
+    HttpResponseModel<ChartDetailModel> rightFive(String street);
 }

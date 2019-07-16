@@ -18,5 +18,9 @@
         VALUES(select SEQ_LAB_CITYMANAGE_EVENT.nextval,#{cameraId},#{eventType},#{imageUrl},#{videoUrl},#{logTime},sysdate,sysdate)
     </insert>-->
 
+    <select id="getList" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT * from LAB_CITYMANAGE_EVENT
+        WHERE OBJECT_ID = #{objectId}
+    </select>
 
 </mapper>

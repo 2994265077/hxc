@@ -8,9 +8,7 @@ import com.cetccity.operationcenter.webframework.rundisplay.api.model.City;
 import com.cetccity.operationcenter.webframework.rundisplay.api.model.CityList;
 import com.cetccity.operationcenter.webframework.web.util.Constant;
 import com.cetccity.operationcenter.webframework.web.util.apollo.ApolloPropertiesLoadUtils;
-
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.RestController;

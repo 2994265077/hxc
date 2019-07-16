@@ -24,7 +24,7 @@ public class LAB_CITYMANAGE_EVENT {
 
     private String cameraId;
 
-    private String eventType;
+    private Integer eventType;
 
     private String imageUrl;
 

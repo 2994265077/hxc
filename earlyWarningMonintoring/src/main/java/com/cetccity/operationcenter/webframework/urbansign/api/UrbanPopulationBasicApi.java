@@ -27,13 +27,12 @@ public interface UrbanPopulationBasicApi {
 
     @ApiOperation(value = "人口基本面--户籍人口、流动人口", notes = "人口基本面--户籍人口、流动人口-表名(BLK_POPULATION)")
     @ApiImplicitParams({
-            @ApiImplicitParam(value = "街道--南园街道(可不填)", name = "street", dataType = "string", paramType = "query"),
-            @ApiImplicitParam(value = "社区--滨江(可不填)", name = "community", dataType = "string", paramType = "query")
+            @ApiImplicitParam(value = "街道--南园街道(可不填)", name = "street", dataType = "string", paramType = "query")
     })
     @RequestMapping(value = "/population/basic/leftOne",method = RequestMethod.GET,produces = "application/json;charset=utf-8")
     @ResponseBody
-    @Cacheable(key = "'leftOne'+#street + '_' + #community")
-    List<NameValueUnitModel> leftOne(String street, String community) throws IOException;
+    @Cacheable(key = "'leftOne'+#street")
+    List<NameValueUnitModel> leftOne(String street) throws IOException;
 
     @ApiOperation(value = "人口基本面--户籍人口、流动人口", notes = "人口基本面--户籍人口、流动人口-表名(BLK_POPULATION)")
     @ApiImplicitParams({

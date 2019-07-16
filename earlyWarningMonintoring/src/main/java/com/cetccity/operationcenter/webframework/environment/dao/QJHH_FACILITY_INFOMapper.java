@@ -39,4 +39,6 @@ public interface QJHH_FACILITY_INFOMapper {
     List<HashMap> rightFour(Map map);
 
     List<HashMap> rightFive();
+
+    List<HashMap> hasStatusErrorCount();
 }

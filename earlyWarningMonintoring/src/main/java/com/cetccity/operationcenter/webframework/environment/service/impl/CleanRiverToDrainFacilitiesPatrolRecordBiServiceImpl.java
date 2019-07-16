@@ -2,6 +2,8 @@ package com.cetccity.operationcenter.webframework.environment.service.impl;
 
 import com.cetccity.operationcenter.webframework.core.chart.engine.model.ChartDetailModel;
 import com.cetccity.operationcenter.webframework.core.chart.engine.model.ChartFactory;
+import com.cetccity.operationcenter.webframework.core.chart.factory.CetcFactoryProducer;
+import com.cetccity.operationcenter.webframework.core.frame.basicmodel.LoadMap;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.MyPageInfoModel;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel;
 import com.cetccity.operationcenter.webframework.core.frame.model.HttpResponseModel;
@@ -40,12 +42,15 @@ public class CleanRiverToDrainFacilitiesPatrolRecordBiServiceImpl implements Cle
     QJHH_PATROLMapper qJHH_PATROLMapper;
 
     public List<NameValueModel> rightOne(String SEWERATE_ID){
-        String currentMonth = LoadMyUtil.getMyTime("MONTH",0);  //本月
+        //获取最近一个月有隐患的巡查记录
+        String currentDay = LoadMyUtil.getMyTime("DATE",0);  //today
+        String lastDay = LoadMyUtil.getMyTime("DATE",-30);  //30天前
         int patrolNum = 0;   //巡查次数
         int patrolHiddenDangerNum = 0;   //巡查隐患次数
         Map map = new HashMap();
         map.put("SEWERAGE_ID",SEWERATE_ID);
-        map.put("currentMonth",currentMonth);
+        map.put("lastDay",lastDay);
+        map.put("currentDay",currentDay);
         List<NameValueModel> list = qJHH_PATROLMapper.rightOne(map);
         for(NameValueModel u : list){
             patrolNum += Integer.valueOf(u.getValue());
@@ -54,8 +59,8 @@ public class CleanRiverToDrainFacilitiesPatrolRecordBiServiceImpl implements Cle
             }
         }
         List<NameValueModel> nameValueModelList = new ArrayList<>();
-        nameValueModelList.add(NameValueModel.builder().name("本月巡查次数").value(String.valueOf(patrolNum)+"次").build());
-        nameValueModelList.add(NameValueModel.builder().name("本月巡查隐患").value(String.valueOf(patrolHiddenDangerNum)+"次").build());
+        nameValueModelList.add(NameValueModel.builder().name("最近一个月巡查次数").value(String.valueOf(patrolNum)+"次").build());
+        nameValueModelList.add(NameValueModel.builder().name("最近一个月巡查隐患").value(String.valueOf(patrolHiddenDangerNum)+"次").build());
         return nameValueModelList;
     }
 
@@ -160,6 +165,7 @@ public class CleanRiverToDrainFacilitiesPatrolRecordBiServiceImpl implements Cle
     }
 
     public MyPageInfoModel rightFour(String street, String SEWERATE_ID, Integer pageNum, Integer pageSize){
+        List<PatrolRecordRightFour> patrolRecordRightFourListReturn = new ArrayList<>();
         //获取最近一个月有隐患的巡查记录
         String currentDay = LoadMyUtil.getMyTime("DATE",0);  //today
         String lastDay = LoadMyUtil.getMyTime("DATE",-30);  //30天前
@@ -172,7 +178,36 @@ public class CleanRiverToDrainFacilitiesPatrolRecordBiServiceImpl implements Cle
         map.put("start",start * pageSize);
         map.put("end",(start+1) * pageSize);
         List<PatrolRecordRightFour> patrolRecordRightFourList = qJHH_PATROLMapper.rightFour(map);
+        Map map2 = new HashMap();
+        map2.put("沉砂池","QJHH_FACILITY_INFO@1");
+        map2.put("隔油池","QJHH_FACILITY_INFO@2");
+        map2.put("污水立管","QJHH_FACILITY_INFO@3");
+        map2.put("毛发收集池","QJHH_FACILITY_INFO@4");
+        map2.put("污水井","QJHH_FACILITY_INFO@5");
+        map2.put("雨水口","QJHH_FACILITY_INFO@6");
+        map2.put("雨水立管","QJHH_FACILITY_INFO@7");
+        map2.put("雨水井","QJHH_FACILITY_INFO@8");
+        map2.put("化粪池","QJHH_FACILITY_INFO@9");
+        patrolRecordRightFourList.stream().forEach(u->{
+            String str = LoadMyUtil.getPropertiesVauleOfKey("loadmap.properties","31project_april."+map2.get(u.getFACILITY_NAME()));
+            u.setLayerId(str.substring(0, str.indexOf("#")));
+            patrolRecordRightFourListReturn.add(u);
+        });
         int count = qJHH_PATROLMapper.rightFourCount(map);
-        return MyPageInfoModel.builder().total(count).pageNum(pageNum).pageSize(pageSize).list(patrolRecordRightFourList).pages(count % pageSize == 0 ? count / pageSize : count / pageSize + 1).build();
+        return MyPageInfoModel.builder().total(count).pageNum(pageNum).pageSize(pageSize).list(patrolRecordRightFourListReturn).pages(count % pageSize == 0 ? count / pageSize : count / pageSize + 1).build();
+    }
+
+    public HttpResponseModel<ChartDetailModel> rightFive(String street){
+        //获取最近一个月有隐患的巡查记录
+        String currentDay = LoadMyUtil.getMyTime("DATE",0);  //today
+        String lastDay = LoadMyUtil.getMyTime("DATE",-30);  //30天前
+        Map map = new HashMap();
+        map.put("lastDay",lastDay);
+        map.put("currentDay",currentDay);
+        map.put("streetCode",StringUtils.isNotEmpty(street) ? LoadMyUtil.getPropertiesVauleOfKey("street.properties", street).split(",")[0] : null);
+        List<HashMap> data = qJHH_PATROLMapper.rightFive(map);
+        Map<String,String> map2 = new HashMap();
+        map2.put("type","bar");
+        return CetcFactoryProducer.init(data,"X_NAME",map2,false);
     }
 }

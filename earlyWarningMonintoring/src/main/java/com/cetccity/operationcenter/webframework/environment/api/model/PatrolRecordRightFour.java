@@ -34,4 +34,12 @@ public class PatrolRecordRightFour {
 
     private String FACILITY_ADDRESS;
 
+    private String layerId;
+
+    private String FACILITY_ID;
+
+    private String JD84;
+
+    private String WD84;
+
 }
