@@ -56,6 +56,7 @@ public class ZhongZhiOauthController implements ZhongZhiOauthApi{
             String userObject = UrlApiToSource.doJsonGet(getUserUrl);
             Map userMap = (Map) JSON.parse(userObject);
             String userName = Base64.encode((String) userMap.get("userid"));
+            //web/SingleSignOn为我们前端的页面
             String urlLast = "http://"+ApolloPropertiesLoadUtils.readProperties("application","redirect.server.web.ip")+"/web/SingleSignOn?url=/unifiedauth/authentication/authClient/"+userName+"/"+Base64.encode("zz_app")+"/"+Base64.encode(MD5Encoder.encode( "Ft@admin123"));
             response.sendRedirect(urlLast);
         }else {
