@@ -18,9 +18,9 @@
             <if test="TAGNAME != null and TAGNAME != ''">
                 and b.NAME like concat('%',concat(#{TAGNAME},'%'))
             </if>
-            <if test="USER_NAME != null and USER_NAME != ''">
+            <!--<if test="USER_NAME != null and USER_NAME != ''">
                 and a.USER_NAME like concat('%',concat(#{USER_NAME},'%'))
-            </if>
+            </if>-->
             <if test="STREET_CODE != null and STREET_CODE != ''">
                 and c.STREET_CODE = #{STREET_CODE}
             </if>

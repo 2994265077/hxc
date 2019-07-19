@@ -11,6 +11,7 @@
                 and FACILITY_ID = #{FACILITY_ID}
             </if>
         </where>
+        ORDER BY CHECK_TIME DESC
     </select>
 
     <select id="rightOne" parameterType="java.util.Map" resultType="com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel">
