@@ -3,6 +3,7 @@ package com.cetc.cloud.datasynch.provider.template.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cetc.cloud.datasynch.api.model.VideoModel;
+import com.cetc.cloud.datasynch.provider.config.SpringContextUtil;
 import com.cetc.cloud.datasynch.provider.mapper.VideoPoliceMapper;
 import com.cetc.cloud.datasynch.provider.template.OuterJobRunnableTemplate;
 import com.cetc.cloud.datasynch.provider.util.HttpClientUtil2;
@@ -29,13 +30,17 @@ import java.util.List;
 @Service
 @Slf4j
 public class XinghuoVideoHttpRunnable implements OuterJobRunnableTemplate {
-    @Autowired
     VideoPoliceMapper videoPoliceMapper;
+
     private final String IP_PORT = "10.192.76.202:8082";
-    private final String URL_getPlatformCount = "http://"+IP_PORT+"/xEyeWeb/channel/getPlatformCount.do";
-    private final String URL_getPlatformListProto = "http://"+IP_PORT+"/xEyeWeb/channel/getPlatformListProto.do";
-    private final String URL_getCameraInfoById = "http://"+IP_PORT+"/xEyeWeb/channel/getCameraInfoById.do";
+    private final String URL_getPlatformCount = "http://" + IP_PORT + "/xEyeWeb/channel/getPlatformCount.do";
+    private final String URL_getPlatformListProto = "http://" + IP_PORT + "/xEyeWeb/channel/getPlatformListProto.do";
+    private final String URL_getCameraInfoById = "http://" + IP_PORT + "/xEyeWeb/channel/getCameraInfoById.do";
     private final String xueliangProjectPlatId = "9ca58a521af846ecb7e7ff1d8e021099";
+
+    public XinghuoVideoHttpRunnable() {
+        this.videoPoliceMapper = (VideoPoliceMapper) SpringContextUtil.getBean("videoPoliceMapper");
+    }
 
     @Override
     public void run() {
@@ -49,19 +54,21 @@ public class XinghuoVideoHttpRunnable implements OuterJobRunnableTemplate {
         int totalVideoPointNum = 0;
         for (String platformId : platformIds) {
             List videoListOnline = null;
-            log.info("handling:platformId -- "+platformId);
+            log.info("handling:platformId -- " + platformId);
             if (xueliangProjectPlatId.equals(platformId)) {
                 List<String> platformListProto = getVideoListOnlineByPlatformId(xueliangProjectPlatId);
                 for (String p : platformListProto) {
                     String subPlatformId = extractPlatformId(p);
                     videoListOnline = getVideoListOnlineByPlatformId(subPlatformId);
-                    totalVideoPointNum +=videoListOnline.size();
+                    totalVideoPointNum += videoListOnline.size();
                     count += insertVideoListIntoDB(videoListOnline);
                 }
             } else {
                 videoListOnline = getVideoListOnlineByPlatformId(platformId);
-                count += insertVideoListIntoDB(videoListOnline);
-                totalVideoPointNum +=videoListOnline.size();
+                if (null != videoListOnline) {
+                    count += insertVideoListIntoDB(videoListOnline);
+                }
+                totalVideoPointNum += videoListOnline.size();
             }
 
         }
@@ -104,10 +111,10 @@ public class XinghuoVideoHttpRunnable implements OuterJobRunnableTemplate {
         body.put("client", 0);
         postModel.setBody(body);
         JSONObject header = new JSONObject();
-        header.put("Content-Type", "text/html;charset=utf-8");
-        header.put("Host", IP_PORT);
-//        header.put("Content-Length","151");
-        header.put("Expect", "100-continue");
+//        header.put("Content-Type", "text/html;charset=utf-8");
+//        header.put("Host", IP_PORT);
+////        header.put("Content-Length","151");
+//        header.put("Expect", "100-continue");
         postModel.setHeader(header);
         JSONObject res = HttpClientUtil2.doPostWithPostModel(postModel);
         if (res.getIntValue("code") == 200) {
@@ -170,9 +177,9 @@ public class XinghuoVideoHttpRunnable implements OuterJobRunnableTemplate {
                     } else {
                         failCount++;
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     log.error(e.getCause().getMessage());
-                    log.error("duplicate:cameraid:"+model.getCameraId());
+                    log.error("duplicate:cameraid:" + model.getCameraId());
                 }
 
             }
@@ -187,7 +194,7 @@ public class XinghuoVideoHttpRunnable implements OuterJobRunnableTemplate {
         postModel.setUrl(URL_getCameraInfoById);
         JSONObject body = new JSONObject();
         body.put("user_id", "xJphzu9nOdmzoJLA08U");
-        body.put("cameraid", cameraId.replaceAll(" ",""));
+        body.put("cameraid", cameraId.replaceAll(" ", ""));
         postModel.setBody(body);
         JSONObject res = HttpClientUtil2.doPostWithPostModel(postModel);
         if (res.getIntValue("code") == 200) {
@@ -222,7 +229,7 @@ public class XinghuoVideoHttpRunnable implements OuterJobRunnableTemplate {
             videoModel.setGbCode(camerainfosVo.getString("gb_code"));
             videoModel.setJkfw(camerainfosVo.getString("jkfw"));
             return videoModel;
-        }else {
+        } else {
             return null;
         }
     }

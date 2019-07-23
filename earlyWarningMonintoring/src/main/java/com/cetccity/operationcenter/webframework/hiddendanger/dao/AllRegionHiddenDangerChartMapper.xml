@@ -96,18 +96,18 @@
     </select>
     <select id="queryThreeSmallEvent" resultMap="nameValueTypeModel">
         SELECT
-            STREET AS NAME, COUNT(OBJECT_ID) AS VALUE
+            STREET_NAME AS NAME, COUNT(OBJECT_ID) AS VALUE
         FROM
             BLK_SANXIAO_PLACE
         WHERE
             HAS_TROUBLE = 1
         AND
-            STREET IS NOT NULL
+            STREET_NAME IS NOT NULL
         <if test="streetCode != null and streetCode != ''">
             AND STREET_CODE = #{streetCode}
         </if>
         GROUP BY
-            STREET
+            STREET_NAME
     </select>
     <select id="queryThreeSmallEventByStreetName" resultMap="nameValueTypeModel">
         SELECT

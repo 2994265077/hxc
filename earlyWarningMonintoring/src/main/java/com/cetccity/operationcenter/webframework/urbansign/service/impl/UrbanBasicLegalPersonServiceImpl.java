@@ -127,7 +127,7 @@ public class UrbanBasicLegalPersonServiceImpl implements UrbanBasicLegalPersonSe
         rbanBasicLegalPersonLeftOne_list.add(urbanBasicLegalPersonLeftOne_enterprise);
 
         UrbanBasicLegalPersonLeftOne urbanBasicLegalPersonLeftOne_register = new UrbanBasicLegalPersonLeftOne();
-        urbanBasicLegalPersonLeftOne_register.setName("新注册企业数");
+        urbanBasicLegalPersonLeftOne_register.setName("本月新注册企业数");
         urbanBasicLegalPersonLeftOne_register.setValue(String.valueOf(news_enterprise_count));
         urbanBasicLegalPersonLeftOne_register.setUnit("个");
         urbanBasicLegalPersonLeftOne_register.setRate(news_enterprise_rate);

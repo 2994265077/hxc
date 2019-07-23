@@ -39,16 +39,16 @@ spring:
     dynamic:
       primary: master #设置默认的数据源或者数据源组,默认值即为master,如果你主从默认下主库的名称就是master可不定义此项。
       datasource:
-        master:
-          username: ZHFTYJJCPT
-          password: 456789
-          driver-class-name: oracle.jdbc.driver.OracleDriver
-          url: jdbc:oracle:thin:@10.192.19.108:1521/ORCL
 #        master:
 #          username: ZHFTYJJCPT
-#          password: ToKreDi*nJ
+#          password: 456789
 #          driver-class-name: oracle.jdbc.driver.OracleDriver
-#          url: jdbc:oracle:thin:@10.192.19.116:1521/ORCL
+#          url: jdbc:oracle:thin:@10.192.19.108:1521/ORCL
+        master:
+          username: ZHFTYJJCPT
+          password: ToKreDi*nJ
+          driver-class-name: oracle.jdbc.driver.OracleDriver
+          url: jdbc:oracle:thin:@10.192.19.116:1521/ORCL
 #        master:
 #          username: ZHFTYJJCPT
 #          password: ToKreDi*nJ
@@ -58,12 +58,12 @@ spring:
           username: ZHFTYJJCPT
           password: ToKreDi*nJ
           driver-class-name: oracle.jdbc.driver.OracleDriver
-          url: jdbc:oracle:thin:@10.192.19.116:1521/ORCL
+          url: jdbc:oracle:thin:@10.192.19.116:1521/ORCL       #中心库：sqlplus ZHFTREAD`/ZHB.FT.123@10.190.67.1:1521/orcl
         third:
           username: ZHFTYJJCPT
           password: ToKreDi*nJ
           driver-class-name: oracle.jdbc.driver.OracleDriver
-          url: jdbc:oracle:thin:@10.192.19.116:1521/ORCL
+          url: jdbc:oracle:thin:@10.192.19.116:1521/ORCL     #应用库：sqlplus ZHFTYJJCPT`/ToKreDi*nJ@10.190.41.13:1521/coreora
 
 #mybatis-plus:
 #  mapper-locations: classpath*:/mapper/*.xml

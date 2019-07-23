@@ -59,6 +59,7 @@ public class ScheduleService {
         return dsScheduleMapper.updateCronByJobId(jobId, cron);
     }
 
+    //修改任务运行状态  0-无任务   1-有任务
     public int alterJobStatusByJobId(int jobId, int statusToChange) {
         //获取运行状态
         int status = dsScheduleMapper.getStatusByJobId(jobId);

@@ -23,12 +23,12 @@ import java.util.List;
 @Slf4j
 public class DsScheduleRunnableTemplate implements Runnable {
 
-    private DsScheduleModel dsScheduleModel;
-    private SynchJobLogInfoService synchJobLogInfoService;
-    private ScheduleService scheduleService;
-    private DbQuerySumService dbQueryService;
-    private DbOperateService dbOperateService;
-    private HttpOperateService httpOperateService;
+    private DsScheduleModel dsScheduleModel;                  //任务Model
+    private SynchJobLogInfoService synchJobLogInfoService;   //Log
+    private ScheduleService scheduleService;       //执行任务实体
+    private DbQuerySumService dbQueryService;     //数据库-如ADQSVC   中心库
+    private DbOperateService dbOperateService;     //数据库-如master   开发库或生产库
+    private HttpOperateService httpOperateService;   //http-如应用支撑
 
     public DsScheduleRunnableTemplate(DsScheduleModel dsScheduleModel) {
         this.dsScheduleModel = dsScheduleModel;
@@ -68,8 +68,9 @@ public class DsScheduleRunnableTemplate implements Runnable {
 
 
             if (dsScheduleModel.getNeedsTruncateTargetTb() == 1) {
-                dbOperateService.backUpTable(dsScheduleModel.getTargetTableName());
-                dbOperateService.truncateTableByTbName(dsScheduleModel.getTargetTableName());
+                dbOperateService.backUpTable(dsScheduleModel.getTargetTableName());   //备份
+                dbOperateService.truncateTableByTbName(dsScheduleModel.getTargetTableName());  //清空当前表
+                synchJobLogInfoService.deleteByJobId(dsScheduleModel.getId());  //删除执行日志
             }
 
             //根据接入方式决定生成SQL query还是Http请求
@@ -176,6 +177,7 @@ public class DsScheduleRunnableTemplate implements Runnable {
                 log.info("\n\n----->>>> current job is running! query doesn't reach the end ");
                 log.info("target tableRowCounts:" + tableRowCounts_src);
                 //重新计算分页参数
+                //TODO 修改为失败，并且页码pageNum为1，成功请求数为0 startRow为0
                 if (null == logModel) {
                     startRow = 1;
                     endRow = startRow + dsScheduleModel.getPageSize() - 1;

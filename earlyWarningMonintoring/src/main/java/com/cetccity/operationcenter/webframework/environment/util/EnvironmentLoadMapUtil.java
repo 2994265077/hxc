@@ -130,15 +130,6 @@ public class EnvironmentLoadMapUtil {
                         .iconType("1").build());
             }
         }else if("4".equals(patrolType)){
-            map.put("facilitiesStatus", "2");//所有的废弃设施
-            List<QJHH_FACILITY_INFO> list = qJHH_FACILITY_INFOMapper.loadMap(map);
-            for (QJHH_FACILITY_INFO u : list) {
-                if (StringUtils.isEmpty(u.getJD84()) || StringUtils.isEmpty(u.getWD84())) continue;
-                iconTypeLoadMapList.add(IconTypeLoadMap.builder().tableName(tableName).id(u.getUID())
-                        .layerid(layerid).jd(u.getJD84()).wd(u.getWD84())
-                        .iconType("2").build());
-            }
-        }else if("5".equals(patrolType)){
             map.put("patrolStatus", "不正常"); //所有的隐患巡查
             List<QJHH_FACILITY_INFO> list = qJHH_FACILITY_INFOMapper.loadMap(map);
             for (QJHH_FACILITY_INFO u : list) {
@@ -146,6 +137,15 @@ public class EnvironmentLoadMapUtil {
                 iconTypeLoadMapList.add(IconTypeLoadMap.builder().tableName(tableName).id(u.getUID())
                         .layerid(layerid).jd(u.getJD84()).wd(u.getWD84())
                         .iconType("0").build());
+            }
+        }else if("5".equals(patrolType)){
+            map.put("facilitiesStatus", "2");//所有的废弃设施
+            List<QJHH_FACILITY_INFO> list = qJHH_FACILITY_INFOMapper.loadMap(map);
+            for (QJHH_FACILITY_INFO u : list) {
+                if (StringUtils.isEmpty(u.getJD84()) || StringUtils.isEmpty(u.getWD84())) continue;
+                iconTypeLoadMapList.add(IconTypeLoadMap.builder().tableName(tableName).id(u.getUID())
+                        .layerid(layerid).jd(u.getJD84()).wd(u.getWD84())
+                        .iconType("2").build());
             }
         }
         return iconTypeLoadMapList;

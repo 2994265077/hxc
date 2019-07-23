@@ -53,7 +53,7 @@ public class HttpClientUtil2 {
     static ConcurrentHashMap<String, CloseableHttpClient> clientHashMap =
             new ConcurrentHashMap<String, CloseableHttpClient>();
 
-    private static synchronized CloseableHttpClient getHttpClient(String url){
+    private static synchronized CloseableHttpClient getHttpClient(String url) {
         if (!url.contains("http://")) {
             url = "http://" + url;
         }
@@ -86,7 +86,6 @@ public class HttpClientUtil2 {
         }
 
     }
-
 
 
     /**
@@ -467,10 +466,69 @@ public class HttpClientUtil2 {
 
     public static JSONObject doPostWithPostModel(PostModel postModel) {
         log.info("\n>>Http doPostWithPostModel:URL:" + toHttpParamStr(postModel.getUrl(), postModel.getParams()));
-        if (null!=postModel.getBody()) {
+        if (null != postModel.getBody()) {
             log.info("\n>>Http doPostWithPostModel:Body:" + postModel.getBody().toJSONString() + "\n");
         }
-        if (null!=postModel.getHeader()) {
+        if (null != postModel.getHeader()) {
+            log.info("\n>>Http doPostWithPostModel:Header:" + postModel.getHeader().toJSONString() + "\n");
+        }
+        CloseableHttpClient httpClient = getHttpClient(postModel.getUrl());
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", null);
+        result.put("code", 200);
+        result.put("msg", null);
+        HttpPost httpPost = null;
+        StatusLine status = null;
+        try {
+            URIBuilder builder = new URIBuilder(postModel.getUrl());
+            JSONObject params = postModel.getParams();
+            if (!MapUtils.isEmpty(params)) {
+                for (String key : params.keySet()) {
+                    builder.setParameter(key, params.getString(key));
+                }
+            }
+            httpPost = new HttpPost(builder.build());
+            RequestConfig config = RequestConfig.custom()
+                    .setSocketTimeout(CommonInstance.HTTP_SOCKET_TIMEOUT)
+                    .setConnectTimeout(CommonInstance.HTTP_CONNECT_TIMEOUT)
+                    .setConnectionRequestTimeout(CommonInstance.HTTP_CONNECT_RESPONSE_TIMEOUT).build();
+            httpPost.setConfig(config);
+
+            if (null != postModel.getBody() && !"".equals(postModel.getBody())) {
+                HttpEntity entity = new StringEntity(postModel.getBody().toJSONString());
+                httpPost.setEntity(entity);
+            }
+
+            HttpResponse response = httpClient.execute(httpPost);
+            status = response.getStatusLine();                          //获取返回的状态码
+            HttpEntity entity = response.getEntity();                   //获取响应内容
+            if (status.getStatusCode() == 200) {
+                result.put("success", true);
+                result.put("data", EntityUtils.toString(entity, "UTF-8"));
+                result.put("code", 200);
+                result.put("msg", "请求成功");
+            } else {
+                result.put("success", false);
+                result.put("code", status.getStatusCode());
+                result.put("msg", "请求异常，异常信息:" + status.getReasonPhrase());
+            }
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("code", 500);
+            result.put("msg", "请求异常，异常信息：" + e.getClass() + "->" + e.getMessage());
+        } finally {
+            httpPost.abort();//中止请求，连接被释放回连接池
+        }
+        return result;
+    }
+
+    public static JSONObject doPostFormWithPostModel(PostModel postModel) {
+        log.info("\n>>Http doPostWithPostModel:URL:" + toHttpParamStr(postModel.getUrl(), postModel.getParams()));
+        if (null != postModel.getBody()) {
+            log.info("\n>>Http doPostWithPostModel:Body:" + postModel.getBody().toJSONString() + "\n");
+        }
+        if (null != postModel.getHeader()) {
             log.info("\n>>Http doPostWithPostModel:Header:" + postModel.getHeader().toJSONString() + "\n");
         }
         CloseableHttpClient httpClient = getHttpClient(postModel.getUrl());
@@ -510,80 +568,18 @@ public class HttpClientUtil2 {
 
                     while (i$.hasNext()) {
                         Map.Entry<String, String> entry = (Map.Entry) i$.next();
-                        String value = entry.getValue();
-                        if (StringUtils.isNotBlank(value)) {
-                            pairs.add(new BasicNameValuePair(entry.getKey(), value));
+                        Object value = entry.getValue();
+
+                        if (value instanceof String && StringUtils.isNotBlank((String) value)) {
+                            pairs.add(new BasicNameValuePair(entry.getKey(), String.valueOf(value)));
+                        } else {
+                            pairs.add(new BasicNameValuePair(entry.getKey(), ""));
                         }
                     }
                 }
                 HttpEntity entityBody = new UrlEncodedFormEntity(pairs, "UTF-8");
                 httpPost.setEntity(entityBody);
             }
-            httpPost.setConfig(config);
-            HttpResponse response = httpClient.execute(httpPost);
-            status = response.getStatusLine();                          //获取返回的状态码
-            HttpEntity entity = response.getEntity();                   //获取响应内容
-            if (status.getStatusCode() == 200) {
-                result.put("success", true);
-                result.put("data", EntityUtils.toString(entity, "UTF-8"));
-                result.put("code", 200);
-                result.put("msg", "请求成功");
-            } else {
-                result.put("success", false);
-                result.put("code", status.getStatusCode());
-                result.put("msg", "请求异常，异常信息:" + status.getReasonPhrase());
-            }
-        } catch (Exception e) {
-            result.put("success", false);
-            result.put("code", 500);
-            result.put("msg", "请求异常，异常信息：" + e.getClass() + "->" + e.getMessage());
-        } finally {
-            httpPost.abort();//中止请求，连接被释放回连接池
-        }
-        return result;
-    }
-
-    public static JSONObject doPostFormWithPostModel(PostModel postModel) {
-        log.info("\n>>Http doPostWithPostModel:URL:" + toHttpParamStr(postModel.getUrl(), postModel.getParams()) + "\n");
-        CloseableHttpClient httpClient = getHttpClient(postModel.getUrl());
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", null);
-        result.put("code", 200);
-        result.put("msg", null);
-        HttpPost httpPost = null;
-        StatusLine status = null;
-        try {
-            httpPost = new HttpPost(postModel.getUrl());
-            List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-
-            if (null != postModel.getBody()) {
-                JSONObject body = postModel.getBody();
-                Iterator<String> iterator1 = body.keySet().iterator();
-                while (iterator1.hasNext()) {
-                    String next = iterator1.next();
-                    formparams.add(new BasicNameValuePair(next, body.getString(next)));
-                }
-                UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, Consts.UTF_8);
-                httpPost.setEntity(entity);
-            }
-
-
-            RequestConfig config = RequestConfig.custom()
-                    .setSocketTimeout(CommonInstance.HTTP_SOCKET_TIMEOUT)
-                    .setConnectTimeout(CommonInstance.HTTP_CONNECT_TIMEOUT)
-                    .setConnectionRequestTimeout(CommonInstance.HTTP_CONNECT_RESPONSE_TIMEOUT).build();
-            //添加Form表单的表头
-            JSONObject headerParam = postModel.getHeader();
-            Header header1 = new BasicHeader("Content-Type", "application/x-www-form-urlencoded");
-            httpPost.addHeader(header1);
-            if (headerParam != null) {
-                Set<String> keySet = headerParam.keySet();
-                for (String key : keySet) {
-                    httpPost.addHeader(key, headerParam.getString(key));
-                }
-            }
-
             httpPost.setConfig(config);
             HttpResponse response = httpClient.execute(httpPost);
             status = response.getStatusLine();                          //获取返回的状态码
@@ -910,8 +906,8 @@ public class HttpClientUtil2 {
                 }
             }
         }
-        res.put(CommonInstance.HTTP_URL_KEY_NAME,url);
-        res.put(CommonInstance.HTTP_QUERY_PARAMS_KEY_NAME,httpQueryParams);
+        res.put(CommonInstance.HTTP_URL_KEY_NAME, url);
+        res.put(CommonInstance.HTTP_QUERY_PARAMS_KEY_NAME, httpQueryParams);
         return res;
     }
 

@@ -36,8 +36,8 @@ public class Enums {
                               )
         ),
         DANGER_AIR("危化品气体报警", "002", "002003", new HashSet<>(Arrays.asList("00213001"))),
-        SMOKE_DETECTOR("烟感报警", "003", "003001", new HashSet<>(Arrays.asList("00031001"))),
-        ELECTRICAL_FIRE("电器火灾报警", "003", "003002", new HashSet<>(Arrays.asList("00241005"))),
+        SMOKE_DETECTOR("烟感报警", "003", "003001", new HashSet<>(Arrays.asList("00031001","00033001","00033002","00033003"))),
+        ELECTRICAL_FIRE("电器火灾报警", "003", "003002", new HashSet<>(Arrays.asList("00240006","00241001","00241002","00241003","00241004","00241005"))),
         HYDRANT_PRESSURE("消防栓水压报警", "003", "003003", new HashSet<>(Arrays.asList("00251001")));
 
         private String typeName;

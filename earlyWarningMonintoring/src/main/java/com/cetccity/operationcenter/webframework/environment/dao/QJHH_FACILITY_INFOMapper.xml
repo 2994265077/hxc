@@ -28,8 +28,14 @@
             (select a.*, qpi2.status
             from (select max(qpi.CHECK_TIME) check_time, qpi.facility_id
             from QJHH_PATROL_INFO qpi
-            where qpi.CHECK_TIME &gt; to_date(#{lastDay}, 'yyyy-MM-dd HH24:mi:ss')
-            AND qpi.CHECK_TIME &lt;= to_date(#{currentDay}, 'yyyy-MM-dd HH24:mi:ss')
+        <where>
+            <if test="lastDay != null">
+                and qpi.CHECK_TIME &gt; to_date(#{lastDay}, 'yyyy-MM-dd HH24:mi:ss')
+            </if>
+            <if test="currentDay != null">
+                and qpi.CHECK_TIME &lt;= to_date(#{currentDay}, 'yyyy-MM-dd HH24:mi:ss')
+            </if>
+        </where>
             group by qpi.facility_id) a
             left join QJHH_PATROL_INFO qpi2
             on a.facility_id = qpi2.facility_id

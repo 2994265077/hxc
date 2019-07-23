@@ -92,7 +92,6 @@ public class LogAnnotationAspect {
      			} catch (Exception e) {
      				 logger.error("记录参数失败：{}", e.getMessage());
      			}
-            	 
              });
          }
     }

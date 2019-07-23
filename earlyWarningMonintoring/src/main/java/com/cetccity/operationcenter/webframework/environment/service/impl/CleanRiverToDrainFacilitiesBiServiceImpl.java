@@ -4,18 +4,16 @@ import com.cetccity.operationcenter.webframework.core.chart.engine.model.ChartDe
 import com.cetccity.operationcenter.webframework.core.chart.engine.model.ChartFactory;
 import com.cetccity.operationcenter.webframework.core.chart.factory.CetcFactoryProducer;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameDataModel;
-import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel;
 import com.cetccity.operationcenter.webframework.core.frame.model.HttpResponseModel;
 import com.cetccity.operationcenter.webframework.core.frame.model.SysCode;
 import com.cetccity.operationcenter.webframework.core.tools.LoadMyUtil;
 import com.cetccity.operationcenter.webframework.environment.api.model.NumRateTrend;
 import com.cetccity.operationcenter.webframework.environment.dao.QJHH_FACILITY_INFOMapper;
-import com.cetccity.operationcenter.webframework.environment.dao.QJHH_PATROLMapper;
 import com.cetccity.operationcenter.webframework.environment.service.CleanRiverToDrainFacilitiesBiService;
+import com.cetccity.operationcenter.webframework.web.service.db.OracleOperateService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
