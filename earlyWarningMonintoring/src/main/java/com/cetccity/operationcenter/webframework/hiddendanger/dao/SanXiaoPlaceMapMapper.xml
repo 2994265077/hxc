@@ -8,9 +8,9 @@
         <where>
             AND a.name = b.event_name
             AND a.address = b.address
-            AND b.event_source = 6
-            AND (b.state = 0 OR b.state = 1)
-            AND b.isdelete = '0'
+            AND b.event_source = 6              /*1-12345热线，2-人大代表，3-预警监测，4-数字化城管，6-三小巡查，7-物联网设备上报*/
+            AND (b.state = 0 OR b.state = 1)   /*0、受理；1、分拨*/
+            AND b.isdelete = '0'                  /*0-未删除*/
             <if test="PLACE_TYPE != null">
                 and a.PLACE_TYPE = #{PLACE_TYPE}
             </if>

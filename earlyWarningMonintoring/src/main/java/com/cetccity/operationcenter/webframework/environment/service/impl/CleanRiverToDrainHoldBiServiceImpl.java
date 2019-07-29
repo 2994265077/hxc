@@ -11,15 +11,13 @@ import com.cetccity.operationcenter.webframework.environment.api.model.NumRateTr
 import com.cetccity.operationcenter.webframework.environment.dao.QJHH_FACILITY_INFOMapper;
 import com.cetccity.operationcenter.webframework.environment.dao.QJHH_SEWERAGE_INFOMapper;
 import com.cetccity.operationcenter.webframework.environment.service.CleanRiverToDrainHoldBiService;
+import com.cetccity.operationcenter.webframework.web.service.db.OracleOperateService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 工程包名:   com.cetccity.operationcenter.webframework.environment.service.impl
@@ -39,6 +37,9 @@ public class CleanRiverToDrainHoldBiServiceImpl implements CleanRiverToDrainHold
 
     @Autowired
     QJHH_FACILITY_INFOMapper qJHH_FACILITY_INFOMapper;
+
+    @Autowired
+    OracleOperateService oracleOperateService;
 
     public List<NameDataModel> rightOne(String street){
         Map map = new HashMap();
@@ -112,5 +113,27 @@ public class CleanRiverToDrainHoldBiServiceImpl implements CleanRiverToDrainHold
         Map<String, String> map2 = new HashMap();
         map2.put("type", "bar");
         return CetcFactoryProducer.init(data, "X_NAME", map2,false);
+    }
+
+    public String qingXing(){
+        //1、排水户分组
+        List<LinkedHashMap> list = oracleOperateService.querySql("SELECT NAME,COUNT(*) NUM FROM QJHH_SEWERAGE_INFO GROUP BY NAME ORDER BY NUM DESC");
+        for (LinkedHashMap u1:list) {
+            //同一个排水户实体多id
+            List<LinkedHashMap> listUid = oracleOperateService.querySql("SELECT \"UID\" FROM QJHH_SEWERAGE_INFO WHERE NAME = '"+u1.get("NAME")+"'");
+            String uid = (String) listUid.get(0).get("UID");
+            //遍历list，在排水设施中更换关联到的排水户id
+            for(int i = 1;i<listUid.size();i++){
+                //修改排水设施表
+                oracleOperateService.excuteSql("UPDATE QJHH_FACILITY_INFO SET SEWERAGE_ID = '"+uid+"' WHERE SEWERAGE_ID = '"+listUid.get(i).get("UID")+"'");
+                //修改巡查表
+                oracleOperateService.excuteSql("UPDATE QJHH_PATROL_INFO SET SEWERAGE_ID = '"+uid+"' WHERE SEWERAGE_ID = '"+listUid.get(i).get("UID")+"'");
+            }
+            //删除多余的排水户
+            for(int j = 1;j<listUid.size();j++) {
+                oracleOperateService.excuteSql("DELETE from QJHH_SEWERAGE_INFO WHERE \"UID\" = '"+listUid.get(j).get("UID")+"'");
+            }
+        }
+        return "success";
     }
 }

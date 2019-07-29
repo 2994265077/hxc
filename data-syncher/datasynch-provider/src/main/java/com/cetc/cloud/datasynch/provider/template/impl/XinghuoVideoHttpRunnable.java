@@ -27,9 +27,10 @@ import java.util.List;
  * Update_Date: 2019/3/5 15:02
  * Update_Description: Administrator 补充
  */
-@Service
+//@Service
 @Slf4j
 public class XinghuoVideoHttpRunnable implements OuterJobRunnableTemplate {
+
     VideoPoliceMapper videoPoliceMapper;
 
     private final String IP_PORT = "10.192.76.202:8082";
@@ -53,7 +54,7 @@ public class XinghuoVideoHttpRunnable implements OuterJobRunnableTemplate {
         int count = 0;
         int totalVideoPointNum = 0;
         for (String platformId : platformIds) {
-            List videoListOnline = null;
+            List videoListOnline;
             log.info("handling:platformId -- " + platformId);
             if (xueliangProjectPlatId.equals(platformId)) {
                 List<String> platformListProto = getVideoListOnlineByPlatformId(xueliangProjectPlatId);

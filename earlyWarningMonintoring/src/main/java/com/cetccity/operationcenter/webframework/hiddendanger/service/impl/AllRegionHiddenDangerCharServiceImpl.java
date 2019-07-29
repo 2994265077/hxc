@@ -1,6 +1,5 @@
 package com.cetccity.operationcenter.webframework.hiddendanger.service.impl;
 
-import com.cetccity.operationcenter.webframework.backstage.community.dao.CommunityInfoMapper;
 import com.cetccity.operationcenter.webframework.backstage.community.service.CommunityInfoService;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.MyPageInfoModel;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel;
@@ -18,16 +17,12 @@ import com.cetccity.operationcenter.webframework.core.frame.model.SysCode;
 import com.cetccity.operationcenter.webframework.hiddendanger.dao.FireHiddenDangerChartMapper;
 import com.cetccity.operationcenter.webframework.hiddendanger.dao.entity.NameValuePlus;
 import com.cetccity.operationcenter.webframework.web.model.incident.AlarmTodayType;
-import com.cetccity.operationcenter.webframework.web.service.db.OracleOperateService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -262,10 +257,10 @@ public class AllRegionHiddenDangerCharServiceImpl {
      * @Author:yhy
      * @Date: 2019/5/7 10:57
      */
-    public List<NameValuePlus> countThreeSmallDangerByType(String street) {
+    public List<NameValuePlus> countThreeSmallDangerByType(String street,String startTime,String endTime) {
         String streetCode = communityInfoService.streetCodeByName(street);
 
-        List<NameValuePlus> nameValuePluses = allRegionHiddenDangerChartMapper.countThreeSmallDangerByType(streetCode);
+        List<NameValuePlus> nameValuePluses = allRegionHiddenDangerChartMapper.countThreeSmallDangerByType(streetCode,startTime,endTime);
         Map<String, NameValuePlus> nameValuePlusMap = nameValuePluses.stream()
                 .collect(Collectors.toMap(NameValuePlus::getType, nameValuePlus -> nameValuePlus));
         nameValuePluses = THREE_SMALL_PLACE_TYPE

@@ -108,7 +108,7 @@ public class DistrictVideoRelationServiceImpl implements DistrictVideoRelationSe
     }
     /**
      * 删除有标签的视屏
-     * @param id id
+     * @param object_ID id
      */
     public HttpResponseModel<Integer> videoRemoveTag(Integer object_ID) {
         int s = districtVideoClassMapper.videoRemoveTag(DistrictVideoClass.builder().OBJECT_ID(object_ID).build());

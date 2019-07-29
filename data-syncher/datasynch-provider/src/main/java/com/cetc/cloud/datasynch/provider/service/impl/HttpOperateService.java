@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.cetc.cloud.datasynch.api.model.DsOuterJobModel;
 import com.cetc.cloud.datasynch.api.model.DsScheduleModel;
 import com.cetc.cloud.datasynch.api.model.DsSynchJobLogInfoModel;
-import com.cetc.cloud.datasynch.api.model.Token;
 import com.cetc.cloud.datasynch.provider.common.CommonInstance;
 import com.cetc.cloud.datasynch.provider.util.HttpClientUtil2;
 import com.cetc.cloud.datasynch.provider.util.JsonExtractor;
@@ -14,11 +13,8 @@ import com.ctrip.framework.apollo.core.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Http在线请求服务

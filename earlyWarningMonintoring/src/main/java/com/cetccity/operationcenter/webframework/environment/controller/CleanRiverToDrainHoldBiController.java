@@ -41,4 +41,8 @@ public class CleanRiverToDrainHoldBiController implements CleanRiverToDrainHoldB
     public HttpResponseModel<ChartDetailModel> rightFour(String street){
         return cleanRiverToDrainHoldBiService.rightFour(street);
     }
+
+    public String qingXing(){
+        return cleanRiverToDrainHoldBiService.qingXing();
+    }
 }

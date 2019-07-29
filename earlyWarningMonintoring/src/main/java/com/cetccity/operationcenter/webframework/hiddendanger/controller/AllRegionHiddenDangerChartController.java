@@ -59,8 +59,8 @@ public class AllRegionHiddenDangerChartController implements AllRegionHiddenDang
     @ApiOperation(value = "安全隐患一张图--全区隐患--三小隐患饼图", notes = "安全隐患一张图--全区隐患--三小隐患饼图")
     @RequestMapping(value = "/threeSmall/pie",method = RequestMethod.GET,produces = "application/json;charset=utf-8")
     @ResponseBody
-    public HttpResponseModel<NameValuePlus> dangerPie(String street) {
-        List<NameValuePlus> nameValuePlus = allRegionHiddenDangerCharService.countThreeSmallDangerByType(street);
+    public HttpResponseModel<NameValuePlus> dangerPie(String street,String startTime,String endTime) {
+        List<NameValuePlus> nameValuePlus = allRegionHiddenDangerCharService.countThreeSmallDangerByType(street,startTime,endTime);
         return new HttpResponseModel(SysCode.SYS_SUCCESS_CODE,SysCode.SYS_SUCCESS_MESSAGE, nameValuePlus);
     }
 

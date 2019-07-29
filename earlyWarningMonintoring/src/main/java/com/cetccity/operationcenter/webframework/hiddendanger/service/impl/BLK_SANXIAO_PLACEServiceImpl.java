@@ -124,7 +124,7 @@ public class BLK_SANXIAO_PLACEServiceImpl implements BLK_SANXIAO_PLACEService {
                 "from BLK_SANXIAO_PLACE a,BLK_CHENGGUAN_EVENT d\n" +
                 "WHERE a.name=d.EVENT_NAME\n" +
                 "and a.ADDRESS=d.ADDRESS\n" +
-                "and d.EVENT_SOURCE='6'\n" +
+                "and d.EVENT_SOURCE='6'\n" +  /*1-12345热线，2-人大代表，3-预警监测，4-数字化城管，6-三小巡查，7-物联网设备上报，8-领导发现，9-专项整治行动，10-三防应急，11-区长热线，21-智慧福田app，66-块数据推送服务，90-网格员上报，99-其他*/
                 "and d.state='1'\n" +
 //                "and d.EVENT_TIME > add_months(SYSDATE, -2)\n"+
                 "and a.id = '"+id+"'\n" +

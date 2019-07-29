@@ -255,58 +255,30 @@
     </select>
 
     <select id="countThreeSmallDangerByType" resultMap="nameValuePlus">
-        SELECT
-            CODE AS type, t2.PLACE_NAME AS name, COUNT(ID) as value
-        FROM
-            (
-                SELECT
-                    t1.*, t2.filepath
-                FROM
-                    (
-                        SELECT
-                            a.id, a.place_type, a.name, b.event_content eventContent, b.event_time eventTime, b.state,  b.SYSTEMID
-                        FROM
-                            BLK_SANXIAO_PLACE a, BLK_CHENGGUAN_EVENT b
-                        WHERE
-                            a.name = b.event_name
-                        AND
-                            a.address = b.address
-                        AND
-                            b.event_source = 6
-                        AND (b.state = 0 OR b.state = 1)
-                        AND b.isdelete = '0'
+        SELECT CODE AS type, t2.PLACE_NAME AS name, COUNT(ID) as value FROM(
+                SELECT t1.*, t2.filepath FROM(
+                        SELECT a.id, a.place_type, a.name, b.event_content eventContent, b.event_time eventTime, b.state,  b.SYSTEMID
+                        FROM BLK_SANXIAO_PLACE a, BLK_CHENGGUAN_EVENT b
+                        WHERE a.name = b.event_name AND a.address = b.address AND b.event_source = 6 AND (b.state = 0 OR b.state = 1) AND b.isdelete = '0'
                         <if test="streetCode != null and streetCode != ''">
                             AND a.STREET_CODE = #{streetCode}
                         </if>
+                        <if test="startTime != null and startTime != ''">
+                              AND b.event_time &gt; to_date(#{startTime},'yyyy-MM-dd')
+                        </if>
+                        <if test="endTime != null and endTime != ''">
+                              AND b.event_time &lt;= to_date(#{endTime},'yyyy-MM-dd')
+                        </if>
                     ) t1
-				LEFT JOIN
-					(
-					    SELECT
-					        wm_concat(filepath) AS filepath, SYSTEM_ID
-					    FROM
-					        BLK_CG_EVT_ATTS
-					    GROUP BY
-					        SYSTEM_ID
+				LEFT JOIN(
+					    SELECT wm_concat(filepath) AS filepath, SYSTEM_ID FROM BLK_CG_EVT_ATTS GROUP BY SYSTEM_ID
 					) t2
-				ON
-                    t1.SYSTEMID = t2.SYSTEM_ID
-
+				ON t1.SYSTEMID = t2.SYSTEM_ID
             ) t1
-            JOIN
-            (
-                SELECT
-                    CODE_IN_CHINESE place_name, code
-                FROM
-                    DS_VALUE_DICT
-                WHERE
-                    TABLE_NAME = 'BLK_SANXIAO_PLACE'
-                AND
-                    COLUMN_NAME = 'PLACE_TYPE'
+            JOIN(SELECT CODE_IN_CHINESE place_name, code FROM DS_VALUE_DICT
+                WHERE TABLE_NAME = 'BLK_SANXIAO_PLACE' AND COLUMN_NAME = 'PLACE_TYPE'
             ) t2
-            ON
-                t1.place_type = t2.code
-			GROUP BY
-			    t2.code, t2.PLACE_NAME
+            ON t1.place_type = t2.code GROUP BY t2.code, t2.PLACE_NAME
     </select>
 
     <select id="picsBySystemIds" resultMap="com.cetccity.operationcenter.webframework.urbansign.dao.UrbanComponentMapper.nameValueModel">

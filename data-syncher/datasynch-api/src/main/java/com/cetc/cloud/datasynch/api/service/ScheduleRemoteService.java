@@ -5,10 +5,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -42,12 +40,9 @@ public interface ScheduleRemoteService {
                               String httpParamExpression, String httpToken, int httpPagingType,
                               String httpQueryMethod,int httpSignType,String httpJsonExtractRule,
                               String targetTableName, int needsTruncateTargetTb, String pageSize, String cronExpression) throws SQLException;
-
     @RequestMapping(value = "/schedule/job/querylist", produces = "application/json", method = RequestMethod.GET)
     @ApiOperation(value = "查询表同步任务List", notes = "查询表同步任务List", produces = "application/json")
     List<DsScheduleModel> queryScheduleJobList();
-
-
 
     @RequestMapping(value = "/schedule/job/start/byJobId", produces = "application/json", method = RequestMethod.POST)
     @ApiOperation(value = "根据jobID启动任务", notes = "根据jobID启动任务", produces = "application/json")
@@ -59,7 +54,6 @@ public interface ScheduleRemoteService {
             @ApiImplicitParam(name = "tableName", value = "目标表名称", required = true, dataType = "String", paramType = "query")
     })
     HashMap<String, String> triggerOnceJobByTargetTableName(String tableName);
-
 
     @RequestMapping(value = "/schedule/job/triggerOnce/outerJob/byJobSimpleClassName", produces = "application/json", method = RequestMethod.POST)
     @ApiOperation(value = "根据jobName启动单次自定义任务", notes = "\"ChengguanEventAttachRunnable\";\n\"FinancialRunnable\";\n" +

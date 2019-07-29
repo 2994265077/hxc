@@ -25,9 +25,9 @@
             <if test="NAME != null and NAME != ''">
                 and NAME like concat('%',concat(#{NAME},'%'))
             </if>
-            <if test="USER_NAME != null and USER_NAME != ''">
+            <!--<if test="USER_NAME != null and USER_NAME != ''">
                 and USER_NAME like concat('%',concat(#{USER_NAME},'%'))
-            </if>
+            </if>-->
             <if test="MAIN_ID != null">
                 and MAIN_ID = #{MAIN_ID}
             </if>

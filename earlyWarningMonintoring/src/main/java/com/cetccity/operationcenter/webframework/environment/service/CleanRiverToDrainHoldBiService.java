@@ -26,4 +26,6 @@ public interface CleanRiverToDrainHoldBiService {
 
     HttpResponseModel<ChartDetailModel> rightFour(String street);
 
+    String qingXing();
+
 }

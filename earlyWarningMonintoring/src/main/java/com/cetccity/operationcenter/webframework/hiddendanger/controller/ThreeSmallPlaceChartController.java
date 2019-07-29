@@ -30,20 +30,17 @@ public class ThreeSmallPlaceChartController implements ThreeSmallPlaceChartApi {
     @Autowired
     ThreeSmallPlaceChartServiceImpl threeSmallPlaceChartService;
 
-
     @Override
     @Cacheable(key = "'hiddendanger_threesmallchart_pie' + #street")
     public HttpResponseModel<PieModel> pie(String street) {
         return HttpResponseModel.defaultSuccess(threeSmallPlaceChartService.pie(street));
     }
 
-
     @Override
     @Cacheable(key = "'hiddendanger_threesmallchart_line' + #street")
     public HttpResponseModel<List<BarOrLineModel>> line(String street) {
         return HttpResponseModel.defaultSuccess(threeSmallPlaceChartService.line(street));
     }
-
 
     @Override
     @Cacheable(key = "'hiddendanger_threesmallchart_bar' + #street")

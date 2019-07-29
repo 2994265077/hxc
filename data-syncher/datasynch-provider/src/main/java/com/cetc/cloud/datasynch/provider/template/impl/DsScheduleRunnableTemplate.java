@@ -35,11 +35,11 @@ public class DsScheduleRunnableTemplate implements Runnable {
         this.synchJobLogInfoService = (SynchJobLogInfoService) SpringContextUtil.getBean("synchJobLogInfoService");
         this.scheduleService = (ScheduleService) SpringContextUtil.getBean("scheduleService");
         if (dsScheduleModel.getSrcDs() == 1) {
-            this.dbQueryService = (DbQuerySumService) SpringContextUtil.getBean("dbQueryThirdService");
-        }else {
-            this.dbQueryService = (DbQuerySumService) SpringContextUtil.getBean("dbQueryService");
+            this.dbQueryService = (DbQuerySumService) SpringContextUtil.getBean("dbQueryThirdService");//third-信息中心分配给我们的数据库
+        } else {
+            this.dbQueryService = (DbQuerySumService) SpringContextUtil.getBean("dbQueryService"); //readonly-信息中心-前置机中心库
         }
-        this.dbOperateService = (DbOperateService) SpringContextUtil.getBean("dbOperateService");
+        this.dbOperateService = (DbOperateService) SpringContextUtil.getBean("dbOperateService");//master-同步到本地库
         this.httpOperateService = (HttpOperateService) SpringContextUtil.getBean("httpOperateService");
     }
 
@@ -65,8 +65,7 @@ public class DsScheduleRunnableTemplate implements Runnable {
             checkAndCreateColumn(dsScheduleModel.getTargetTableName(), CommonInstance.GLOBAL_COLNAME_INCRE_ID, "NUMBER", "id");
             checkAndCreateColumn(dsScheduleModel.getTargetTableName(), CommonInstance.GLOBAL_COLNAME_CREATE_TIME, "DATE DEFAULT SYSDATE", "创建时间");
             checkAndCreateColumn(dsScheduleModel.getTargetTableName(), CommonInstance.GLOBAL_COLNAME_UPDATE_TIME, "DATE DEFAULT SYSDATE", "更新时间");
-
-
+            //是否要清空表  0：不清空 1：清空
             if (dsScheduleModel.getNeedsTruncateTargetTb() == 1) {
                 dbOperateService.backUpTable(dsScheduleModel.getTargetTableName());   //备份
                 dbOperateService.truncateTableByTbName(dsScheduleModel.getTargetTableName());  //清空当前表
@@ -96,7 +95,6 @@ public class DsScheduleRunnableTemplate implements Runnable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         //更新任务最新状态信息
         updateScheduleModel(dsScheduleModel);
     }
@@ -283,8 +281,6 @@ public class DsScheduleRunnableTemplate implements Runnable {
         //用来计算最新的分页参数
         int toDoPageNum = CommonInstance.DEFAULT_START_PAGE_NUM;
         DsSynchJobLogInfoModel logModel = null;
-
-
         if (CommonInstance.DO_PAGING == dsScheduleModel.getIsPagingQuery()) {
             String httpParamExpression = dsScheduleModel.getHttpParamExpression();
             if (!httpParamExpression.contains("$1$") || !httpParamExpression.contains("$2$")) {
@@ -295,22 +291,17 @@ public class DsScheduleRunnableTemplate implements Runnable {
                 synchJobLogInfoModel.setFailCount(0);
                 return false;
             }
-
             try {
-                logModel = synchJobLogInfoService.queryLatestInfoByJobId(dsScheduleModel.getId());
+                logModel = synchJobLogInfoService.queryLatestInfoByJobId(dsScheduleModel.getId());//根据jobID查询最近一次成功请求的分页参数
                 singleJobTotalSuccessCount = logModel.getTotalSuccessCount();
                 singleJobTotalFailCount = logModel.getTotalFailCount();
             } catch (Exception e) {
                 log.info("recent paging param is null!");
             }
-
-            // 如果当前请求结果集大小大于上次结果集大小，则进行入库
+            // 如果当前请求结果集大于上次结果集，则进行入库
             boolean doInsertQueryResult = queryDetect(dsScheduleModel, logModel);
-
             log.info("\n\n----->>>> current page has new data? -- " + doInsertQueryResult);
-
             if (doInsertQueryResult == true) {
-
                 /**初次执行or未到达最后一页or有新的数据 --- 继续请求**/
                 // 判断是否到达最后一页(未到达最后一页的标志：queryDataSize==pageSize; 若达到最后一页: rowNum==0||rownum<pageSize
                 // null==model表示还未发起过请求)

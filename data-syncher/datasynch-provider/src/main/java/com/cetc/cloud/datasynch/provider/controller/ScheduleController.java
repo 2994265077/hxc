@@ -5,17 +5,13 @@ import com.cetc.cloud.datasynch.api.service.ScheduleRemoteService;
 import com.cetc.cloud.datasynch.provider.common.CommonInstance;
 import com.cetc.cloud.datasynch.provider.config.MyApplicationRunner;
 import com.cetc.cloud.datasynch.provider.core.JobManageService;
-import com.cetc.cloud.datasynch.provider.mapper.FinancialMapper;
-import com.cetc.cloud.datasynch.provider.mapper.XinfangEventMapper;
 import com.cetc.cloud.datasynch.provider.service.impl.*;
 import com.cetc.cloud.datasynch.provider.template.OuterJobRunnableTemplate;
-import com.cetc.cloud.datasynch.provider.util.Date2CronUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.Future;
@@ -29,26 +25,16 @@ import java.util.concurrent.Future;
 public class ScheduleController implements ScheduleRemoteService {
     @Autowired
     DbOperateService dbOperateService;
-    @Autowired
-    DbThirdOperateService dbOperateService_zhft;
+
     @Autowired
     JobManageService jobManageService;
+
     @Autowired
     ScheduleService scheduleService;
-    @Autowired
-    SynchJobLogInfoService synchJobLogInfoService;
+
     @Autowired
     DbQueryService dbQueryService;
-    @Autowired
-    HttpOperateService httpOperateService;
-    @Autowired
-    OuterUrlsService outerUrlsService;
-    @Autowired
-    RePullTableController rePullTableController;
-    @Autowired
-    XinfangEventMapper xinfangEventMapper;
-    @Autowired
-    FinancialMapper financialMapper;
+
     @Autowired
     MyApplicationRunner runner;
 
@@ -289,7 +275,6 @@ public class ScheduleController implements ScheduleRemoteService {
         if (null == jobs && "".equals(jobs)) {
             res.put("res", "fail");
             res.put("msg", "param: jobs cannot be null!");
-
         }
         if (StringUtils.isNotEmpty(jobs)) {
             String[] split = jobs.split(",");
@@ -372,7 +357,6 @@ public class ScheduleController implements ScheduleRemoteService {
         }
         return res;
     }
-
 
     @Override
     public HashMap<String, String> deleteScheduleJobByJobId(int jobId) {

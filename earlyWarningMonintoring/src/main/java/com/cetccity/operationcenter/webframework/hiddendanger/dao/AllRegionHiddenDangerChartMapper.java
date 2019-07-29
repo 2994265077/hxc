@@ -56,7 +56,7 @@ public interface AllRegionHiddenDangerChartMapper {
     /**
      * 根据类型统计三小场所隐患事件
      */
-    List<NameValuePlus> countThreeSmallDangerByType(@Param("streetCode") String streetCode);
+    List<NameValuePlus> countThreeSmallDangerByType(@Param("streetCode") String streetCode,@Param("startTime")String startTime,@Param("endTime")String endTime);
 
     /**
      * 根据类型统计报警事件统计

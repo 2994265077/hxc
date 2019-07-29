@@ -90,12 +90,12 @@ public class DistrictVideoTagServiceImpl implements DistrictVideoTagService {
             return new ResponseEntity("error-标签"+tagName+"已存在",HttpStatus.PRECONDITION_FAILED);
         DISTRICT_CLASS dISTRICT_CLASS = DISTRICT_CLASS.builder().OBJECT_ID(districtClassMapper.maxId()).NAME(tagName)
                 .USER_NAME(authenticationUser.getUser(servletRequest)).MAIN_ID(tagGroupId).STATUS(1).build();
-                return new ResponseEntity<Integer>(districtClassMapper.save(dISTRICT_CLASS), HttpStatus.OK);
+                return new ResponseEntity<>(districtClassMapper.save(dISTRICT_CLASS), HttpStatus.OK);
     }
 
     public ResponseEntity<Boolean> updateVideoTag(Integer object_ID, String tagName, Integer status){
         DISTRICT_CLASS dISTRICT_CLASS = DISTRICT_CLASS.builder().OBJECT_ID(object_ID).NAME(tagName).STATUS(status).build();
-        return new ResponseEntity<Boolean>(districtClassMapper.updateById(dISTRICT_CLASS),HttpStatus.OK);
+        return new ResponseEntity<>(districtClassMapper.updateById(dISTRICT_CLASS),HttpStatus.OK);
     }
 
     public HttpResponseModel<PageInfo> findVideoTagGroup(String tagGroupName, String user, Integer pageNum, Integer pageSize){
@@ -110,13 +110,13 @@ public class DistrictVideoTagServiceImpl implements DistrictVideoTagService {
 
         //查看是否有禁用的标签组
         List<DISTRICT_CLASS> menu = districtClassMapper.findVideoList(DISTRICT_CLASS.builder().MAIN_ID(0).STATUS(0).build());
-        DISTRICT_CLASS dISTRICT_CLASS = new DISTRICT_CLASS();
+        DISTRICT_CLASS dISTRICT_CLASS;
         if(StringUtils.isEmpty(tagGroupId)) {
             dISTRICT_CLASS = DISTRICT_CLASS.builder().NAME(tagName).USER_NAME(user).build();
         }else {
             dISTRICT_CLASS = DISTRICT_CLASS.builder().MAIN_ID(Integer.valueOf(tagGroupId)).NAME(tagName).USER_NAME(user).build();
         }
-        List<DISTRICT_CLASS_GROUP> dISTRICT_CLASS_list = new ArrayList<>();
+        List<DISTRICT_CLASS_GROUP> dISTRICT_CLASS_list;
         PageHelper.startPage(pageNum, pageSize);
         if(menu.size() == 0) { //没有禁用的标签组
             dISTRICT_CLASS_list = districtClassMapper.findVideoAsListNo(dISTRICT_CLASS);
@@ -129,28 +129,25 @@ public class DistrictVideoTagServiceImpl implements DistrictVideoTagService {
 
     /**
      * 删除视屏标签组
-     * @param id 主键id
+     * @param object_ID 主键id
      */
     @Transactional
     public ResponseEntity<Boolean> deleteVideoTagGroup(Integer object_ID){
         //1、先获取改标签组下面的所有二级标签然后删除视屏标签库对应的该标签
         List<Integer> tgIdList = new ArrayList<>();
         List<DISTRICT_CLASS> dISTRICT_CLASS_list = districtClassMapper.findVideoList(DISTRICT_CLASS.builder().MAIN_ID(object_ID).build());
-        dISTRICT_CLASS_list.stream().forEach(u-> {
-                    tgIdList.add(u.getOBJECT_ID());
-        });
+        dISTRICT_CLASS_list.stream().forEach(u-> tgIdList.add(u.getOBJECT_ID()));
         tgIdList.stream().forEach(u-> districtClassMapper.removeVideoTagById(u));
         //删除标签组对应的标签
         tgIdList.stream().forEach(u-> districtClassMapper.removeClassById(u));
         //删除标签库对应的标签组
         districtClassMapper.removeClassById(object_ID);
-
-        return new ResponseEntity<Boolean>(true,HttpStatus.OK);
+        return new ResponseEntity<>(true,HttpStatus.OK);
     }
 
     /**
      * 删除视屏标签
-     * @param id 主键id
+     * @param object_ID 主键id
      */
     @Transactional
     public ResponseEntity<Boolean> deleteVideoTag(Integer object_ID){
@@ -158,7 +155,6 @@ public class DistrictVideoTagServiceImpl implements DistrictVideoTagService {
         districtClassMapper.removeVideoTagById(object_ID);
         //2、删除标签库对应的标签
         districtClassMapper.removeClassById(object_ID);
-
-        return new ResponseEntity<Boolean>(true,HttpStatus.OK);
+        return new ResponseEntity<>(true,HttpStatus.OK);
     }
 }

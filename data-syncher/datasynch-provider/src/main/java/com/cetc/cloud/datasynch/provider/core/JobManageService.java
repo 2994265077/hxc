@@ -1,7 +1,6 @@
 package com.cetc.cloud.datasynch.provider.core;
 
 import com.cetc.cloud.datasynch.api.model.DsScheduleModel;
-import com.cetc.cloud.datasynch.provider.service.impl.*;
 import com.cetc.cloud.datasynch.provider.template.impl.DsScheduleRunnableTemplate;
 import com.cetc.cloud.datasynch.provider.template.OuterJobRunnableTemplate;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,18 +23,6 @@ import java.util.concurrent.ScheduledFuture;
 @Slf4j
 public class JobManageService {
 
-    @Autowired
-    DbOperateService dbOperateService;
-    @Autowired
-    SynchJobLogInfoService synchJobLogInfoService;
-    @Autowired
-    DbQueryService dbQueryService;
-    @Autowired
-    DbQueryThirdService dbQueryThirdService;
-    @Autowired
-    HttpOperateService httpOperateService;
-    @Autowired
-    private ScheduleService scheduleService;
     @Autowired
     private ThreadPoolTaskScheduler threadPoolTaskScheduler;
 
@@ -65,7 +51,7 @@ public class JobManageService {
      */
     public int startScheduledJob(DsScheduleModel dsScheduleModel) {
 
-        DsScheduleRunnableTemplate runnableInstance = null;
+        DsScheduleRunnableTemplate runnableInstance;
         if (dsScheduleModel.getSrcDs() == 0) {
             //创建定时任务
             runnableInstance = new DsScheduleRunnableTemplate(dsScheduleModel);
@@ -125,7 +111,7 @@ public class JobManageService {
      * 启动一次性任务
      */
     public int startOnceJob(DsScheduleModel dsScheduleModel) {
-        DsScheduleRunnableTemplate runnableInstance = null;
+        DsScheduleRunnableTemplate runnableInstance;
         //创建定时任务
         if (dsScheduleModel.getSrcDs() == 0) {
             runnableInstance = new DsScheduleRunnableTemplate(dsScheduleModel);

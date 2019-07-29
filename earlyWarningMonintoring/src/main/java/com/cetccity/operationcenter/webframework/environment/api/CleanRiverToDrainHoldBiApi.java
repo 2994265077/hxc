@@ -57,4 +57,10 @@ public interface CleanRiverToDrainHoldBiApi {
     @RequestMapping(value = "/drain/hold/right/four",method = RequestMethod.GET,produces = "application/json;charset=utf-8")
     @ResponseBody
     HttpResponseModel<ChartDetailModel> rightFour(String street);
+
+    @ApiOperation(value = "排水户排水设施数据清洗", notes = "排水户排水设施数据清洗")
+    @RequestMapping(value = "/drain/hold/qing/xi",method = RequestMethod.GET,produces = "application/json;charset=utf-8")
+    @ResponseBody
+    String qingXing();
+
 }

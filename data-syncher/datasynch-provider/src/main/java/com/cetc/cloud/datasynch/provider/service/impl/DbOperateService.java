@@ -426,7 +426,7 @@ public class DbOperateService {
             //根据表名、字段名称集合,与表结构 获取 组装后的SQL值String
             String tableValues = getTableValuesSQLString(targetTableName, keyList_SQL, valueList_SQL, tbStructureMap);
             //异常情况处理：如果不能在业务库中找到这张目标表对应的表结构,则放弃执行该任务
-            if (null == tableValues || "".equals(tableValues)) {
+            if (StringUtils.isEmpty(tableValues)) {
                 log.error("》》》》》》》》》》》》》》》\n" +
                         "cannot find target table:不能在业务库中找到这张目标表对应的表结构\"" + targetTableName + "\" in targetDB\n");
                 resList.add(CommonInstance.ERROR);

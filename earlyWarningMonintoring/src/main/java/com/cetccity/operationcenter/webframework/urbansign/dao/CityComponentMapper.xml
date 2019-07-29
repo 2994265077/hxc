@@ -3,7 +3,7 @@
 <mapper namespace="com.cetccity.operationcenter.webframework.urbansign.dao.CityComponentMapper">
 
     <select id="queryTotalByStreet" resultType="java.util.HashMap">
-        SELECT a.street_name, IOT_DEVICE 物联网, MONITOR 监测站, CAMERA 摄像头, BJ 城市部件 FROM
+        SELECT a.street_name, NVL(IOT_DEVICE,0) 物联网, NVL(MONITOR,0) 监测站, NVL(CAMERA,0) 摄像头, NVL(BJ,0) 城市部件 FROM
         (SELECT street_code, street_name FROM COMMUNITY_CODE WHERE street_code IS NOT NULL GROUP BY street_code,street_name ) a LEFT JOIN
         -- SELECT a.street_code, IOT_DEVICE, MONITOR FROM
         ----物联感知
@@ -52,13 +52,14 @@
         ) GROUP BY STREET_CODE
         )e on a.street_code = e.street_code
     </select>
+
     <select id="queryIotEventTypeAndDate" resultType="java.util.HashMap">
         SELECT PRODUCE_TIME, IOT_CODE.DEVICE_NAME  FROM IOT_EVENT JOIN IOT_DEVICE ON IOT_EVENT.DEVICE_CODE = IOT_DEVICE.DEVICE_CODE
         LEFT JOIN IOT_CODE ON IOT_DEVICE.DEVICE_TYPE = IOT_CODE.DEVICE_TYPE
     </select>
 
     <select id="countIotByDate" resultType="java.util.HashMap">
-        SELECT
+        /*SELECT
             TO_CHAR(PRODUCE_TIME, ${formatter}) AS PRODUCE_TIME, IOT_CODE.DEVICE_NAME, COUNT(IOT_CODE.DEVICE_NAME) AS COUNT
         FROM
             IOT_EVENT
@@ -71,12 +72,16 @@
         ON
             IOT_DEVICE.DEVICE_TYPE = IOT_CODE.DEVICE_TYPE
 		GROUP BY
-		TO_CHAR(PRODUCE_TIME, ${formatter}) ,IOT_CODE.DEVICE_NAME
+		TO_CHAR(PRODUCE_TIME, ${formatter}) ,IOT_CODE.DEVICE_NAME*/
+		SELECT B.DEVICE_NAME X,count(*) 数量 from IOT_DEVICE A,IOT_CODE B
+          WHERE B.DEVICE_TYPE = A.DEVICE_TYPE
+          GROUP BY B.DEVICE_NAME
     </select>
 
     <select id="countIot" resultType="java.lang.Integer">
         SELECT COUNT(DEVICE_CODE) FROM IOT_DEVICE
     </select>
+
     <select id="queryCameraNumByStreet" resultType="java.util.HashMap">
         SELECT  b.street_name, a.cameranum 摄像头 FROM
         (SELECT street_code, COUNT(street_code) cameranum FROM VIDEO_POLICE WHERE street_code IS NOT NULL GROUP BY street_code) a
@@ -84,6 +89,7 @@
         (SELECT street_code, street_name FROM community_code GROUP BY street_code, street_name) b
         on a.street_code = b.street_code
     </select>
+
     <select id="queryCityComponentByStreet" resultType="java.util.HashMap">
         SELECT  b.street_name, a.BJ 城市部件 FROM
         (SELECT street_code, SUM(BJ) BJ FROM (

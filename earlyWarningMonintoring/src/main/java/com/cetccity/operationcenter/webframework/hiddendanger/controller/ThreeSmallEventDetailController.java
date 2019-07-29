@@ -35,9 +35,6 @@ public class ThreeSmallEventDetailController implements ThreeSmallEventDetailApi
 
         String url = "http://10.190.55.62:8080/zz-yhdljq/v1/gwapi?Method=LoginByAccount&Account=limujun&Password=e10adc3949ba59abbe56e057f20f883e";
 
-//        header
-//        Authorization： Bearer d7f91c2e-7922-3410-abc2-8695f0ae6103
-
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", "Bearer d7f91c2e-7922-3410-abc2-8695f0ae6103");
 

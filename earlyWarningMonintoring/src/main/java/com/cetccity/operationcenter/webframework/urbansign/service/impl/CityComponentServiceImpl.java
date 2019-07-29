@@ -4,6 +4,7 @@ import com.cetccity.operationcenter.webframework.core.chart.engine.model.BarOrLi
 import com.cetccity.operationcenter.webframework.core.chart.engine.model.ChartDetailModel;
 import com.cetccity.operationcenter.webframework.core.chart.engine.model.ChartFactory;
 import com.cetccity.operationcenter.webframework.core.chart.engine.utils.DateUtil;
+import com.cetccity.operationcenter.webframework.core.chart.factory.CetcFactoryProducer;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueTypeModel;
 import com.cetccity.operationcenter.webframework.core.frame.model.HttpResponseModel;
 import com.cetccity.operationcenter.webframework.core.frame.model.SysCode;
@@ -97,7 +98,11 @@ public class CityComponentServiceImpl implements TableName{
     }
 
     public HttpResponseModel<ChartDetailModel> iotCityComponent() {
-        ChartFactory chartFactory = new ChartFactory() {
+        List<HashMap> data = cityComponentMapper.countIotByDate("'yyyy-mm'");
+        Map map = new HashMap();
+        HttpResponseModel<ChartDetailModel> result = CetcFactoryProducer.init(data,"X",null,false);
+        return result;
+        /*ChartFactory chartFactory = new ChartFactory() {
             @Override
             public List<HashMap> queryData() {
                 return cityComponentMapper.countIotByDate("'yyyy-mm'");
@@ -140,7 +145,7 @@ public class CityComponentServiceImpl implements TableName{
         list.add(new NameValueTypeModel<Integer>("物联网感知设备保有量", iotNum));
         list.add(new NameValueTypeModel<Integer>("当月物联网告警数", iotEventCurrentMonth));
         chartDetailModel.setDetail(list);
-        return new HttpResponseModel(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, chartDetailModel);
+        return new HttpResponseModel(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, chartDetailModel);*/
     }
 
     public HttpResponseModel<ChartDetailModel> siteCityComponent() {
@@ -181,42 +186,9 @@ public class CityComponentServiceImpl implements TableName{
     }
 
     public HttpResponseModel<ChartDetailModel> cameraCityComponent() {
-        ChartFactory chartFactory = new ChartFactory() {
-            @Override
-            public List<HashMap> queryData() {
-                return cityComponentMapper.queryCameraNumByStreet();
-            }
-
-            @Override
-            public List<String> initX() {
-                List<String> result = new ArrayList<String>();
-                for (int i = 0; i < input.size(); ++i){
-                    String name = String.valueOf(input.get(i).get("STREET_NAME"));
-                    result.add(name);
-                }
-                return result;
-            }
-
-            @Override
-            public List<String> initY() {
-                List<String> result = new ArrayList<String>();
-                result.add("摄像头");
-                return result;
-            }
-
-            @Override
-            public void match(HashMap row) {
-                String street_name = String.valueOf(row.get("STREET_NAME"));
-                int camera_num = str2num(String.valueOf(row.get("摄像头")));
-                dataMap.get(street_name).put("摄像头",camera_num);
-            }
-        };
-        List<BarOrLineModel> chart = chartFactory.build(null);
-        ChartDetailModel model = new ChartDetailModel();
-        model.setDetail(ChartFactory.countByType(chart));
-        model.setChart(chart);
-        return new HttpResponseModel<ChartDetailModel>(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, model);
-
+        List<HashMap> data = cityComponentMapper.queryCameraNumByStreet();
+        HttpResponseModel<ChartDetailModel> res = CetcFactoryProducer.init(data,"STREET_NAME",null,false);
+        return res;
     }
 
     public HttpResponseModel<ChartDetailModel> cityComponentCityComponent() {
