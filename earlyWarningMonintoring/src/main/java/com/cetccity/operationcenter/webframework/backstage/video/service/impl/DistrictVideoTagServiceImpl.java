@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 工程包名:   com.cetccity.operationcenter.webframework.backstage.video.service.impl
@@ -54,6 +56,13 @@ public class DistrictVideoTagServiceImpl implements DistrictVideoTagService {
         List<DISTRICT_CLASSNode> res = districtClassList.stream()
                 .filter(u -> u.getMAIN_ID().equals(0))
                 .map(u -> covert(u,districtClassList)).collect(Collectors.toList());
+        List<DISTRICT_CLASSNode> allChildren = res.stream()
+                .flatMap(obj -> Objects.nonNull(obj.getChildren()) ? obj.getChildren().stream() : Stream.empty())
+                .collect(Collectors.toList());
+        DISTRICT_CLASSNode all = new DISTRICT_CLASSNode();
+        all.setChildren(allChildren);
+        all.setNAME("所有站点");
+        res.add(0,all);
         return new HttpResponseModel(0,res);
     }
 

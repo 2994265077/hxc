@@ -11,6 +11,9 @@
         <if test="STREET != null">
             and STREET = #{STREET}
         </if>
+        <if test="STREET_CODE != null">
+            and STREET_CODE = #{STREET_CODE}
+        </if>
         <if test="CREATETIME != null">
             and to_char(CREATETIME,'yyyy-MM-dd HH24:mi:ss') like concat(#{CREATETIME},'%')
         </if>

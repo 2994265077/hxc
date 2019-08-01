@@ -1,5 +1,6 @@
 package com.cetccity.operationcenter.webframework.urbansign.service.impl;
 
+import com.cetccity.operationcenter.webframework.backstage.community.service.CommunityInfoService;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameDataModel;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel;
 import com.cetccity.operationcenter.webframework.core.tools.ESOperate;
@@ -49,6 +50,9 @@ public class UrbanBuildingBasicServiceImpl implements UrbanBuildingBasicService 
     UrbanMapReturnUtil urbanMapReturnUtil;
 
     @Autowired
+    CommunityInfoService communityInfoService;
+
+    @Autowired
     StreetTool streetTool;
 
     public NameValueModel leftOne(String street){
@@ -86,12 +90,13 @@ public class UrbanBuildingBasicServiceImpl implements UrbanBuildingBasicService 
     }
 
     public NameValueModel leftThree(String street){
+        String streetCode;
         BLK_SANXIAO_PLACE bLK_SANXIAO_PLACE = new BLK_SANXIAO_PLACE();
-        bLK_SANXIAO_PLACE.setSTREET(street);
+        if (StringUtils.isNotBlank(street)) {
+            streetCode = communityInfoService.streetCodeByName(street);
+            bLK_SANXIAO_PLACE.setSTREET_CODE(Objects.nonNull(streetCode) ? streetCode : "-1");
+        }
         long num = bLK_SANXIAO_PLACEMapper.getBLK_SANXIAO_PLACECount(bLK_SANXIAO_PLACE);
-        /*NameValueModel nameValueModel = new NameValueModel();
-        nameValueModel.setName("棚旧改项目数量");
-        nameValueModel.setValue(String.valueOf(num));*/
         return NameValueModel.builder().name("棚旧改项目数量").value(String.valueOf(num)).build();
     }
 
