@@ -14,6 +14,7 @@ import com.cetccity.operationcenter.webframework.web.model.incident.NearbyResour
 import com.cetccity.operationcenter.webframework.web.util.Constant;
 import com.cetccity.operationcenter.webframework.web.util.apollo.ApolloPropertiesLoadUtils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,7 +44,7 @@ public class ResourcesSearchController implements ResourcesSearchApi {
 
     public MyPageInfoModel<List<SearchObjList>> findResourceObj(String content, Integer pageNum, Integer pageSize,String tag) throws IOException {
         MyPageInfoModel<List<SearchObjList>> pageInfo;
-        if("".equals(tag)||tag==null){
+        if(StringUtils.isEmpty(tag)){
             pageInfo = searchResourcesService.searchByEsObjOne(content, pageNum, pageSize,tag);
         }else{
             String[] tableName_Obj = tag.split(",");
