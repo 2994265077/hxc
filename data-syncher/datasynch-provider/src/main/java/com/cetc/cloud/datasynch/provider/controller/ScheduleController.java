@@ -44,7 +44,6 @@ public class ScheduleController implements ScheduleRemoteService {
         return list;
     }
 
-
     @Override
     public HashMap createScheduleJob(int connType, String source, String srcDs, int isPagingQuery,
                                      String orderByColumnName,
@@ -53,7 +52,6 @@ public class ScheduleController implements ScheduleRemoteService {
                                      String httpQueryMethod, int httpSignType, String httpJsonExtractRule,
                                      String targetTableName, int needsTruncateTargetTb, String pageSize, String cronExpression) throws SQLException {
         HashMap res = new HashMap();
-
         //共有参数完整性校验
         if (null == source || null == targetTableName || null == cronExpression || null == pageSize) {
             res.put("result", "fail");
@@ -129,7 +127,6 @@ public class ScheduleController implements ScheduleRemoteService {
             res.put("msg", "job for " + targetTableName + " already exists! please delete job first and create again");
             return res;
         }
-
         try {
             CronTrigger trigger = new CronTrigger(cronExpression);
         } catch (Exception e) {
@@ -138,7 +135,6 @@ public class ScheduleController implements ScheduleRemoteService {
             res.put("msg", "cron trigger syntax error! please check and try again!");
             return res;
         }
-
         DsScheduleModel dsScheduleModel = new DsScheduleModel();
         dsScheduleModel.setConnType(connType);
         dsScheduleModel.setSource(source);
@@ -160,10 +156,8 @@ public class ScheduleController implements ScheduleRemoteService {
         dsScheduleModel.setPageSize(Integer.parseInt(pageSize));
         dsScheduleModel.setCronExpression(cronExpression);
         dsScheduleModel.setHttpQueryMethod(httpQueryMethod);
-
         //将创建的任务记录在数据库schedule表中
         int jobId = scheduleService.addScheduleInstance(dsScheduleModel);
-
         if (jobId == -1) {
             res.put("result", "fail");
             res.put("msg", "failed,error when creating schedule job");
@@ -171,16 +165,13 @@ public class ScheduleController implements ScheduleRemoteService {
         }
         res.put("result", "success");
         res.put("msg", "create job:" + jobId + " success!");
-
         return res;
     }
-
 
     @Override
     public HashMap<String, String> startScheduleJobByJobId(int jobId) {
         HashMap res = new HashMap();
         DsScheduleModel dsScheduleModel = scheduleService.queryModelByJobId(jobId);
-
         //启动任务
         int jobid = jobManageService.startScheduledJob(dsScheduleModel);
         if (-1 != jobid) {
@@ -229,7 +220,6 @@ public class ScheduleController implements ScheduleRemoteService {
         if (trigger != null) {
             startResult = jobManageService.startOuterScheduledJob(clazz.getSimpleName(), myOuterRunnable, trigger);
         }
-
         log.info("\n\n>>>>\n\n  >>>> scheduling job:" + clazz.getSimpleName() + " started! --- cronExpression：" + trigger.getExpression());
         if (startResult != false) {
             res.put("result", "success");
@@ -238,7 +228,6 @@ public class ScheduleController implements ScheduleRemoteService {
             res.put("result", "failed");
             res.put("msg", "start Outer job:" + clazz.getSimpleName() + " faild!");
         }
-
         return res;
     }
 
@@ -252,7 +241,6 @@ public class ScheduleController implements ScheduleRemoteService {
             res.put("result", "success");
             res.put("msg", "start Outer job:" + clazz.getSimpleName() + " success! " + myOuterRunnable.getClass().getSimpleName());
             log.info("\n\n>>>>\n\n  >>>> scheduling job:" + clazz.getSimpleName() + " started! --- cronExpression： now");
-
             return res;
         } catch (Exception e) {
             e.printStackTrace();
@@ -360,7 +348,6 @@ public class ScheduleController implements ScheduleRemoteService {
 
     @Override
     public HashMap<String, String> deleteScheduleJobByJobId(int jobId) {
-
         HashMap result = new HashMap<String, String>();
         //停止当前任务
         int s = jobManageService.removeJob(jobId);
@@ -386,7 +373,6 @@ public class ScheduleController implements ScheduleRemoteService {
 
     @Override
     public HashMap<String, String> alterScheduleJobCron(int jobId, String cron) {
-
         HashMap result = new HashMap<String, String>();
         //停止当前任务
         int s = jobManageService.removeJob(jobId);
@@ -413,5 +399,4 @@ public class ScheduleController implements ScheduleRemoteService {
     public Map<String, Future> getRunningFutures() {
         return jobManageService.getRunningFutures();
     }
-
 }

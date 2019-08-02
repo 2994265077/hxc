@@ -110,6 +110,7 @@ public class CleanRiverToDrainFacilitiesPatrolRecordBiServiceImpl implements Cle
     public HttpResponseModel<ChartDetailModel> rightThree(String street, String SEWERATE_ID, String hiddenDanger){
         String startTime = LoadMyUtil.getMyTime("DATE",-30);  //开始时间
         String endTime = LoadMyUtil.getMyTime("DATE",0);  //结束时间
+
         ChartFactory chartFactory = new ChartFactory() {
             @Override
             public List<HashMap> queryData() {
