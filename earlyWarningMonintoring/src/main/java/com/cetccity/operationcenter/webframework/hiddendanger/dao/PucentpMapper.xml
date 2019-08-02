@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.hiddendanger.dao.PucentpMapper">
+
+    <select id="pieByStreet" resultMap="com.cetccity.operationcenter.webframework.hiddendanger.dao.HiddenDangerThreeSmallChartMapper.nameValueTypeModel">
+        SELECT
+            COUNT(*) AS VALUE, STREET AS NAME
+        FROM
+            QAJJ_PUCENTP_V
+        WHERE
+            REGION_CODE = '440304'
+        <if test="street_code != null">
+            AND STREET_CODE = #{street_code}
+        </if>
+        GROUP BY
+            STREET
+    </select>
+
+    <select id="pieByCommunity" resultMap="com.cetccity.operationcenter.webframework.hiddendanger.dao.HiddenDangerThreeSmallChartMapper.nameValueTypeModel">
+        SELECT
+            COUNT(*) AS VALUE, COMMUNITY_NAME AS NAME
+        FROM
+            QAJJ_PUCENTP_V
+        WHERE
+            REGION_CODE = '440304' AND STREET_CODE = #{street_code}
+        GROUP BY
+            COMMUNITY_NAME
+    </select>
+</mapper>

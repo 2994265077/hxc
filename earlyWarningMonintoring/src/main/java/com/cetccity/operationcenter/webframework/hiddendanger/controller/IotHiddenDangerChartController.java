@@ -9,7 +9,11 @@ import com.cetccity.operationcenter.webframework.core.frame.model.HttpResponseMo
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static com.cetccity.operationcenter.webframework.hiddendanger.controller.AllRegionHiddenDangerChartController.DEFAULT_FORMATTER;
 
 /**
  * @Package: com.cetccity.operationcenter.webframework.hiddendanger.controller
@@ -38,7 +42,9 @@ public class IotHiddenDangerChartController implements IotHiddenDangerChartApi{
     }
 
     @Override
-    public HttpResponseModel<List<BarOrLineModel>> line(String street) {
-        return HttpResponseModel.defaultSuccess(iotHiddenDangerChartService.line(street));
+    public HttpResponseModel<List<BarOrLineModel>> line(String street, String startTime, String endTime) {
+        LocalDateTime start = LocalDate.parse(startTime, DEFAULT_FORMATTER).atStartOfDay();
+        LocalDateTime end = LocalDate.parse(endTime, DEFAULT_FORMATTER).plusDays(1).atStartOfDay();
+        return HttpResponseModel.defaultSuccess(iotHiddenDangerChartService.line(street, start, end));
     }
 }

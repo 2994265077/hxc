@@ -6,6 +6,7 @@ import com.cetccity.operationcenter.webframework.core.chart.engine.model.PieMode
 import com.cetccity.operationcenter.webframework.hiddendanger.service.impl.FireHiddenDangerChartServiceImpl;
 import com.cetccity.operationcenter.webframework.core.frame.model.HttpResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -37,5 +38,10 @@ public class FireHiddenDangerChartController implements FireHiddenDangerChartApi
     @Override
     public HttpResponseModel<List<BarOrLineModel>> bar(String street) {
         return HttpResponseModel.defaultSuccess(fireHiddenDangerChartService.bar(street));
+    }
+
+    @Override
+    public HttpResponseModel<List<BarOrLineModel>> barByStreet(String street) {
+        return HttpResponseModel.defaultSuccess(fireHiddenDangerChartService.barByStreetName(street));
     }
 }

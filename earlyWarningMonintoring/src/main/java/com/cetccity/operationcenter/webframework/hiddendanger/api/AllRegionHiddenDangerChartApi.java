@@ -45,7 +45,7 @@ public interface AllRegionHiddenDangerChartApi {
     @ApiOperation(value = "安全隐患一张图--全区隐患--条形图", notes = "安全隐患一张图--全区隐患--条形图")
     @RequestMapping(value = "/allrigionhiddendangerchart/bar", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
-    HttpResponseModel<List<BarOrLineModel>> bar(String street);
+    HttpResponseModel<List<BarOrLineModel>> bar(String street, String startTime, String endTime);
 
     /**
      * 全区隐患--列表

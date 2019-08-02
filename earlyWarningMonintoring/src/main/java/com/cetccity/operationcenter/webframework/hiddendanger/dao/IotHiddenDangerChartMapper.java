@@ -43,5 +43,5 @@ public interface IotHiddenDangerChartMapper {
     /**
      * 查询指定月份的报警信息统计数量，按月，按device_type  参数示例2018-10,符合yyyy-MM
      */
-    List<BarOrLineModel> countDeviceEventByMonth(@Param("yearMonth") YearMonth yearMonth, @Param("streetCode") String streetCode);
+    List<BarOrLineModel> countDeviceEventByMonth(@Param("begin") YearMonth begin,@Param("end") YearMonth end, @Param("streetCode") String streetCode);
 }

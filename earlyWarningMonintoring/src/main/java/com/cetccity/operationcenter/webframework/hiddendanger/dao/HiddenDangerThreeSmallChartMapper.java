@@ -26,12 +26,14 @@ public interface HiddenDangerThreeSmallChartMapper {
 
     List<NameValueTypeModel> countThreeSmallType(@Param("street") String street);
 
-    List<BarOrLineModel> countAlarmByDateAndStreet(@Param("fromDate") LocalDateTime fromDate, @Param("streetCode") String streetCode);
+    List<BarOrLineModel> countAlarmByDateAndStreet(@Param("begin") LocalDateTime begin, @Param("end") LocalDateTime end, @Param("streetCode") String streetCode);
 
-    List<NameValueTypeModel<Integer>> countThreeSmallEventByType(@Param("street") String street);
+    List<NameValueTypeModel<Integer>> countThreeSmallEventByType(@Param("street") String street, @Param("begin") LocalDateTime begin, @Param("end") LocalDateTime end);
 
-    List<NameValueTypeModel<Integer>> countUndisposedByType(@Param("eventTypes") List<String> eventTypes, @Param("street") String street);
+    List<NameValueTypeModel<Integer>> countUndisposedByType(@Param("eventTypes") List<String> eventTypes, @Param("street") String street, @Param("begin") LocalDateTime begin, @Param("end") LocalDateTime end);
 
     List<NameValueTypeModel<Integer>> countThreeSmallPlaceByStreet(@Param("street") String street, @Param("hasTrouble") String hasTrouble);
+
+    List<NameValueTypeModel<Integer>> countThreeSmallPlaceByStreetAndDate(@Param("street") String street, @Param("hasTrouble") String hasTrouble, @Param("begin") LocalDateTime begin, @Param("end") LocalDateTime end);
 
 }

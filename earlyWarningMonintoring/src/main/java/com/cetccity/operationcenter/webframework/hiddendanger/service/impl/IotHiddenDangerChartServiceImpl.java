@@ -9,6 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -46,22 +48,21 @@ public class IotHiddenDangerChartServiceImpl {
         return new PieModel(total, nameValueTypeModels);
     }
 
-    public List<BarOrLineModel> line(String streetName) {
+    public List<BarOrLineModel> line(String streetName, LocalDateTime begin, LocalDateTime end) {
         String streetCode = null;
         if (StringUtils.isNotBlank(streetName)) {
             streetCode = communityInfoService.streetCodeByName(streetName);
         }
-        List<BarOrLineModel> barOrLineModels = iotHiddenDangerChartMapper.countDeviceEventByMonth(YearMonth.now()
-                .minusMonths(6), streetCode);
+        List<BarOrLineModel> barOrLineModels = iotHiddenDangerChartMapper.countDeviceEventByMonth(YearMonth.from(begin), YearMonth.from(end), streetCode);
 
         barOrLineModels.stream()
                 .forEach(barOrLineModel -> {
                     // 最近6月没数据的月份填充0
                     Map<String, NameValueTypeModel<Integer>> nameValueTypeModelMap = barOrLineModel.getData().stream()
                             .collect(Collectors.toMap(NameValueTypeModel::getName, nameValueTypeModel -> nameValueTypeModel));
-
-                    List<NameValueTypeModel<Integer>> nameValueTypeModelList = LongStream.range(0, 6)
-                            .mapToObj(item -> YearMonth.now().minusMonths(item))
+                    long months = Period.between(begin.toLocalDate(), end.toLocalDate()).toTotalMonths();
+                    List<NameValueTypeModel<Integer>> nameValueTypeModelList = LongStream.range(0, months)
+                            .mapToObj(item -> YearMonth.from(end).minusMonths(item))
                             .sorted()
                             .map(yearMonth -> {
                                 String yearMonthStr = yearMonth.format(DateTimeFormatter.ofPattern("yyyy-MM"));

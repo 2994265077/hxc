@@ -53,10 +53,14 @@
                 FROM
                     BLK_CHENGGUAN_EVENT
                 WHERE
-                    EVENT_TIME BETWEEN #{fromDate} AND SYSDATE
-                AND
                     EVENT_SOURCE = '6'
                 AND ISDELETE = '0'
+                <if test="begin != null">
+                    AND EVENT_TIME &gt; #{begin}
+                </if>
+                <if test="end != null">
+                    AND EVENT_TIME &lt; #{end}
+                </if>
             ) t2
         ON
             t1.NAME = t2.EVENT_NAME AND t1.ADDRESS = t2.ADDRESS
@@ -76,6 +80,12 @@
         <if test="street != null and street !=''">
             AND JD = #{street}
         </if>
+        <if test="begin != null">
+            AND EVENT_TIME &gt; #{begin}
+        </if>
+        <if test="end != null">
+            AND EVENT_TIME &lt; #{end}
+        </if>
         GROUP BY
             EVENT_TYPE
         ORDER BY
@@ -92,6 +102,12 @@
         AND ISDELETE = '0'
         <if test="street != null and street !=''">
             AND JD = #{street}
+        </if>
+        <if test="begin != null">
+            AND EVENT_TIME &gt; #{begin}
+        </if>
+        <if test="end != null">
+            AND EVENT_TIME &lt; #{end}
         </if>
         AND
             <if test="eventTypes != null and eventTypes.size() > 0">
@@ -135,6 +151,68 @@
                     </if>
                 </where>
             ) t2
+        ON
+            t1.STREET_CODE = t2.STREET_CODE
+    </select>
+
+    <select id="countThreeSmallPlaceByStreetAndDate" resultMap="nameValueTypeModel">
+        SELECT
+            t1.VALUE AS VALUE, t2.STREET_NAME AS NAME
+        FROM
+        (
+            SELECT
+                STREET_CODE, COUNT(*) AS VALUE
+            FROM
+            (
+                SELECT
+                    STREET_CODE, name, address
+                FROM
+                    BLK_SANXIAO_PLACE
+                WHERE
+                    HAS_TROUBLE = 1
+                AND
+                    STREET_NAME IS NOT NULL
+                <if test="street != null and street != ''">
+                    AND STREET_NAME = #{street}
+                </if>
+            ) a
+            JOIN
+            (
+                SELECT
+                    address,event_name
+                FROM
+                    BLK_CHENGGUAN_EVENT
+                WHERE
+                    event_source = 6
+                AND
+                    (state = 0 OR state = 1)
+                AND
+                    isdelete = '0'
+                <if test="begin != null">
+                    AND event_time &gt; #{begin}
+                </if>
+                <if test="end != null">
+                    AND event_time &lt; #{end}
+                </if>
+            ) b
+        ON
+            a.address = b.address
+        AND
+            a.name = b.event_name
+        GROUP BY STREET_CODE
+        ) t1
+        JOIN
+        (
+            SELECT
+                DISTINCT STREET_CODE, STREET_NAME
+            FROM
+                COMMUNITY_CODE
+            <where>
+                <if test="street != null and street !=''">
+                    STREET_NAME = #{street}
+                </if>
+            </where>
+        ) t2
         ON
             t1.STREET_CODE = t2.STREET_CODE
     </select>

@@ -38,5 +38,5 @@ public interface IotHiddenDangerChartApi {
     @ApiOperation(value = "安全隐患一张图--物联监测图表--折线图", notes = "安全隐患一张图--物联监测图表--折线图")
     @RequestMapping(value = "/iothiddendangerchart/line",method = RequestMethod.GET,produces = "application/json;charset=utf-8")
     @ResponseBody
-    HttpResponseModel<List<BarOrLineModel>> line(String street);
+    HttpResponseModel<List<BarOrLineModel>> line(String street, String startTime, String endTime);
 }

@@ -24,6 +24,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -88,9 +89,9 @@ public class AllRegionHiddenDangerCharServiceImpl {
      * @Author:yhy
      * @Date: 2019/5/7 10:54
      */
-    public List<BarOrLineModel> bar(String street) {
+    public List<BarOrLineModel> bar(String street, LocalDateTime begin, LocalDateTime end) {
         List<BarOrLineModel> result = new ArrayList<BarOrLineModel>();
-        BarOrLineModel smallEventBar = threeSmallEventBar(street);
+        BarOrLineModel smallEventBar = threeSmallEventBar(street, begin, end);
         BarOrLineModel geologyNumBar = geologyNumBar(street);
         BarOrLineModel fireHiddenDangerBar = fireHiddenDangerBar(street);
 
@@ -109,9 +110,9 @@ public class AllRegionHiddenDangerCharServiceImpl {
      * @Author:yhy
      * @Date: 2019/5/7 10:55
      */
-    public List<BarOrLineModel> barByStreetName(String streetName) {
+    public List<BarOrLineModel> barByStreetName(String streetName, LocalDateTime begin, LocalDateTime end) {
         List<BarOrLineModel> result = new ArrayList<BarOrLineModel>();
-        BarOrLineModel smallEventBar = threeSmallEventBarByStreetName(streetName);
+        BarOrLineModel smallEventBar = threeSmallEventBarByStreetName(streetName, begin, end);
         BarOrLineModel geologyNumBar = geologyNumBarByStreetName(streetName);
         BarOrLineModel fireHiddenDangerBar = fireHiddenDangerBarByStreetName(streetName);
 
@@ -159,9 +160,9 @@ public class AllRegionHiddenDangerCharServiceImpl {
      * @Author:yhy
      * @Date: 2019/5/7 10:56
      */
-    public BarOrLineModel threeSmallEventBar(String street) {
+    public BarOrLineModel threeSmallEventBar(String street, LocalDateTime begin, LocalDateTime end) {
         String streetCode = communityInfoService.streetCodeByName(street);
-        List<NameValueTypeModel<Integer>>  threeSmallEvents = allRegionHiddenDangerChartMapper.queryThreeSmallEvent(streetCode);
+        List<NameValueTypeModel<Integer>>  threeSmallEvents = allRegionHiddenDangerChartMapper.queryThreeSmallEvent(streetCode, begin, end);
         return new BarOrLineModel("三小场所隐患", threeSmallEvents);
     }
 
@@ -174,8 +175,8 @@ public class AllRegionHiddenDangerCharServiceImpl {
      * @Author:yhy
      * @Date: 2019/5/7 10:56
      */
-    public BarOrLineModel threeSmallEventBarByStreetName(String streetName) {
-        List<NameValueTypeModel<Integer>>  threeSmallEvents = allRegionHiddenDangerChartMapper.queryThreeSmallEventByStreetName(streetName);
+    public BarOrLineModel threeSmallEventBarByStreetName(String streetName, LocalDateTime begin, LocalDateTime end) {
+        List<NameValueTypeModel<Integer>>  threeSmallEvents = allRegionHiddenDangerChartMapper.queryThreeSmallEventByStreetName(streetName, begin, end);
         return new BarOrLineModel("三小场所隐患", threeSmallEvents);
     }
 
@@ -294,9 +295,9 @@ public class AllRegionHiddenDangerCharServiceImpl {
      * @Author:yhy
      * @Date: 2019/5/7 10:57
      */
-    public List<NameValuePlus> countAlarmByType(String street) {
+    public List<NameValuePlus> countAlarmByType(String street, LocalDateTime begin, LocalDateTime end) {
         String streetCode = communityInfoService.streetCodeByName(street);
-        List<NameValuePlus> nameValuePluses = allRegionHiddenDangerChartMapper.countAlarmsByType(streetCode);
+        List<NameValuePlus> nameValuePluses = allRegionHiddenDangerChartMapper.countAlarmsByType(streetCode, begin, end);
         nameValuePluses.stream()
                 .forEach(item -> {
                     String layerId = LoadMyUtil.getPropertiesVauleOfKey("loadmap.properties", ESOperate.dbName + "." + item.getType());
@@ -316,10 +317,10 @@ public class AllRegionHiddenDangerCharServiceImpl {
      * @Author:yhy
      * @Date: 2019/5/7 10:57
      */
-    public PageInfo<AlarmTodayType> queryAlarmByType(String type, int pageNum, int pageSize, String street) {
+    public PageInfo<AlarmTodayType> queryAlarmByType(String type, int pageNum, int pageSize, String street, LocalDateTime begin, LocalDateTime end) {
         PageHelper.startPage(pageNum, pageSize);
         String streetCode = communityInfoService.streetCodeByName(street);
-        List<AlarmTodayType> res = allRegionHiddenDangerChartMapper.queryAlarmByType(type, streetCode);
+        List<AlarmTodayType> res = allRegionHiddenDangerChartMapper.queryAlarmByType(type, streetCode, begin, end);
         // 塞入layerid
         res.stream()
                 .forEach(alarmTodayType ->

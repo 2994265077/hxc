@@ -96,16 +96,45 @@
     </select>
     <select id="queryThreeSmallEvent" resultMap="nameValueTypeModel">
         SELECT
-            STREET_NAME AS NAME, COUNT(OBJECT_ID) AS VALUE
+            a.STREET_NAME AS NAME, COUNT(*) AS VALUE
         FROM
-            BLK_SANXIAO_PLACE
-        WHERE
-            HAS_TROUBLE = 1
+        (
+            SELECT
+                STREET_NAME, name, address
+            FROM
+                BLK_SANXIAO_PLACE
+            WHERE
+                HAS_TROUBLE = 1
+            AND
+                STREET_NAME IS NOT NULL
+            <if test="streetCode != null and streetCode != ''">
+                AND STREET_CODE = #{streetCode}
+            </if>
+
+        ) a
+        JOIN
+        (
+            SELECT
+               address,event_name
+            FROM
+                BLK_CHENGGUAN_EVENT
+            WHERE
+                event_source = 6
+            AND
+                (state = 0 OR state = 1)
+            AND
+                isdelete = '0'
+            <if test="begin != null">
+                AND event_time &gt; #{begin}
+            </if>
+            <if test="end != null">
+                AND event_time &lt; #{end}
+            </if>
+        ) b
+        ON
+            a.address = b.address
         AND
-            STREET_NAME IS NOT NULL
-        <if test="streetCode != null and streetCode != ''">
-            AND STREET_CODE = #{streetCode}
-        </if>
+            a.name = b.event_name
         GROUP BY
             STREET_NAME
     </select>
@@ -114,16 +143,46 @@
         NVL(t1.VALUE, 0) as VALUE, t2.COMMUNITY_NAME NAME
         FROM
             (
-                SELECT
-                    COMMUNITY_CODE, COUNT(OBJECT_ID) as VALUE
+                SELECT COMMUNITY_CODE, COUNT(*) AS VALUE
                 FROM
-                    BLK_SANXIAO_PLACE
-                WHERE
-                    HAS_TROUBLE = 1
+                (
+                    SELECT
+                        COMMUNITY_CODE, name, address
+                    FROM
+                        BLK_SANXIAO_PLACE
+                    WHERE
+                        HAS_TROUBLE = 1
+                    AND
+                        STREET_NAME IS NOT NULL
+                    <if test="street_name != null and street_name != ''">
+                        AND STREET_NAME = #{street_name}
+                    </if>
+
+                ) a
+                JOIN
+                (
+                    SELECT
+                        address,event_name
+                    FROM
+                        BLK_CHENGGUAN_EVENT
+                    WHERE
+                        event_source = 6
+                    AND
+                        (state = 0 OR state = 1)
+                    AND
+                        isdelete = '0'
+                    <if test="begin != null">
+                        AND event_time &gt; #{begin}
+                    </if>
+                    <if test="end != null">
+                        AND event_time &lt; #{end}
+                    </if>
+                ) b
+                ON
+                    a.address = b.address
                 AND
-                    STREET = #{street_name}
-                GROUP BY
-                    COMMUNITY_CODE
+                    a.name = b.event_name
+                GROUP BY COMMUNITY_CODE
             ) t1
             RIGHT JOIN
             (
@@ -327,6 +386,12 @@
                 <if test="streetCode != null and streetCode != ''">
                     AND STREET_CODE = #{streetCode}
                 </if>
+                <if test="begin != null">
+                    AND RELEASE_TIME &gt; #{begin}
+                </if>
+                <if test="end != null">
+                    AND RELEASE_TIME &lt; #{end}
+                </if>
             ) t2
         ON
             t1.LV_2 = t2.ALARM_TYPE_LV2
@@ -368,6 +433,12 @@
             </if>
             <if test="streetCode != null and streetCode != ''">
                 AND STREET_CODE = #{streetCode}
+            </if>
+            <if test="begin != null">
+                AND RELEASE_TIME &gt; #{begin}
+            </if>
+            <if test="end != null">
+                AND RELEASE_TIME &lt; #{end}
             </if>
         ) t2
         ON

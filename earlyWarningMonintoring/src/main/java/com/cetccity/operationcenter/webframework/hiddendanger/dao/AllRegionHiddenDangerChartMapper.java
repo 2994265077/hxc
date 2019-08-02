@@ -8,6 +8,7 @@ import com.cetccity.operationcenter.webframework.web.model.incident.AlarmTodayTy
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,9 +36,9 @@ public interface AllRegionHiddenDangerChartMapper {
     /**
      * 分街道统计三小场所事件
      */
-    List<NameValueTypeModel<Integer>> queryThreeSmallEvent(@Param("streetCode") String streetCode);
+    List<NameValueTypeModel<Integer>> queryThreeSmallEvent(@Param("streetCode") String streetCode, @Param("begin") LocalDateTime begin, @Param("end") LocalDateTime end);
 
-    List<NameValueTypeModel<Integer>>  queryThreeSmallEventByStreetName(@Param("street_name") String streetName);
+    List<NameValueTypeModel<Integer>>  queryThreeSmallEventByStreetName(@Param("street_name") String streetName, @Param("begin") LocalDateTime begin, @Param("end") LocalDateTime end);
 
 
     /**
@@ -61,7 +62,7 @@ public interface AllRegionHiddenDangerChartMapper {
     /**
      * 根据类型统计报警事件统计
      */
-    List<NameValuePlus> countAlarmsByType(@Param("streetCode") String streetCode);
+    List<NameValuePlus> countAlarmsByType(@Param("streetCode") String streetCode, @Param("begin") LocalDateTime begin, @Param("end") LocalDateTime end);
 
     /**
      *  根据systemId查询城管巡查事件图片
@@ -73,6 +74,6 @@ public interface AllRegionHiddenDangerChartMapper {
     /**
      * 根据类型查询报警事件类型
      */
-    List<AlarmTodayType> queryAlarmByType(@Param("type") String typeV2, @Param("streetCode") String streetCode);
+    List<AlarmTodayType> queryAlarmByType(@Param("type") String typeV2, @Param("streetCode") String streetCode, @Param("begin") LocalDateTime begin, @Param("end") LocalDateTime end);
 
 }

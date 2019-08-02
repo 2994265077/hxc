@@ -33,15 +33,15 @@ public interface ThreeSmallPlaceChartApi {
     @ApiOperation(value = "折线图-按时间统计三小场所数量", notes = "折线图-按时间统计三小场所数量")
     @RequestMapping(value = "/threesmallchart/line",method = RequestMethod.GET,produces = "application/json;charset=utf-8")
     @ResponseBody
-    HttpResponseModel<List<BarOrLineModel>> line(String street);
+    HttpResponseModel<List<BarOrLineModel>> line(String street, String startTime, String endTime);
 
     @ApiOperation(value = "统计三小场所历史所有事件，已经整改情况", notes = "统计三小场所历史所有事件，已经整改情况")
     @RequestMapping(value = "/threesmallchart/bar",method = RequestMethod.GET,produces = "application/json;charset=utf-8")
     @ResponseBody
-    HttpResponseModel<List<BarOrLineModel>> bar(String street);
+    HttpResponseModel<List<BarOrLineModel>> bar(String street, String startTime, String endTime);
 
     @ApiOperation(value = "条形图-按街道查询历史的三小场所数据和事件", notes = "条形图-按街道查询历史的三小场所数据和事件")
     @RequestMapping(value = "/threesmallchart/streetBar",method = RequestMethod.GET,produces = "application/json;charset=utf-8")
     @ResponseBody
-    HttpResponseModel<List<BarOrLineModel>> streetBar(String street);
+    HttpResponseModel<List<BarOrLineModel>> streetBar(String street, String startTime, String endTime);
 }

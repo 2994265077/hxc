@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,5 +40,11 @@ public interface FireHiddenDangerChartApi {
     @ResponseBody
     @Cacheable(key = "'bar' + #street")
     HttpResponseModel<List<BarOrLineModel>> bar(String street);
+
+    @ApiOperation(value = "安全隐患一张图--消防隐患图表--条形图下钻", notes = "安全隐患一张图--消防隐患图表--条形图")
+    @RequestMapping(value = "/firehiddendangerchart/bar/community",method = RequestMethod.GET,produces = "application/json;charset=utf-8")
+    @ResponseBody
+    @Cacheable(key = "'barByStreet' + #street")
+    HttpResponseModel<List<BarOrLineModel>> barByStreet(String street);
 
 }

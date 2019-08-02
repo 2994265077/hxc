@@ -10,7 +10,11 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static com.cetccity.operationcenter.webframework.hiddendanger.controller.AllRegionHiddenDangerChartController.DEFAULT_FORMATTER;
 
 /**
  * @Package: com.cetccity.operationcenter.webframework.hiddendanger.controller
@@ -37,20 +41,26 @@ public class ThreeSmallPlaceChartController implements ThreeSmallPlaceChartApi {
     }
 
     @Override
-    @Cacheable(key = "'hiddendanger_threesmallchart_line' + #street")
-    public HttpResponseModel<List<BarOrLineModel>> line(String street) {
-        return HttpResponseModel.defaultSuccess(threeSmallPlaceChartService.line(street));
+    @Cacheable(key = "'hiddendanger_threesmallchart_line' + #street + #startTime + #endTime")
+    public HttpResponseModel<List<BarOrLineModel>> line(String street, String startTime, String endTime) {
+        LocalDateTime start = LocalDate.parse(startTime, DEFAULT_FORMATTER).atStartOfDay();
+        LocalDateTime end = LocalDate.parse(endTime, DEFAULT_FORMATTER).plusDays(1).atStartOfDay();
+        return HttpResponseModel.defaultSuccess(threeSmallPlaceChartService.line(street, start, end));
     }
 
     @Override
-    @Cacheable(key = "'hiddendanger_threesmallchart_bar' + #street")
-    public HttpResponseModel<List<BarOrLineModel>> bar(String street) {
-        return HttpResponseModel.defaultSuccess(threeSmallPlaceChartService.bar(street));
+    @Cacheable(key = "'hiddendanger_threesmallchart_bar' + #street + #startTime + #endTime")
+    public HttpResponseModel<List<BarOrLineModel>> bar(String street, String startTime, String endTime) {
+        LocalDateTime start = LocalDate.parse(startTime, DEFAULT_FORMATTER).atStartOfDay();
+        LocalDateTime end = LocalDate.parse(endTime, DEFAULT_FORMATTER).plusDays(1).atStartOfDay();
+        return HttpResponseModel.defaultSuccess(threeSmallPlaceChartService.bar(street, start, end));
     }
 
     @Override
-    @Cacheable(key = "'hiddendanger_threesmallchart_streetBar' + #street")
-    public HttpResponseModel<List<BarOrLineModel>> streetBar(String street) {
-        return HttpResponseModel.defaultSuccess(threeSmallPlaceChartService.streetBar(street));
+    @Cacheable(key = "'hiddendanger_threesmallchart_streetBar' + #street + #startTime + #endTime")
+    public HttpResponseModel<List<BarOrLineModel>> streetBar(String street, String startTime, String endTime) {
+        LocalDateTime start = LocalDate.parse(startTime, DEFAULT_FORMATTER).atStartOfDay();
+        LocalDateTime end = LocalDate.parse(endTime, DEFAULT_FORMATTER).plusDays(1).atStartOfDay();
+        return HttpResponseModel.defaultSuccess(threeSmallPlaceChartService.streetBar(street, start, end));
     }
 }

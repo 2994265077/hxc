@@ -70,8 +70,11 @@
                         a.device_code = b.device_code
                         AND
                         b.device_type = c.device_type
-                        <if test="yearMonth != null">
-                            AND a.PRODUCE_TIME &gt;= TO_DATE(#{yearMonth},'yyyy-mm')
+                        <if test="begin != null">
+                            AND a.PRODUCE_TIME &gt;= TO_DATE(#{begin},'yyyy-mm')
+                        </if>
+                        <if test="end != null">
+                            AND a.PRODUCE_TIME &lt;= TO_DATE(#{end},'yyyy-mm')
                         </if>
                         <if test="streetCode != null and streetCode != ''">
                             AND b.STREET_CODE = #{streetCode}
