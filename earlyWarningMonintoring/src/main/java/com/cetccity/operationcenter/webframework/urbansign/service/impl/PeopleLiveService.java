@@ -41,17 +41,13 @@ public class PeopleLiveService {
                 jsonStr = String.valueOf(input.get(i).get("VALUE"));
             }
         }
-
         ObjectMapper objectMapper = new ObjectMapper();
-
         ArrayList json = null;
         try {
             json = objectMapper.readValue(jsonStr, ArrayList.class);
         } catch (IOException e) {
             log.error("",e);
         }
-
-
         ArrayList finalJson = json;
         ChartFactory chartFactory = new ChartFactory() {
             @Override
@@ -85,17 +81,11 @@ public class PeopleLiveService {
             }
         };
         List<BarOrLineModel> chart = chartFactory.build(null);
-//        for (BarOrLineModel barOrLineModel : chart) {
-//            barOrLineModel.setxAxis(new NameValueTypeModel("name", "年"));
-//        }
-
         for (int i = 0; i < input.size(); ++i){
             if ("A0016".equals(input.get(i).get("CHART_CODE"))){
                 jsonStr = String.valueOf(input.get(i).get("VALUE"));
             }
         }
-
-
         List json1 = null;
         try {
             HashMap map = objectMapper.readValue(jsonStr, HashMap.class);
@@ -120,7 +110,6 @@ public class PeopleLiveService {
         } catch (IOException e) {
             log.error("",e);
         }
-
         List finalJson1 = new ArrayList(json1);
         ChartFactory chartFactory1 = new ChartFactory() {
             @Override
@@ -154,13 +143,10 @@ public class PeopleLiveService {
             }
         };
         List<BarOrLineModel> chart1 = chartFactory1.build(null);
-
-
         chart.addAll(chart1);
         ChartDetailModel model = new ChartDetailModel();
         model.setChart(chart);
-
-        return new HttpResponseModel<Object>(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, model);
+        return new HttpResponseModel<>(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, model);
     }
 
     public HttpResponseModel<Object> littleSchool() {
@@ -171,17 +157,13 @@ public class PeopleLiveService {
                 jsonStr = String.valueOf(input.get(i).get("VALUE"));
             }
         }
-
         ObjectMapper objectMapper = new ObjectMapper();
-
         ArrayList json = null;
         try {
             json = objectMapper.readValue(jsonStr, ArrayList.class);
         } catch (IOException e) {
             log.error("",e);
         }
-
-
         ArrayList finalJson = json;
         ChartFactory chartFactory = new ChartFactory() {
             @Override
@@ -219,13 +201,9 @@ public class PeopleLiveService {
             }
         };
         List<BarOrLineModel> chart = chartFactory.build(null);
-//        for (BarOrLineModel barOrLineModel : chart) {
-//            barOrLineModel.setxAxis(new NameValueTypeModel("name", "年"));
-//        }
         ChartDetailModel model = new ChartDetailModel();
         model.setChart(chart);
-        return new HttpResponseModel<Object>(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, model);
-
+        return new HttpResponseModel<>(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, model);
     }
 
     public HttpResponseModel<Object> smallSchool() {
@@ -236,17 +214,13 @@ public class PeopleLiveService {
                 jsonStr = String.valueOf(input.get(i).get("VALUE"));
             }
         }
-
         ObjectMapper objectMapper = new ObjectMapper();
-
         ArrayList json = null;
         try {
             json = objectMapper.readValue(jsonStr, ArrayList.class);
         } catch (IOException e) {
             log.error("",e);
         }
-
-
         ArrayList finalJson = json;
         ChartFactory chartFactory = new ChartFactory() {
             @Override
@@ -284,13 +258,11 @@ public class PeopleLiveService {
             }
         };
         List<BarOrLineModel> chart = chartFactory.build(null);
-//        for (BarOrLineModel barOrLineModel : chart) {
-//            barOrLineModel.setxAxis(new NameValueTypeModel("name", "年"));
-//        }
         ChartDetailModel model = new ChartDetailModel();
         model.setChart(chart);
-        return new HttpResponseModel<Object>(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, model);
+        return new HttpResponseModel<>(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, model);
     }
+
     public HttpResponseModel<Object> professionalSchool() {
         String jsonStr = null;
         List<HashMap> input = peopleLiveMapper.queryAll();
@@ -299,17 +271,13 @@ public class PeopleLiveService {
                 jsonStr = String.valueOf(input.get(i).get("VALUE"));
             }
         }
-
         ObjectMapper objectMapper = new ObjectMapper();
-
         ArrayList json = null;
         try {
             json = objectMapper.readValue(jsonStr, ArrayList.class);
         } catch (IOException e) {
             log.error("",e);
         }
-
-
         ArrayList finalJson = json;
         ChartFactory chartFactory = new ChartFactory() {
             @Override
@@ -347,13 +315,11 @@ public class PeopleLiveService {
             }
         };
         List<BarOrLineModel> chart = chartFactory.build(null);
-//        for (BarOrLineModel barOrLineModel : chart) {
-//            barOrLineModel.setxAxis(new NameValueTypeModel("name", "年"));
-//        }
         ChartDetailModel model = new ChartDetailModel();
         model.setChart(chart);
-        return new HttpResponseModel<Object>(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, model);
+        return new HttpResponseModel<>(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, model);
     }
+
     public HttpResponseModel<Object> middleSchool() {
         String jsonStr = null;
         List<HashMap> input = peopleLiveMapper.queryAll();
@@ -362,17 +328,13 @@ public class PeopleLiveService {
                 jsonStr = String.valueOf(input.get(i).get("VALUE"));
             }
         }
-
         ObjectMapper objectMapper = new ObjectMapper();
-
         ArrayList json = null;
         try {
             json = objectMapper.readValue(jsonStr, ArrayList.class);
         } catch (IOException e) {
             log.error("",e);
         }
-
-
         ArrayList finalJson = json;
         ChartFactory chartFactory = new ChartFactory() {
             @Override
@@ -410,12 +372,9 @@ public class PeopleLiveService {
             }
         };
         List<BarOrLineModel> chart = chartFactory.build(null);
-//        for (BarOrLineModel barOrLineModel : chart) {
-//            barOrLineModel.setxAxis(new NameValueTypeModel("name", "年"));
-//        }
         ChartDetailModel model = new ChartDetailModel();
         model.setChart(chart);
-        return new HttpResponseModel<Object>(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, model);
+        return new HttpResponseModel<>(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, model);
     }
 
     public HttpResponseModel<Object> feedOld() {
@@ -426,17 +385,13 @@ public class PeopleLiveService {
                 jsonStr = String.valueOf(input.get(i).get("VALUE"));
             }
         }
-
         ObjectMapper objectMapper = new ObjectMapper();
-
         ArrayList json = null;
         try {
             json = objectMapper.readValue(jsonStr, ArrayList.class);
         } catch (IOException e) {
             log.error("",e);
         }
-
-
         ArrayList finalJson = json;
         ChartFactory chartFactory = new ChartFactory() {
             @Override
@@ -481,7 +436,7 @@ public class PeopleLiveService {
         }
         ChartDetailModel model = new ChartDetailModel();
         model.setChart(chart);
-        return new HttpResponseModel<Object>(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, model);
+        return new HttpResponseModel<>(SysCode.SYS_SUCCESS_CODE, SysCode.SYS_SUCCESS_MESSAGE, model);
     }
 
 
@@ -493,7 +448,6 @@ public class PeopleLiveService {
                 jsonStr = String.valueOf(input.get(i).get("VALUE"));
             }
         }
-
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             //解决转义符问题
@@ -503,7 +457,5 @@ public class PeopleLiveService {
         	log.error(e.toString());
         }
         return new HttpResponseModel<>(SysCode.UNKNOWN_ERROR_CODE, SysCode.UNKNOWN_ERROR_MESSAGE);
-
     }
-
 }

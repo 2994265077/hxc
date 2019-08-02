@@ -2,7 +2,6 @@ package com.cetccity.operationcenter.webframework.urbansign.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,7 +19,6 @@ import java.util.List;
 public interface PeopleLiveMapper {
 
     List<HashMap> queryAll();
-
 
     @Select("select street_name from COMMUNITY_CODE where STREET_CODE = #{STREET_CODE} and rownum < 2")
     String queryStreetNameByCode(String StreetCode);

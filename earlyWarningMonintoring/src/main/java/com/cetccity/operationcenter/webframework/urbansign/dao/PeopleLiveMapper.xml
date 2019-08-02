@@ -5,4 +5,5 @@
     <select id="queryAll" resultType="java.util.HashMap">
         select * from CHART_SHOW
     </select>
+
 </mapper>
