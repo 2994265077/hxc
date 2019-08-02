@@ -88,7 +88,7 @@ public class ThreeSmallPlaceChartServiceImpl {
 
     private List<NameValueTypeModel<Integer>> createAndFillDefaultNameValue(Map<String, NameValueTypeModel<Integer>> paramMap, LocalDateTime begin, LocalDateTime end) {
         long monthCount = Period.between(begin.toLocalDate(), end.toLocalDate().plusMonths(1)).toTotalMonths();
-        return LongStream.range(0, monthCount)
+        return LongStream.range(0, monthCount + 1)
                 .mapToObj(item -> end.toLocalDate()
                         .minusMonths(monthCount - item)
                         .format(DateTimeFormatter.ofPattern("yyyy-MM")))

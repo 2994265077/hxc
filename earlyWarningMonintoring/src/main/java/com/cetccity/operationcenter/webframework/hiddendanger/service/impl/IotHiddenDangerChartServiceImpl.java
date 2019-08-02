@@ -60,8 +60,8 @@ public class IotHiddenDangerChartServiceImpl {
                     // 最近6月没数据的月份填充0
                     Map<String, NameValueTypeModel<Integer>> nameValueTypeModelMap = barOrLineModel.getData().stream()
                             .collect(Collectors.toMap(NameValueTypeModel::getName, nameValueTypeModel -> nameValueTypeModel));
-                    long months = Period.between(begin.toLocalDate(), end.toLocalDate()).toTotalMonths();
-                    List<NameValueTypeModel<Integer>> nameValueTypeModelList = LongStream.range(0, months)
+                    long months = Period.between(begin.toLocalDate(), end.toLocalDate().plusMonths(1)).toTotalMonths();
+                    List<NameValueTypeModel<Integer>> nameValueTypeModelList = LongStream.range(0, months + 1)
                             .mapToObj(item -> YearMonth.from(end).minusMonths(item))
                             .sorted()
                             .map(yearMonth -> {
