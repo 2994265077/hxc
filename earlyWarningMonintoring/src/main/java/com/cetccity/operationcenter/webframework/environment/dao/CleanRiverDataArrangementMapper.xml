@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.environment.dao.CleanRiverDataArrangementMapper">
+
+    <select id="operationOne" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT NAME,NUM FROM(
+           SELECT NAME,COUNT(*) NUM FROM QJHH_SEWERAGE_INFO GROUP BY NAME ORDER BY NUM DESC)
+           WHERE NUM ! = 1
+    </select>
+
+    <select id="operationTwo" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT "UID" FROM QJHH_SEWERAGE_INFO WHERE NAME = #{name}
+    </select>
+
+
+    <update id="operationThree" parameterType="java.util.Map">
+        UPDATE QJHH_FACILITY_INFO SET SEWERAGE_ID = #{uid} WHERE SEWERAGE_ID = #{uid_current}
+    </update>
+
+    <update id="operationFour" parameterType="java.util.Map">
+        UPDATE QJHH_PATROL_INFO SET SEWERAGE_ID = #{uid} WHERE SEWERAGE_ID = #{uid_current}
+    </update>
+
+
+    <delete id="deleteRepeatHold" parameterType="java.lang.String">
+      DELETE QJHH_SEWERAGE_INFO WHERE "UID" = #{uid_current}
+    </delete>
+
+</mapper>

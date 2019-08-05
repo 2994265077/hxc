@@ -43,14 +43,15 @@ public class CleanRiverToDrainFacilitiesPatrolRecordBiServiceImpl implements Cle
 
     public List<NameValueModel> rightOne(String SEWERATE_ID){
         //获取最近一个月有隐患的巡查记录
-        String currentDay = LoadMyUtil.getMyTime("DATE",0);  //today
-        String lastDay = LoadMyUtil.getMyTime("DATE",-30);  //30天前
+        String startTime = LoadMyUtil.getMyTime("DATE",-30);  //30天前
+        String endTime = LoadMyUtil.getMyTime("DATE",0);  //today
+
         int patrolNum = 0;   //巡查次数
         int patrolHiddenDangerNum = 0;   //巡查隐患次数
         Map map = new HashMap();
         map.put("SEWERAGE_ID",SEWERATE_ID);
-        map.put("lastDay",lastDay);
-        map.put("currentDay",currentDay);
+        map.put("startTime",startTime);
+        map.put("endTime",endTime);
         List<NameValueModel> list = qJHH_PATROLMapper.rightOne(map);
         for(NameValueModel u : list){
             patrolNum += Integer.valueOf(u.getValue());

@@ -4,11 +4,13 @@ import com.cetccity.operationcenter.webframework.core.chart.engine.model.ChartDe
 import com.cetccity.operationcenter.webframework.core.chart.engine.model.ChartFactory;
 import com.cetccity.operationcenter.webframework.core.chart.factory.CetcFactoryProducer;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameDataModel;
+import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel;
 import com.cetccity.operationcenter.webframework.core.frame.model.HttpResponseModel;
 import com.cetccity.operationcenter.webframework.core.frame.model.SysCode;
 import com.cetccity.operationcenter.webframework.core.tools.LoadMyUtil;
 import com.cetccity.operationcenter.webframework.environment.api.model.NumRateTrend;
 import com.cetccity.operationcenter.webframework.environment.dao.QJHH_FACILITY_INFOMapper;
+import com.cetccity.operationcenter.webframework.environment.dao.QJHH_PATROLMapper;
 import com.cetccity.operationcenter.webframework.environment.service.CleanRiverToDrainFacilitiesBiService;
 import com.cetccity.operationcenter.webframework.web.service.db.OracleOperateService;
 import org.apache.commons.lang3.StringUtils;
@@ -36,8 +38,11 @@ public class CleanRiverToDrainFacilitiesBiServiceImpl implements CleanRiverToDra
     @Autowired
     QJHH_FACILITY_INFOMapper qJHH_FACILITY_INFOMapper;
 
+    @Autowired
+    QJHH_PATROLMapper qJHH_PATROLMapper;
+
     public List<NameDataModel> rightOne(String street, String SEWERATE_ID){
-        Map map = new HashMap();
+        /*Map map = new HashMap();
         map.put("SEWERAGE_ID",SEWERATE_ID);
         map.put("streetCode", StringUtils.isNotEmpty(street) ? LoadMyUtil.getPropertiesVauleOfKey("street.properties", street).split(",")[0] : null);
         int count = qJHH_FACILITY_INFOMapper.count(map);//计算排水设施总数
@@ -106,6 +111,49 @@ public class CleanRiverToDrainFacilitiesBiServiceImpl implements CleanRiverToDra
         list.add(NameDataModel.builder().name("本月新增").data(NumRateTrend.builder().num(currentCount).trend(trend).build()).build());
         list.add(NameDataModel.builder().name("正常排水设施").data(NumRateTrend.builder().num(count_status_1).rate(increaseRate_status_1).trend(trend_status_1).build()).build());
         list.add(NameDataModel.builder().name("异常排水设施").data(NumRateTrend.builder().num(count_status_2).rate(increaseRate_status_2).trend(trend_status_2).build()).build());
+        return list;*/
+        Map map = new HashMap();
+        map.put("SEWERAGE_ID",SEWERATE_ID);
+        map.put("streetCode", StringUtils.isNotEmpty(street) ? LoadMyUtil.getPropertiesVauleOfKey("street.properties", street).split(",")[0] : null);
+        int count = qJHH_FACILITY_INFOMapper.count(map);//计算排水设施总数
+        String time1 = LoadMyUtil.getMyTime("DATE",-60);  //30天前
+        String time2 = LoadMyUtil.getMyTime("DATE",-30);  //30天前
+        String time3 = LoadMyUtil.getMyTime("DATE",0);  //today
+        map.put("startTime",time2);
+        map.put("endTime",time3);
+        List<NameValueModel> list1 = qJHH_PATROLMapper.rightOne(map);
+        int abnormal1 = 0,abnormal2 = 0;//异常排水设施
+        for (NameValueModel u:list1) {
+            if("不正常".equals(u.getName())){
+                abnormal1 = Integer.valueOf(u.getValue());
+            }
+        }
+        map.put("startTime",time1);
+        map.put("endTime",time2);
+        List<NameValueModel> list2 = qJHH_PATROLMapper.rightOne(map);
+        for (NameValueModel u:list2) {
+            if("不正常".equals(u.getName())){
+                abnormal2 = Integer.valueOf(u.getValue());
+            }
+        }
+        String increaseRate_status_2,trend_status_2;
+        if(abnormal1 - abnormal2 > 0){
+            trend_status_2 = "↑";
+            increaseRate_status_2 = LoadMyUtil.myPercent(abnormal1,abnormal2);
+
+        }else if(abnormal1 - abnormal2 < 0){
+            trend_status_2 = "↓";
+            increaseRate_status_2 = LoadMyUtil.myPercent(abnormal1,abnormal2);
+
+        }else {
+            trend_status_2 = "-";
+            increaseRate_status_2 = "0.00%";
+        }
+        List<NameDataModel> list = new ArrayList<>();
+        list.add(NameDataModel.builder().name("排水设施总数").data(NumRateTrend.builder().num(count).rate("0.00%").trend("-").build()).build());
+        list.add(NameDataModel.builder().name("本月新增").data(NumRateTrend.builder().num(0).trend("-").build()).build());
+        list.add(NameDataModel.builder().name("正常排水设施").data(NumRateTrend.builder().num(count).rate("0.00%").trend("-").build()).build());
+        list.add(NameDataModel.builder().name("近一月异常排水设施").data(NumRateTrend.builder().num(abnormal1).rate(increaseRate_status_2).trend(trend_status_2).build()).build());
         return list;
     }
 

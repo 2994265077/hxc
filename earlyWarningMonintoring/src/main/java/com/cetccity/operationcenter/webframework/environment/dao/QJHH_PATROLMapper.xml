@@ -15,22 +15,20 @@
     </select>
 
     <select id="rightOne" parameterType="java.util.Map" resultType="com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel">
-        SELECT STATUS "name",count(STATUS) "value" from QJHH_PATROL_INFO
+        SELECT A.STATUS "name",count(A.STATUS) "value" from QJHH_PATROL_INFO A,QJHH_FACILITY_INFO B
         <where>
             <if test="SEWERAGE_ID != null">
-                and SEWERAGE_ID = #{SEWERAGE_ID}
+                and A.SEWERAGE_ID = #{SEWERAGE_ID}
             </if>
-            <if test="lastDay != null">
-                and to_char(CHECK_TIME,'yyyy-MM-dd') &gt; #{lastDay}
+            <if test="startTime != null">
+                and A.CHECK_TIME &gt; to_date(#{startTime},'yyyy-MM-dd')
             </if>
-            <if test="currentMonth != null">
-                and to_char(CHECK_TIME,'yyyy-MM-dd') &lt;= #{currentMonth}
+            <if test="endTime != null">
+                and A.CHECK_TIME &lt;= to_date(#{endTime},'yyyy-MM-dd')
             </if>
-            <if test="currentMonth != null">
-                and to_char(CHECK_TIME,'yyyy-MM') like concat(#{currentMonth},'%')
-            </if>
+            AND A.FACILITY_ID = B."UID"
         </where>
-        group by STATUS
+        group by A.STATUS
     </select>
 
 
