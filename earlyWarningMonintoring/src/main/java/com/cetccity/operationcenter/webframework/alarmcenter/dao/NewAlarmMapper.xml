@@ -37,7 +37,7 @@
 
     <select id="countByTypeLv1s" resultMap="nameValueDataModel">
         SELECT
-            t2.LV_2 AS NAME, NVL(t1.VALUE, 0) AS DATA, t2.LV_1_NAME AS VALUE
+            t2.LV_1 AS NAME, NVL(t1.VALUE, 0) AS DATA, t2.LV_1_NAME AS VALUE
         FROM
             (
                 SELECT
