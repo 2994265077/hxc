@@ -46,7 +46,7 @@
                     ALARM_INFORMATION
                 <where>
                     ALARM_STATE = 1
-                    <if test="level != null">
+                    <if test="level != null AND level != ''">
                         AND ALARM_LEVEL = #{level}
                     </if>
                     <if test="alarm_condition != null">
@@ -88,7 +88,9 @@
                     ALARM_INFORMATION
                 <where>
                     ALARM_STATE = 1
-                    AND
+                    <if test="level != null AND level != ''">
+                        AND ALARM_LEVEL = #{level}
+                    </if>
                     ALARM_TYPE_LV1 = #{type_v1}
                     <if test="begin != null">
                         AND RELEASE_TIME &gt; #{begin}

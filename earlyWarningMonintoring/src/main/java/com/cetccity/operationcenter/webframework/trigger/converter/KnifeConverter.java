@@ -80,7 +80,7 @@ public class KnifeConverter extends AbstractSingleConverter<YjjcQwjjSdmInfoV> {
     protected AlarmInformation fillAlarmInformation(AlarmInformation alarmInformation) {
         alarmInformation = super.fillAlarmInformation(alarmInformation);
         alarmInformation.setSEND_STATE(1);
-        alarmInformation.setALARM_LEVEL("特殊病情");
+        alarmInformation.setALARM_LEVEL("三级-黄");
         alarmInformation.setALARM_TYPE_LV1("007");
         alarmInformation.setALARM_TYPE_LV2("007003");
         alarmInformation.setCHANNEL("卫计局");

@@ -119,6 +119,6 @@ public class WeatherAlarmTriggerServiceImpl extends AbstractEventAlarmTrigger<Ha
                 return "四级-蓝";
             }
         }
-        return sourceLevel;
+        return "四级-蓝";
     }
 }

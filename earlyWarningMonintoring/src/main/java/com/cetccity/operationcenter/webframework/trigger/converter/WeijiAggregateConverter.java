@@ -85,7 +85,6 @@ public abstract class WeijiAggregateConverter extends AbstractAggregatesConverte
 
         AlarmInformation alarmInformation = defaultAlarmInformation();
         fillAlarmCommon(sources, alarmInformation);
-        alarmInformation.setALARM_LEVEL("特殊病情");
         alarmInformation.setCHANNEL("卫计局");
         alarmInformation.setALARM_LEVEL(getAlarmLevel());
 
