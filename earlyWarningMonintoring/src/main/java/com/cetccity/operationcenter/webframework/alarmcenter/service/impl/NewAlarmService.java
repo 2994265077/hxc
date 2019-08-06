@@ -10,20 +10,13 @@
 package com.cetccity.operationcenter.webframework.alarmcenter.service.impl;
 
 import com.cetccity.operationcenter.webframework.alarmcenter.dao.NewAlarmMapper;
-import com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.ALARM_INFORMATION;
 import com.cetccity.operationcenter.webframework.alarmcenter.vo.AlarmLevelCount;
 import com.cetccity.operationcenter.webframework.alarmcenter.vo.AlarmTypeModel;
-import com.cetccity.operationcenter.webframework.alarmcenter.vo.AlarmTypeNode;
-import com.cetccity.operationcenter.webframework.common.exception.CetcCommonException;
-import com.cetccity.operationcenter.webframework.core.frame.basicmodel.LoadMap;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueTypeModel;
 import com.cetccity.operationcenter.webframework.core.tools.ESOperate;
 import com.cetccity.operationcenter.webframework.core.tools.LoadMyUtil;
 import com.cetccity.operationcenter.webframework.urbansign.api.model.NameValueDataModel;
-import com.cetccity.operationcenter.webframework.web.model.incident.AlarmTodayType;
-import com.github.pagehelper.PageHelper;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -89,42 +82,24 @@ public class NewAlarmService {
 
     public List<NameValueDataModel<Integer>> alarmTypeLv1s(LocalDate localDate, String type, String level) {
         String alarmCondition = getCondition(type);
-        String colorLevel = null;
-        if (StringUtils.isNotBlank(level)) {
-            Map<String, String> levelMap = levels.stream()
-                    .collect(Collectors.toMap(NameValueModel::getName, NameValueModel::getValue));
-            colorLevel = levelMap.get(level);
-            if (StringUtils.isEmpty(colorLevel)) {
-                throw CetcCommonException.defaultException("未找到该预警等级");
-            }
-        }
         LocalDateTime begin = null;
         LocalDateTime end = null;
         if (Objects.nonNull(localDate)) {
             begin = localDate.atStartOfDay();
             end = localDate.plusDays(1L).atStartOfDay();
         }
-        return newAlarmMapper.countByTypeLv1s(begin, end, alarmCondition, colorLevel);
+        return newAlarmMapper.countByTypeLv1s(begin, end, alarmCondition, level);
     }
 
     public List<AlarmTypeModel> alarmTypeLv2s(LocalDate localDate, String type, String level, String typeV1) {
         String alarmCondition = getCondition(type);
-        String colorLevel = null;
-        if (StringUtils.isNotBlank(level)) {
-            Map<String, String> levelMap = levels.stream()
-                    .collect(Collectors.toMap(NameValueModel::getName, NameValueModel::getValue));
-            colorLevel = levelMap.get(level);
-            if (StringUtils.isEmpty(colorLevel)) {
-                throw CetcCommonException.defaultException("未找到该预警等级");
-            }
-        }
         LocalDateTime begin = null;
         LocalDateTime end = null;
         if (Objects.nonNull(localDate)) {
             begin = localDate.atStartOfDay();
             end = localDate.plusDays(1L).atStartOfDay();
         }
-        List<AlarmTypeModel> res = newAlarmMapper.countByTypeLv2s(begin, end, alarmCondition, colorLevel, typeV1);
+        List<AlarmTypeModel> res = newAlarmMapper.countByTypeLv2s(begin, end, alarmCondition, level, typeV1);
         int sum = res.stream().peek(obj -> obj.setLayerid(LoadMyUtil.getPropertiesVauleOfKey("loadmap.properties",ESOperate.dbName+"."+obj.getCode()))).mapToInt(AlarmTypeModel::getCount).sum();
         AlarmTypeModel total = AlarmTypeModel.builder().name("全部").code("").count(sum).layerid("").build();
 
