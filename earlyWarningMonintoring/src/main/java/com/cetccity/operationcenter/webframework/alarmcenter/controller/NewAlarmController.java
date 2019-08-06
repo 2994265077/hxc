@@ -11,6 +11,7 @@ package com.cetccity.operationcenter.webframework.alarmcenter.controller;
 
 import com.cetccity.operationcenter.webframework.alarmcenter.service.impl.NewAlarmService;
 import com.cetccity.operationcenter.webframework.alarmcenter.vo.AlarmLevelCount;
+import com.cetccity.operationcenter.webframework.alarmcenter.vo.AlarmTypeModel;
 import com.cetccity.operationcenter.webframework.backstage.community.entity.CommunityInfo;
 import com.cetccity.operationcenter.webframework.backstage.community.service.CommunityInfoService;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel;
@@ -70,7 +71,7 @@ public class NewAlarmController {
 
     @GetMapping("/typeV2")
     @ApiOperation("二级类型列表")
-    public HttpResponseModel<List<NameValueDataModel<Integer>>> typeV2s(String date, String type, String level, String typeV1) {
+    public HttpResponseModel<List<AlarmTypeModel>> typeV2s(String date, String type, String level, String typeV1) {
         LocalDate localDate = null;
         if (StringUtils.isNotBlank(date)) {
             localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));

@@ -71,9 +71,9 @@
             ON t1.NAME = t2.LV_1
     </select>
 
-    <select id="countByTypeLv2s" resultMap="nameValueDataModel">
+    <select id="countByTypeLv2s" resultType="com.cetccity.operationcenter.webframework.alarmcenter.vo.AlarmTypeModel">
         SELECT
-            t2.LV_2 AS NAME, NVL(t1.VALUE,0) AS DATA, t2.LV_2_NAME AS VALUE
+            t2.LV_2 AS CODE, NVL(t1.VALUE,0) AS COUNT, t2.LV_2_NAME AS NAME
         FROM
             (
                 SELECT

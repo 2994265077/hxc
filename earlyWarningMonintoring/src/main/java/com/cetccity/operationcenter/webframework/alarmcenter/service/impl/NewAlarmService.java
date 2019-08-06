@@ -12,6 +12,7 @@ package com.cetccity.operationcenter.webframework.alarmcenter.service.impl;
 import com.cetccity.operationcenter.webframework.alarmcenter.dao.NewAlarmMapper;
 import com.cetccity.operationcenter.webframework.alarmcenter.dao.entity.ALARM_INFORMATION;
 import com.cetccity.operationcenter.webframework.alarmcenter.vo.AlarmLevelCount;
+import com.cetccity.operationcenter.webframework.alarmcenter.vo.AlarmTypeModel;
 import com.cetccity.operationcenter.webframework.alarmcenter.vo.AlarmTypeNode;
 import com.cetccity.operationcenter.webframework.common.exception.CetcCommonException;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.LoadMap;
@@ -106,7 +107,7 @@ public class NewAlarmService {
         return newAlarmMapper.countByTypeLv1s(begin, end, alarmCondition, colorLevel);
     }
 
-    public List<NameValueDataModel<Integer>> alarmTypeLv2s(LocalDate localDate, String type, String level, String typeV1) {
+    public List<AlarmTypeModel> alarmTypeLv2s(LocalDate localDate, String type, String level, String typeV1) {
         String alarmCondition = getCondition(type);
         String colorLevel = null;
         if (StringUtils.isNotBlank(level)) {
@@ -123,14 +124,12 @@ public class NewAlarmService {
             begin = localDate.atStartOfDay();
             end = localDate.plusDays(1L).atStartOfDay();
         }
-        List<NameValueDataModel<Integer>> nameValueDataModels = newAlarmMapper.countByTypeLv2s(begin, end, alarmCondition, colorLevel, typeV1);
-        int sum = nameValueDataModels.stream().mapToInt(NameValueDataModel::getData).sum();
-        NameValueDataModel<Integer> total = new NameValueDataModel<>();
-        total.setName("全部");
-        total.setValue("");
-        total.setData(sum);
-        nameValueDataModels.add(0, total);
-        return nameValueDataModels;
+        List<AlarmTypeModel> res = newAlarmMapper.countByTypeLv2s(begin, end, alarmCondition, colorLevel, typeV1);
+        int sum = res.stream().peek(obj -> obj.setLayerid(LoadMyUtil.getPropertiesVauleOfKey("loadmap.properties",ESOperate.dbName+"."+obj.getCode()))).mapToInt(AlarmTypeModel::getCount).sum();
+        AlarmTypeModel total = AlarmTypeModel.builder().name("全部").code("").count(sum).layerid("").build();
+
+        res.add(0, total);
+        return res;
     }
 
     public List types() {

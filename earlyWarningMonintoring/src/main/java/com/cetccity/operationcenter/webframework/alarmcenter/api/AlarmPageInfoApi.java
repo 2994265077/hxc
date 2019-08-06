@@ -28,7 +28,11 @@ public interface AlarmPageInfoApi {
             "舆情预警	    010  \n" +
             "地质预警	    011  \n")
     @ApiImplicitParams({
-            @ApiImplicitParam(value = "预警编号--alarm_code", name = "alarm_code", dataType = "string", paramType = "path", required = true)
+            @ApiImplicitParam(value = "预警编号--alarm_code", name = "alarm_code", dataType = "string", paramType = "path", required = true),
+            @ApiImplicitParam(value = "日期--date", name = "date", dataType = "string", paramType = "query", required = false),
+            @ApiImplicitParam(value = "预警类型--type", name = "type", dataType = "string", paramType = "query", required = false),
+            @ApiImplicitParam(value = "预警二级类型--typeV2", name = "typeV2", dataType = "string", paramType = "query", required = false),
+            @ApiImplicitParam(value = "预警等级--level", name = "level", dataType = "string", paramType = "query", required = false)
     })
     @RequestMapping(value = "/{alarm_code}/left/three",method = RequestMethod.GET)
     List<AlarmTodayType> LeftThree(@PathVariable("alarm_code") String alarm_code,String date, String type, String typeV2,String level);

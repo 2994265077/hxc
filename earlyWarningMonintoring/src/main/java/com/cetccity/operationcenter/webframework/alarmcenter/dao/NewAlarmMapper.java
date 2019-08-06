@@ -9,6 +9,7 @@
  */
 package com.cetccity.operationcenter.webframework.alarmcenter.dao;
 
+import com.cetccity.operationcenter.webframework.alarmcenter.vo.AlarmTypeModel;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel;
 import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueTypeModel;
 import com.cetccity.operationcenter.webframework.urbansign.api.model.NameValueDataModel;
@@ -33,7 +34,7 @@ public interface NewAlarmMapper {
 
     List<NameValueDataModel<Integer>> countByTypeLv1s(@Param("begin") LocalDateTime begin, @Param("end") LocalDateTime end, @Param("alarm_condition")String alarmCondition, @Param("level")String level);
 
-    List<NameValueDataModel<Integer>> countByTypeLv2s(@Param("begin") LocalDateTime begin, @Param("end") LocalDateTime end, @Param("alarm_condition")String alarmCondition, @Param("level")String level, @Param("type_v1") String typeV1);
+    List<AlarmTypeModel> countByTypeLv2s(@Param("begin") LocalDateTime begin, @Param("end") LocalDateTime end, @Param("alarm_condition")String alarmCondition, @Param("level")String level, @Param("type_v1") String typeV1);
 
     List<NameValueModel> types();
 }
