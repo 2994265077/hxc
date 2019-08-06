@@ -28,6 +28,18 @@
             REGION_CODE, REGION_NAME, STREET_CODE, STREET_NAME
     </select>
 
+    <select id="queryCommunities" resultMap="communityInfo">
+        SELECT
+            COMMUNITY_CODE, COMMUNITY_NAME
+        FROM
+            COMMUNITY_CODE
+        <if test="street_code != null">
+            WHERE STREET_CODE = #{street_code}
+        </if>
+        GROUP BY
+            COMMUNITY_CODE, COMMUNITY_NAME
+    </select>
+
     <select id="queryStreetCodeByName" resultType="java.lang.String" parameterType="java.lang.String">
         SELECT DISTINCT STREET_CODE FROM COMMUNITY_CODE WHERE STREET_NAME = #{streetName}
     </select>

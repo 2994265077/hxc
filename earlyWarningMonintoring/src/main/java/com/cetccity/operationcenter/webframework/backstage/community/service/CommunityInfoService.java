@@ -64,6 +64,13 @@ public class CommunityInfoService {
         return communityInfoMapper.queryStreets();
     }
 
+    public List<CommunityInfo> queryCommunities(String streetCode) {
+        if (StringUtils.isBlank(streetCode)) {
+            return queryCommunities();
+        }
+        return communityInfoMapper.queryCommunities(streetCode);
+    }
+
 
     public List<RegionNode> communityTree() {
         List<CommunityInfo> communityInfos = communityInfoMapper.queryAll();

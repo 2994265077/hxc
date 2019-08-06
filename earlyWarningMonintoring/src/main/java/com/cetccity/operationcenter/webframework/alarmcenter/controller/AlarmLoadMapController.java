@@ -17,19 +17,19 @@ public class AlarmLoadMapController implements AlarmLoadMapApi {
     @Autowired
     ALARM_INFORMATIONService aLARM_INFORMATIONService;
 
-    public List<LoadMap> alarmLoadMapLV2(@PathVariable("alarm_code") String alarm_code, String street, String date,String id,String startTime,String endTime)throws IOException {
-        List<LoadMap> map_list = aLARM_INFORMATIONService.alarmLoadMapLV2(alarm_code,street,date,id,startTime,endTime);
+    public List<LoadMap> alarmLoadMapLV2(@PathVariable("alarm_code") String alarm_code, String street, String date,String id,String startTime,String endTime, String type, String level)throws IOException {
+        List<LoadMap> map_list = aLARM_INFORMATIONService.alarmLoadMapLV2(alarm_code,street,date,id,startTime,endTime, type,  level);
         return map_list;
     }
 
-    public List<IconTypeLoadMap> alarmLoadMap002002(String street, String date, String id, String startTime, String endTime)throws IOException{
-        List<IconTypeLoadMap> map_list = aLARM_INFORMATIONService.alarmLoadMap002002(street,date,id,startTime,endTime);
+    public List<IconTypeLoadMap> alarmLoadMap002002(String street, String date, String id, String startTime, String endTime, String type, String level)throws IOException{
+        List<IconTypeLoadMap> map_list = aLARM_INFORMATIONService.alarmLoadMap002002(street,date,id,startTime,endTime, type, level);
         return map_list;
     }
 
 
-    public List<LoadMap> alarmLoadMapLeftTwo(@PathVariable("alarm_code") String alarm_code,String date)throws IOException{
-        List<LoadMap> map_list = aLARM_INFORMATIONService.alarmLoadMapLeftTwo(alarm_code,date);
+    public List<LoadMap> alarmLoadMapLeftTwo(@PathVariable("alarm_code") String alarm_code,String date, String type, String level)throws IOException{
+        List<LoadMap> map_list = aLARM_INFORMATIONService.alarmLoadMapLeftTwo(alarm_code,date, type, level);
         return map_list;
     }
 

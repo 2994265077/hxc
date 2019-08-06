@@ -137,4 +137,6 @@ public class ALARM_INFORMATION implements Serializable {
 
     private String street;
 
+    private String condition;
+
 }

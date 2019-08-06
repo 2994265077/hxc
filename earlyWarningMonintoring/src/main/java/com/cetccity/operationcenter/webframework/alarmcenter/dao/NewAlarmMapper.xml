@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cetccity.operationcenter.webframework.alarmcenter.dao.NewAlarmMapper">
+
+    <resultMap id="nameValueDataModel" type="com.cetccity.operationcenter.webframework.urbansign.api.model.NameValueDataModel">
+        <result property="name" column="NAME" javaType="java.lang.String" />
+        <result property="value" column="VALUE" javaType="java.lang.String" />
+        <result property="data" column="DATA" javaType="java.lang.Integer" />
+    </resultMap>
+
+    <select id="countByLevel" resultMap="com.cetccity.operationcenter.webframework.hiddendanger.dao.HiddenDangerThreeSmallChartMapper.nameValueTypeModel">
+        SELECT
+            COUNT(*) AS VALUE, ALARM_LEVEL AS NAME
+        FROM
+            ALARM_INFORMATION
+        <where>
+            ALARM_STATE = 1
+            <if test="begin != null">
+                AND RELEASE_TIME &gt; #{begin}
+            </if>
+            <if test="end != null">
+                AND RELEASE_TIME &lt; #{end}
+            </if>
+            <if test="alarm_condition != null">
+                AND ALARM_TYPE_LV2 IN (SELECT DISTINCT LV_2 FROM ALARM_INFO_CODE WHERE LV_2_NAME LIKE #{alarm_condition})
+            </if>
+            <if test="type_v1 != null and type_v1 != ''">
+                AND ALARM_TYPE_LV1 = #{type_v1}
+            </if>
+            <if test="type_v2 != null and type_v2 != ''">
+                AND ALARM_TYPE_LV2 = #{type_v2}
+            </if>
+        </where>
+        GROUP BY
+            ALARM_LEVEL
+    </select>
+
+    <select id="countByTypeLv1s" resultMap="nameValueDataModel">
+        SELECT
+            t2.LV_2 AS NAME, NVL(t1.VALUE, 0) AS DATA, t2.LV_1_NAME AS VALUE
+        FROM
+            (
+                SELECT
+                    COUNT(*) AS VALUE, ALARM_TYPE_LV1 AS NAME
+                FROM
+                    ALARM_INFORMATION
+                <where>
+                    ALARM_STATE = 1
+                    <if test="begin != null">
+                        AND RELEASE_TIME &gt; #{begin}
+                    </if>
+                    <if test="end != null">
+                        AND RELEASE_TIME &lt; #{end}
+                    </if>
+                </where>
+                GROUP BY
+                    ALARM_TYPE_LV1
+            ) t1
+            RIGHT JOIN
+            (
+                SELECT
+                     DISTINCT LV_1, LV_1_NAME
+                FROM
+                    ALARM_INFO_CODE
+                <where>
+                    <if test="alarm_condition != null">
+                        LV_2_NAME LIKE #{alarm_condition}
+                    </if>
+                </where>
+            ) t2
+            ON t1.NAME = t2.LV_1
+    </select>
+
+    <select id="countByTypeLv2s" resultMap="nameValueDataModel">
+        SELECT
+            t2.LV_2 AS NAME, NVL(t1.VALUE,0) AS DATA, t2.LV_2_NAME AS VALUE
+        FROM
+            (
+                SELECT
+                    COUNT(*) AS VALUE, ALARM_TYPE_LV2 AS NAME
+                FROM
+                    ALARM_INFORMATION
+                <where>
+                    ALARM_STATE = 1
+                    AND
+                    ALARM_TYPE_LV1 = #{type_v1}
+                    <if test="begin != null">
+                        AND RELEASE_TIME &gt; #{begin}
+                    </if>
+                    <if test="end != null">
+                        AND RELEASE_TIME &lt; #{end}
+                    </if>
+                </where>
+                GROUP BY
+                    ALARM_TYPE_LV2
+            ) t1
+            RIGHT JOIN
+            (
+                SELECT
+                    DISTINCT LV_2, LV_2_NAME
+                FROM
+                    ALARM_INFO_CODE
+                <where>
+                    LV_1 = #{type_v1}
+                    <if test="alarm_condition != null">
+                        AND LV_2_NAME LIKE #{alarm_condition}
+                    </if>
+                </where>
+            ) t2
+            ON t1.NAME = t2.LV_2
+    </select>
+
+    <select id="types" resultType="com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValueModel">
+        SELECT
+            DISTINCT LV_2_NAME AS NAME, LV_2 AS VALUE
+        FROM ALARM_INFO_CODE
+    </select>
+
+</mapper>

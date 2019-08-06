@@ -47,7 +47,7 @@ public interface AlarmLoadMapApi {
             @ApiImplicitParam(value = "结束时间--endTime-2019-12-07", name = "endTime", dataType = "string", paramType = "query")
     })
     @RequestMapping(value = "{alarm_code}/selectByExample",method = RequestMethod.GET)
-    List<LoadMap> alarmLoadMapLV2(@PathVariable("alarm_code") String alarm_code, String street, String date,String id,String startTime,String endTime)throws IOException;
+    List<LoadMap> alarmLoadMapLV2(@PathVariable("alarm_code") String alarm_code, String street, String date,String id,String startTime,String endTime, String type, String level)throws IOException;
 
     @ApiOperation(value = "今日预警--预警类型落图", notes = "今日预警--预警类型落图--表名ALARM_INFORMATION 危险源巡查 002002")
     @ApiImplicitParams({
@@ -56,7 +56,7 @@ public interface AlarmLoadMapApi {
             @ApiImplicitParam(value = "结束时间--endTime-2019-12-07", name = "endTime", dataType = "string", paramType = "query")
     })
     @RequestMapping(value = "002002/selectByExample",method = RequestMethod.GET)
-    List<IconTypeLoadMap> alarmLoadMap002002(String street, String date, String id, String startTime, String endTime)throws IOException;
+    List<IconTypeLoadMap> alarmLoadMap002002(String street, String date, String id, String startTime, String endTime, String type, String level)throws IOException;
 
     @ApiOperation(value = "今日预警--预警类型落图", notes = "今日预警--预警类型落图--表名ALARM_INFORMATION  \n"+
             "001	社会安全事件  \n"+
@@ -75,7 +75,7 @@ public interface AlarmLoadMapApi {
             @ApiImplicitParam(value = "预警编号--alarm_code-001002", name = "alarm_code", dataType = "string", paramType = "path", required = true)
     })
     @RequestMapping(value = "{alarm_code}/leftTwo/selectByExample",method = RequestMethod.GET)
-    List<LoadMap> alarmLoadMapLeftTwo(@PathVariable("alarm_code") String alarm_code,String date)throws IOException;
+    List<LoadMap> alarmLoadMapLeftTwo(@PathVariable("alarm_code") String alarm_code,String date, String type, String level)throws IOException;
 
 
 }

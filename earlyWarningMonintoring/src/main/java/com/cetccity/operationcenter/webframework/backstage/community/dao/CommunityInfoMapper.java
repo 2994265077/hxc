@@ -41,6 +41,8 @@ public interface CommunityInfoMapper {
      */
     List<CommunityInfo> queryStreets();
 
+    List<CommunityInfo> queryCommunities(@Param("street_code") String streetCode);
+
     String queryStreetCodeByName(@Param("streetName") String streetName);
 
     long countAll();

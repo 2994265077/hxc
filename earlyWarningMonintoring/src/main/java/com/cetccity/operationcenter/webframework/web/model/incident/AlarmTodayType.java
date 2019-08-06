@@ -31,4 +31,6 @@ public class AlarmTodayType {
      */
     private boolean showDetail;
 
+    private String alarmLevel;
+
 }

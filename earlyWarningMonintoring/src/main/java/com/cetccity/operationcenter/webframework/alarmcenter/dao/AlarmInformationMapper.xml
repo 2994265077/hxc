@@ -70,6 +70,9 @@
             <if test="endTime != null and endTime != ''">
                 and RELEASE_TIME &lt; to_date(#{endTime},'yyyy-MM-dd')
             </if>
+            <if test="condition != null and condition != ''">
+                AND ALARM_TYPE_LV2 IN (SELECT DISTINCT LV_2 FROM ALARM_INFO_CODE WHERE LV_2_NAME like #{condition})
+            </if>
         </where>
         order by RELEASE_TIME desc
     </select>

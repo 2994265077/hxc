@@ -31,5 +31,5 @@ public interface AlarmPageInfoApi {
             @ApiImplicitParam(value = "预警编号--alarm_code", name = "alarm_code", dataType = "string", paramType = "path", required = true)
     })
     @RequestMapping(value = "/{alarm_code}/left/three",method = RequestMethod.GET)
-    List<AlarmTodayType> LeftThree(@PathVariable("alarm_code") String alarm_code,String date);
+    List<AlarmTodayType> LeftThree(@PathVariable("alarm_code") String alarm_code,String date, String type, String typeV2,String level);
 }

@@ -1,5 +1,10 @@
 package com.cetccity.operationcenter.webframework.urbansign.api.model;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
 public class NameValueDataModel<T> {
 
     private String name;

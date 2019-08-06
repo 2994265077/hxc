@@ -18,15 +18,15 @@ public interface ALARM_INFORMATIONService {
 
     List<NameCodeValueModel> LeftTwo(String date)throws IOException;
 
-    List<AlarmTodayType> LeftThree(String alarm_code,String date);
+    List<AlarmTodayType> LeftThree(String alarm_code,String date, String type, String typeV2,String level);
 
     List<LinkedHashMap> LeftThreeLoadMap(String alarm_code)throws IOException;
 
-    List<LoadMap> alarmLoadMapLV2(String alarm_code, String street, String date, String id, String startTime, String endTime);
+    List<LoadMap> alarmLoadMapLV2(String alarm_code, String street, String date, String id, String startTime, String endTime, String type, String level);
 
-    List<IconTypeLoadMap> alarmLoadMap002002(String street, String date, String id, String startTime, String endTime);
+    List<IconTypeLoadMap> alarmLoadMap002002(String street, String date, String id, String startTime, String endTime, String type,String level);
 
-    List<LoadMap> alarmLoadMapLeftTwo(String alarm_code,String date);
+    List<LoadMap> alarmLoadMapLeftTwo(String alarm_code,String date, String type, String level);
 
     EarlyWarningCenter earlyInformationCenter(ALARM_INFORMATION aLARM_INFORMATION);
 

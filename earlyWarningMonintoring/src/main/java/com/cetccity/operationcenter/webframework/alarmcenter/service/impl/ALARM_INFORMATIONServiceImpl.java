@@ -21,6 +21,8 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -83,7 +85,7 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
          return nameCodeValueModel_list;
     }
 
-    public List<AlarmTodayType> LeftThree(String alarm_code,String date){
+    public List<AlarmTodayType>     LeftThree(String alarm_code,String date, String type, String typeV2,String level){
         List<AlarmTodayType> alarmTodayType_list = new ArrayList<AlarmTodayType>();
         //String date = LoadMyUtil.getMyTime("DATE",0);
         ALARM_INFORMATION aLARM_INFORMATION = new ALARM_INFORMATION();
@@ -94,10 +96,18 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
         for (LinkedHashMap map_alarm:map_list){
             map_alarm_code.put((String) map_alarm.get("LV_2"),(String)map_alarm.get("LV_2_NAME"));
         }
+        String alarmCondition = getCondition(type);
+        if (StringUtils.isNotEmpty(level)) {
+            aLARM_INFORMATION.setALARM_LEVEL(level);
+        }
+        if (StringUtils.isNotEmpty(typeV2)) {
+            aLARM_INFORMATION.setALARM_TYPE_LV2(typeV2);
+        }
         if(StringUtils.isEmpty(date)){
             aLARM_INFORMATION.setALARM_STATE(1);//1:正在预警中;0:预警已结束
             //aLARM_INFORMATION.setSEND_STATE(1);
         }else{
+            aLARM_INFORMATION.setALARM_STATE(1);
             aLARM_INFORMATION.setRELEASE_TIME(date);
             //aLARM_INFORMATION.setSEND_STATE(1);
         }
@@ -116,6 +126,7 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
             alarmTodayType.setTime(u.getRELEASE_TIME());
             alarmTodayType.setCompany(u.getALARM_OBJECT());
             alarmTodayType.setSystemid(u.getSYSTEM_ID());
+            alarmTodayType.setAlarmLevel(u.getALARM_LEVEL());
             //alarmTodayType.setNeedPush(set.contains(u.getALARM_TYPE_LV2()));
             alarmTodayType.setHasPush(set.contains(u.getALARM_TYPE_LV2()) && 1== (u.getSEND_STATE()==null? 0:u.getSEND_STATE()) ? true : false);
             alarmTodayType.setShowDetail("004003".equals(u.getALARM_TYPE_LV2()));
@@ -123,6 +134,19 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
         });
         return alarmTodayType_list;
     }
+
+    private String getCondition(String type) {
+        String alarmCondition = null;
+        if ("1".equals(type)) {
+            alarmCondition = "%预警%";
+        }
+        if ("0".equals(type)) {
+            alarmCondition = "%报警%";
+        }
+        return alarmCondition;
+    }
+
+
 
     public List<LinkedHashMap> LeftThreeLoadMap(String alarm_code) throws IOException{
         List<LinkedHashMap> list_month = new ArrayList<LinkedHashMap>();
@@ -169,7 +193,7 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
             return list_month ;
     }
 
-    public List<LoadMap> alarmLoadMapLV2(String alarm_code,String street,String date,String id,String startTime,String endTime){
+    public List<LoadMap> alarmLoadMapLV2(String alarm_code,String street,String date,String id,String startTime,String endTime, String type, String level){
         List<LoadMap> loadMap_list = new ArrayList<LoadMap>();
         String layerid = LoadMyUtil.getPropertiesVauleOfKey("loadmap.properties",ESOperate.dbName+"."+alarm_code);
         String streetCode = null;
@@ -181,9 +205,18 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
         //aLARM_INFORMATION.setALARM_STATE(1);//1:正在预警中;0:预警已结束
         //aLARM_INFORMATION.setSEND_STATE(1);
         aLARM_INFORMATION.setSTREET_CODE(streetCode);
-        aLARM_INFORMATION.setRELEASE_TIME(date);
-        aLARM_INFORMATION.setStartTime(startTime);
-        aLARM_INFORMATION.setEndTime(endTime);
+        String condition = getCondition(type);
+        if (StringUtils.isNotEmpty(condition)) {
+            aLARM_INFORMATION.setCondition(condition);
+        }
+        if (StringUtils.isNotEmpty(date)) {
+            LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            aLARM_INFORMATION.setStartTime(localDate.atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            aLARM_INFORMATION.setEndTime(localDate.plusDays(1).atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        }
+        if (StringUtils.isNotEmpty(level)) {
+            aLARM_INFORMATION.setALARM_LEVEL(level);
+        }
         aLARM_INFORMATION.setID(id);
         List<ALARM_INFORMATION> aLARM_INFORMATION_list = aLARM_INFORMATIONMapper.getALARM_INFORMATION(aLARM_INFORMATION);
         for(ALARM_INFORMATION u:aLARM_INFORMATION_list) {
@@ -193,7 +226,7 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
         return loadMap_list;
     }
 
-    public List<IconTypeLoadMap> alarmLoadMap002002(String street, String date, String id, String startTime, String endTime){
+    public List<IconTypeLoadMap> alarmLoadMap002002(String street, String date, String id, String startTime, String endTime, String type, String level){
         String alarm_code = "002002";
         List<IconTypeLoadMap> loadMap_list = new ArrayList<IconTypeLoadMap>();
         String layerid = LoadMyUtil.getPropertiesVauleOfKey("loadmap.properties",ESOperate.dbName+"."+alarm_code);
@@ -206,15 +239,24 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
         aLARM_INFORMATION.setALARM_STATE(1);//1:正在预警中;0:预警已结束
         //aLARM_INFORMATION.setSEND_STATE(1);
         aLARM_INFORMATION.setSTREET_CODE(streetCode);
-        aLARM_INFORMATION.setRELEASE_TIME(date);
-        aLARM_INFORMATION.setStartTime(startTime);
-        aLARM_INFORMATION.setEndTime(endTime);
+        String condition = getCondition(type);
+        if (StringUtils.isNotEmpty(condition)) {
+            aLARM_INFORMATION.setCondition(condition);
+        }
+        if (StringUtils.isNotEmpty(date)) {
+            LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            aLARM_INFORMATION.setStartTime(localDate.atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            aLARM_INFORMATION.setEndTime(localDate.plusDays(1).atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        }
+        if (StringUtils.isNotEmpty(level)) {
+            aLARM_INFORMATION.setALARM_LEVEL(level);
+        }
         aLARM_INFORMATION.setID(id);
         List<ALARM_INFORMATION> aLARM_INFORMATION_list = aLARM_INFORMATIONMapper.getALARM_INFORMATION(aLARM_INFORMATION);
 
         Map<String,String> map_level = new HashMap();
-        map_level.put("红","0");map_level.put("橙","1");
-        map_level.put("黄","2");map_level.put("蓝","3");
+        map_level.put("一级-红","0");map_level.put("二级-橙","1");
+        map_level.put("三级-黄","2");map_level.put("四级-蓝","3");
 
         aLARM_INFORMATION_list.stream().filter(u->ObjectUtils.isNotEmpty(u.getJD84())).collect(Collectors.toList()).forEach(u->{
             loadMap_list.add(IconTypeLoadMap.builder().id(u.getID()).layerid(LoadMyUtil.getPropertiesVauleOfKey("loadmap.properties","31project_april.002002"))
@@ -224,13 +266,24 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
         return loadMap_list;
     }
 
-    public List<LoadMap> alarmLoadMapLeftTwo(String alarm_code,String date_jump){
+    public List<LoadMap> alarmLoadMapLeftTwo(String alarm_code,String date_jump, String type, String level){
         List<LoadMap> loadMap_list = new ArrayList<LoadMap>();
         String layerid = LoadMyUtil.getPropertiesVauleOfKey("loadmap.properties",ESOperate.dbName+"."+alarm_code);
         ALARM_INFORMATION aLARM_INFORMATION = new ALARM_INFORMATION();
         aLARM_INFORMATION.setALARM_TYPE_LV1(alarm_code);
         //aLARM_INFORMATION.setALARM_STATE(1);
-        aLARM_INFORMATION.setRELEASE_TIME(date_jump);
+        String condition = getCondition(type);
+        if (StringUtils.isNotEmpty(condition)) {
+            aLARM_INFORMATION.setCondition(condition);
+        }
+        if (StringUtils.isNotEmpty(date_jump)) {
+            LocalDate localDate = LocalDate.parse(date_jump, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            aLARM_INFORMATION.setStartTime(localDate.atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            aLARM_INFORMATION.setEndTime(localDate.plusDays(1).atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        }
+        if (StringUtils.isNotEmpty(level)) {
+            aLARM_INFORMATION.setALARM_LEVEL(level);
+        }
         List<ALARM_INFORMATION> aLARM_INFORMATION_list = aLARM_INFORMATIONMapper.getALARM_INFORMATION(aLARM_INFORMATION);
         aLARM_INFORMATION_list.stream().forEach(u->loadMap_list.add(LoadMap.builder().id(u.getID()).tableName("ALARM_INFORMATION")
         .layerid(layerid).jd(u.getJD84()).wd(u.getWD84()).build()));

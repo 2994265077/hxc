@@ -14,8 +14,8 @@ public class AlarmPageInfoController implements AlarmPageInfoApi {
     @Autowired
     ALARM_INFORMATIONService aLARM_INFORMATIONService;
 
-    public List<AlarmTodayType> LeftThree(@PathVariable("alarm_code") String alarm_code,String date){
-        List<AlarmTodayType> alarmTodayType_list = aLARM_INFORMATIONService.LeftThree(alarm_code,date);
+    public List<AlarmTodayType> LeftThree(@PathVariable("alarm_code") String alarm_code,String date, String type, String typeV2,String level){
+        List<AlarmTodayType> alarmTodayType_list = aLARM_INFORMATIONService.LeftThree(alarm_code,date, type, typeV2, level);
         return alarmTodayType_list;
     }
 
