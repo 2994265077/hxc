@@ -46,6 +46,12 @@
                     ALARM_INFORMATION
                 <where>
                     ALARM_STATE = 1
+                    <if test="level != null">
+                        AND ALARM_LEVEL = #{level}
+                    </if>
+                    <if test="alarm_condition != null">
+                        AND ALARM_TYPE_LV2 IN (SELECT DISTINCT LV_2 FROM ALARM_INFO_CODE WHERE LV_2_NAME LIKE #{alarm_condition})
+                    </if>
                     <if test="begin != null">
                         AND RELEASE_TIME &gt; #{begin}
                     </if>
