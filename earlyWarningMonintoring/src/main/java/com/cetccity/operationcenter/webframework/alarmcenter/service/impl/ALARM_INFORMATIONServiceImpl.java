@@ -255,6 +255,9 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
             aLARM_INFORMATION.setEndTime(localDate.plusDays(1).atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         }
         if (StringUtils.isNotEmpty(level)) {
+            level = Arrays.stream(level.split(","))
+                    .map(str -> "'" + str + "'")
+                    .collect(Collectors.joining(","));
             aLARM_INFORMATION.setALARM_LEVEL(level);
         }
         aLARM_INFORMATION.setID(id);
