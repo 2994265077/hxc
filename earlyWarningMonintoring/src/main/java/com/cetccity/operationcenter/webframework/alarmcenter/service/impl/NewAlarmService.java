@@ -53,7 +53,7 @@ public class NewAlarmService {
         Map<String, Integer> queryCounts;
         if (Objects.nonNull(localDate)) {
             queryCounts = newAlarmMapper.countByLevel(
-                        localDate.atStartOfDay(),
+                        null,
                         localDate
                         .plusDays(1)
                         .atStartOfDay(),
