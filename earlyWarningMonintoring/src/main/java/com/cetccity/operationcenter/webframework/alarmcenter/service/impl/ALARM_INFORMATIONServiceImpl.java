@@ -97,6 +97,7 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
             map_alarm_code.put((String) map_alarm.get("LV_2"),(String)map_alarm.get("LV_2_NAME"));
         }
         String alarmCondition = getCondition(type);
+        aLARM_INFORMATION.setCondition(alarmCondition);
         if (StringUtils.isNotEmpty(level)) {
             level = Arrays.stream(level.split(","))
                     .map(str -> "'" + str + "'")
