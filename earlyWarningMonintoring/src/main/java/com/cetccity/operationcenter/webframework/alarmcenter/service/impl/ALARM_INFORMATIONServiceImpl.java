@@ -98,6 +98,9 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
         }
         String alarmCondition = getCondition(type);
         if (StringUtils.isNotEmpty(level)) {
+            level = Arrays.stream(level.split(","))
+                    .map(str -> "'" + str + "'")
+                    .collect(Collectors.joining(","));
             aLARM_INFORMATION.setALARM_LEVEL(level);
         }
         if (StringUtils.isNotEmpty(typeV2)) {
@@ -202,7 +205,7 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
         }
         ALARM_INFORMATION aLARM_INFORMATION = new ALARM_INFORMATION();
         aLARM_INFORMATION.setALARM_TYPE_LV2(alarm_code);
-        //aLARM_INFORMATION.setALARM_STATE(1);//1:正在预警中;0:预警已结束
+        aLARM_INFORMATION.setALARM_STATE(1);//1:正在预警中;0:预警已结束
         //aLARM_INFORMATION.setSEND_STATE(1);
         aLARM_INFORMATION.setSTREET_CODE(streetCode);
         String condition = getCondition(type);
@@ -215,6 +218,9 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
             aLARM_INFORMATION.setEndTime(localDate.plusDays(1).atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         }
         if (StringUtils.isNotEmpty(level)) {
+            level = Arrays.stream(level.split(","))
+                    .map(str -> "'" + str + "'")
+                    .collect(Collectors.joining(","));
             aLARM_INFORMATION.setALARM_LEVEL(level);
         }
         aLARM_INFORMATION.setID(id);
@@ -271,7 +277,7 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
         String layerid = LoadMyUtil.getPropertiesVauleOfKey("loadmap.properties",ESOperate.dbName+"."+alarm_code);
         ALARM_INFORMATION aLARM_INFORMATION = new ALARM_INFORMATION();
         aLARM_INFORMATION.setALARM_TYPE_LV1(alarm_code);
-        //aLARM_INFORMATION.setALARM_STATE(1);
+        aLARM_INFORMATION.setALARM_STATE(1);
         String condition = getCondition(type);
         if (StringUtils.isNotEmpty(condition)) {
             aLARM_INFORMATION.setCondition(condition);

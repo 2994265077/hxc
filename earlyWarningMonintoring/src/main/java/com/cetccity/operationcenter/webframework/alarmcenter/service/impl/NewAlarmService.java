@@ -17,6 +17,7 @@ import com.cetccity.operationcenter.webframework.core.frame.basicmodel.NameValue
 import com.cetccity.operationcenter.webframework.core.tools.ESOperate;
 import com.cetccity.operationcenter.webframework.core.tools.LoadMyUtil;
 import com.cetccity.operationcenter.webframework.urbansign.api.model.NameValueDataModel;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -88,6 +89,11 @@ public class NewAlarmService {
             begin = localDate.atStartOfDay();
             end = localDate.plusDays(1L).atStartOfDay();
         }
+        if (StringUtils.isNotBlank(level)) {
+            level = Arrays.stream(level.split(","))
+                    .map(str -> "'" + str + "'")
+                    .collect(Collectors.joining(","));
+        }
         return newAlarmMapper.countByTypeLv1s(begin, end, alarmCondition, level);
     }
 
@@ -98,6 +104,11 @@ public class NewAlarmService {
         if (Objects.nonNull(localDate)) {
             begin = localDate.atStartOfDay();
             end = localDate.plusDays(1L).atStartOfDay();
+        }
+        if (StringUtils.isNotBlank(level)) {
+            level = Arrays.stream(level.split(","))
+                    .map(str -> "'" + str + "'")
+                    .collect(Collectors.joining(","));
         }
         List<AlarmTypeModel> res = newAlarmMapper.countByTypeLv2s(begin, end, alarmCondition, level, typeV1);
         int sum = res.stream().peek(obj -> obj.setLayerid(LoadMyUtil.getPropertiesVauleOfKey("loadmap.properties",ESOperate.dbName+"."+obj.getCode()))).mapToInt(AlarmTypeModel::getCount).sum();
