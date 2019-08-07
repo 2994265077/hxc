@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -94,7 +95,9 @@ public class NewAlarmService {
                     .map(str -> "'" + str + "'")
                     .collect(Collectors.joining(","));
         }
-        return newAlarmMapper.countByTypeLv1s(begin, end, alarmCondition, level);
+        List<NameValueDataModel<Integer>> nameValueDataModels = newAlarmMapper.countByTypeLv1s(begin, end, alarmCondition, level);
+        nameValueDataModels.sort(Comparator.comparingInt(obj -> Integer.valueOf(obj.getName())));
+        return nameValueDataModels;
     }
 
     public List<AlarmTypeModel> alarmTypeLv2s(LocalDate localDate, String type, String level, String typeV1) {
@@ -111,6 +114,7 @@ public class NewAlarmService {
                     .collect(Collectors.joining(","));
         }
         List<AlarmTypeModel> res = newAlarmMapper.countByTypeLv2s(begin, end, alarmCondition, level, typeV1);
+        res.sort(Comparator.comparingInt(alarmtype -> Integer.valueOf(alarmtype.getCode())));
         int sum = res.stream().peek(obj -> obj.setLayerid(LoadMyUtil.getPropertiesVauleOfKey("loadmap.properties",ESOperate.dbName+"."+obj.getCode()))).mapToInt(AlarmTypeModel::getCount).sum();
         AlarmTypeModel total = AlarmTypeModel.builder().name("全部").code("").count(sum).layerid("").build();
 
