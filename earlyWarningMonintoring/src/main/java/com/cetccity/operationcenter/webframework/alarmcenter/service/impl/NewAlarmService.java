@@ -66,8 +66,7 @@ public class NewAlarmService {
         } else {
             queryCounts = newAlarmMapper.countByLevel(null, null, alarmCondition, typeV1, typeV2).stream().collect(Collectors.toMap(NameValueTypeModel::getName, NameValueTypeModel::getValue));
         }
-        Map<String, Integer> todayCount = newAlarmMapper.countByLevel(LocalDate.now()
-                .atStartOfDay(), LocalDate.now().plusDays(1).atStartOfDay(), alarmCondition, typeV1, typeV2).stream().collect(Collectors.toMap(NameValueTypeModel::getName, NameValueTypeModel::getValue));
+        Map<String, Integer> todayCount = newAlarmMapper.countByLevel( LocalDate.now().atStartOfDay(), LocalDate.now().plusDays(1).atStartOfDay(), alarmCondition, typeV1, typeV2).stream().collect(Collectors.toMap(NameValueTypeModel::getName, NameValueTypeModel::getValue));
         List<AlarmLevelCount> collect = levels.stream()
                 .map(param -> AlarmLevelCount.builder()
                         .name(param.getName())
@@ -87,7 +86,6 @@ public class NewAlarmService {
         LocalDateTime begin = null;
         LocalDateTime end = null;
         if (Objects.nonNull(localDate)) {
-            begin = localDate.atStartOfDay();
             end = localDate.plusDays(1L).atStartOfDay();
         }
         if (StringUtils.isNotBlank(level)) {
@@ -105,7 +103,6 @@ public class NewAlarmService {
         LocalDateTime begin = null;
         LocalDateTime end = null;
         if (Objects.nonNull(localDate)) {
-            begin = localDate.atStartOfDay();
             end = localDate.plusDays(1L).atStartOfDay();
         }
         if (StringUtils.isNotBlank(level)) {

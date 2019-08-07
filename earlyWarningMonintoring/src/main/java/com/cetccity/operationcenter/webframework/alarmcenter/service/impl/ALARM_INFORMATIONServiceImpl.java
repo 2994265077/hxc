@@ -107,13 +107,11 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
         if (StringUtils.isNotEmpty(typeV2)) {
             aLARM_INFORMATION.setALARM_TYPE_LV2(typeV2);
         }
-        if(StringUtils.isEmpty(date)){
-            aLARM_INFORMATION.setALARM_STATE(1);//1:正在预警中;0:预警已结束
-            //aLARM_INFORMATION.setSEND_STATE(1);
-        }else{
-            aLARM_INFORMATION.setALARM_STATE(1);
-            aLARM_INFORMATION.setRELEASE_TIME(date);
-            //aLARM_INFORMATION.setSEND_STATE(1);
+        aLARM_INFORMATION.setALARM_STATE(1);
+        if(StringUtils.isNotEmpty(date)){
+            //1:正在预警中;0:预警已结束
+            LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            aLARM_INFORMATION.setEndTime(localDate.plusDays(1).atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         }
         String sql2 = "select ALARM_TYPE_LV2 from ALARM_PUSH_AVILABLE";
         List<LinkedHashMap> map_list_push = oracleOperateService.querySql(sql2);
@@ -215,7 +213,6 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
         }
         if (StringUtils.isNotEmpty(date)) {
             LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            aLARM_INFORMATION.setStartTime(localDate.atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             aLARM_INFORMATION.setEndTime(localDate.plusDays(1).atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         }
         if (StringUtils.isNotEmpty(level)) {
@@ -252,7 +249,6 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
         }
         if (StringUtils.isNotEmpty(date)) {
             LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            aLARM_INFORMATION.setStartTime(localDate.atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             aLARM_INFORMATION.setEndTime(localDate.plusDays(1).atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         }
         if (StringUtils.isNotEmpty(level)) {
@@ -288,7 +284,6 @@ public class ALARM_INFORMATIONServiceImpl implements ALARM_INFORMATIONService {
         }
         if (StringUtils.isNotEmpty(date_jump)) {
             LocalDate localDate = LocalDate.parse(date_jump, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            aLARM_INFORMATION.setStartTime(localDate.atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             aLARM_INFORMATION.setEndTime(localDate.plusDays(1).atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         }
         if (StringUtils.isNotEmpty(level)) {
